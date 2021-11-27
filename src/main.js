@@ -6,6 +6,7 @@ import { createContent } from './view/content';
 import { createFilmsCard } from './view/films-card';
 import { createButtonShowMore } from './view/button-show-more';
 import { createFilmsPopup } from './view/films-popup';
+import { generateDataCard, generateComment} from './generator-data';
 
 const NUMBER_CARDS = 5;
 
