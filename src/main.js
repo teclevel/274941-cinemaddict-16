@@ -10,7 +10,8 @@ import { generateDataCard, generateComment } from './generator-data';
 import { createComment } from './view/comment';
 import { getRandomInteger } from './utility';
 
-const NUMBER_CARDS = 5;
+const NUMBER_CARDS = 14;
+const NUMBER_CARDS_PER_STEP = 5;
 const MAX_NUMBER_COMMENTS = 5;
 const cards = Array.from({ length: NUMBER_CARDS }, generateDataCard);
 const comments = Array.from({ length: NUMBER_CARDS }, generateComment);
@@ -27,11 +28,31 @@ renderComponent(main, createContent(), RenderPosition.BEFOREEND);
 
 const filmsContainer = main.querySelector('.films-list__container');
 
-for (let i = 0; i < NUMBER_CARDS; i++) {
+for (let i = 0; i < Math.min(cards.length, NUMBER_CARDS_PER_STEP); i++) {
   renderComponent(filmsContainer, createFilmsCard(cards[i]), RenderPosition.BEFOREEND);
 }
 
-renderComponent(filmsContainer, createButtonShowMore(), RenderPosition.AFTEREND);
+if (cards.length > NUMBER_CARDS_PER_STEP) {
+
+  let renderedCards = NUMBER_CARDS_PER_STEP;
+
+  renderComponent(filmsContainer, createButtonShowMore(), RenderPosition.AFTEREND);
+  const buttonShow = document.querySelector('.films-list__show-more');
+
+  buttonShow.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    cards
+      .slice(renderedCards, renderedCards + NUMBER_CARDS_PER_STEP)
+      .forEach((card) => renderComponent(filmsContainer, createFilmsCard(card), RenderPosition.BEFOREEND));
+
+    renderedCards += NUMBER_CARDS_PER_STEP;
+
+    if (renderedCards > cards.length) {
+      buttonShow.remove();
+    }
+  });
+
+}
 
 const listLinkCards = document.querySelectorAll('.film-card__link');
 
@@ -46,5 +67,4 @@ for (const link of listLinkCards) {
     }
   });
 }
-
 // const comments = document.querySelectorAll('.film-details__comment');
