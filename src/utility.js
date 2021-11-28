@@ -1,3 +1,7 @@
+import dayjs from 'dayjs';
+import RelativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(RelativeTime);
+
 // Функция из интернета по генерации случайного числа из диапазона
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
 
@@ -26,4 +30,32 @@ const getRandomText = (array, number) => {
   return text;
 };
 
-export { getRandomInteger, getArraySentences, getRandomElementArray, getRandomText };
+// функция перемешивания массива с использованием источника https://learn.javascript.ru/task/shuffle
+const getShuffleArray = (array) => {
+  const newArray = array.slice();
+
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+};
+
+// const formatDateComment = (date) => {
+//   if (dayjs().diff(date, 'hour') < 24) {
+//     return 'Today';
+//   } else if (dayjs().diff(date, 'hour') < 48 ){
+//     return  date.format('YYYY/MM/D hh:mm');
+//   }
+
+//   return date.fromNow();
+// };
+
+const getTimeFromMins = (mins) => {
+  const hours = Math.trunc(mins / 60);
+  const minutes = mins % 60;
+  if (!hours) { return `${minutes}m` }
+  return `${hours}h ${minutes}m`;
+};
+
+export { getRandomInteger, getArraySentences, getRandomElementArray, getRandomText, getShuffleArray, getTimeFromMins/* formatDateComment */ };
