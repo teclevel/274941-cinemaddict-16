@@ -9,11 +9,14 @@ import { createFilmsPopup } from './view/films-popup';
 import { generateDataCard, generateComment } from './generator-data';
 import { createComment } from './view/comment';
 import { getRandomInteger } from './utility';
+import { generateFilter } from './filter';
 
 const NUMBER_CARDS = 14;
 const NUMBER_CARDS_PER_STEP = 5;
 const MAX_NUMBER_COMMENTS = 5;
+
 const cards = Array.from({ length: NUMBER_CARDS }, generateDataCard);
+const filter = generateFilter(cards);
 const comments = Array.from({ length: NUMBER_CARDS }, generateComment);
 
 const main = document.querySelector('.main');
@@ -22,7 +25,7 @@ const footer = document.querySelector('.footer');
 
 
 renderComponent(header, createProfile(), RenderPosition.BEFOREEND);
-renderComponent(main, createMainNavigation(), RenderPosition.BEFOREEND);
+renderComponent(main, createMainNavigation(filter), RenderPosition.BEFOREEND);
 renderComponent(main, createSort(), RenderPosition.BEFOREEND);
 renderComponent(main, createContent(), RenderPosition.BEFOREEND);
 
@@ -67,4 +70,3 @@ for (const link of listLinkCards) {
     }
   });
 }
-// const comments = document.querySelectorAll('.film-details__comment');
