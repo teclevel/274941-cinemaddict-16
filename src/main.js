@@ -10,8 +10,10 @@ import { generateDataCard, generateComment } from './generator-data';
 import { createComment } from './view/comment';
 import { getRandomInteger } from './utility';
 import { generateFilter } from './filter';
+import { createStatisticTemplate } from './view/statistic';
 
-const NUMBER_CARDS = 14;
+
+const NUMBER_CARDS = 17;
 const NUMBER_CARDS_PER_STEP = 5;
 const MAX_NUMBER_COMMENTS = 5;
 
@@ -28,7 +30,7 @@ renderComponent(header, createProfile(), RenderPosition.BEFOREEND);
 renderComponent(main, createMainNavigation(filter), RenderPosition.BEFOREEND);
 renderComponent(main, createSort(), RenderPosition.BEFOREEND);
 renderComponent(main, createContent(), RenderPosition.BEFOREEND);
-
+renderComponent(footer, createStatisticTemplate(cards), RenderPosition.BEFOREEND);
 const filmsContainer = main.querySelector('.films-list__container');
 
 for (let i = 0; i < Math.min(cards.length, NUMBER_CARDS_PER_STEP); i++) {
@@ -57,16 +59,19 @@ if (cards.length > NUMBER_CARDS_PER_STEP) {
 
 }
 
-const listLinkCards = document.querySelectorAll('.film-card__link');
+const link = document.querySelector('.film-card__link');
 
-for (const link of listLinkCards) {
-  link.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    renderComponent(footer, createFilmsPopup(cards[1]), RenderPosition.AFTEREND);
+link.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  renderComponent(footer, createFilmsPopup(cards[1]), RenderPosition.AFTEREND);
 
-    const commentContainer = document.querySelector('.film-details__comments-list');
-    for (let i = 0; i < getRandomInteger(0, MAX_NUMBER_COMMENTS); i++) {
-      renderComponent(commentContainer, createComment(comments[i]), RenderPosition.BEFOREEND);
-    }
+  const commentContainer = document.querySelector('.film-details__comments-list');
+  for (let i = 0; i < getRandomInteger(0, MAX_NUMBER_COMMENTS); i++) {
+    renderComponent(commentContainer, createComment(comments[i]), RenderPosition.BEFOREEND);
+  }
+  const buttonClose = document.querySelector('.film-details__close-btn');
+  const popup = document.querySelector('.film-details');
+  buttonClose.addEventListener('click', () => {
+    popup.remove();
   });
-}
+});
