@@ -54,7 +54,9 @@ const getShuffleArray = (array) => {
 const getTimeFromMins = (mins) => {
   const hours = Math.trunc(mins / 60);
   const minutes = mins % 60;
-  if (!hours) { return `${minutes}m` }
+  if (!hours) {
+    return `${minutes}m`;
+  }
   return `${hours}h ${minutes}m`;
 };
 
