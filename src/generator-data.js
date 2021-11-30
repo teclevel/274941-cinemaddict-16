@@ -8,10 +8,10 @@ const GENRES = ['Musical', 'Western', 'Cartoon', 'Comedy'];
 const MAX_NUMBER_SENTENCE = 5;
 const MAX_NUMBER_NAME = 3;
 const MAX_NUMBER_GENRES = 4;
+const MAX_NUMBER_COMMENTS_TEXT = 3;
 
 const getNames = () => getShuffleArray(NAMES).slice(0, getRandomInteger(1, MAX_NUMBER_NAME)).join(', ');
-
-const getGenres = ()=> getShuffleArray(GENRES).slice(0, getRandomInteger(1, MAX_NUMBER_GENRES));
+const getGenres = () => getShuffleArray(GENRES).slice(0, getRandomInteger(1, MAX_NUMBER_GENRES));
 
 const generateTitle = () => getRandomElementArray([
   'The Dance of Life',
@@ -25,11 +25,11 @@ const generateRating = () => getRandomInteger(1, 9) / 10 + getRandomInteger(4, 8
 
 const generateYear = () => getRandomInteger(1920, 1980);
 
-const generateArraySentence = () => getArraySentences('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.');
+const getArraySentence = () => getArraySentences('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.');
 
-const generateDescriptionFilm = () => getRandomText(generateArraySentence(), MAX_NUMBER_SENTENCE);
+const generateComments = () => getShuffleArray(getArraySentence()).slice(0, getRandomInteger(1, MAX_NUMBER_COMMENTS_TEXT)).join(' ');
 
-const generateCommentText = () => getRandomElementArray(generateArraySentence());
+const generateDescriptionFilm = () => getRandomText(getArraySentence(), MAX_NUMBER_SENTENCE);
 
 const generatePoster = () => getRandomElementArray([
   './images/posters/made-for-each-other.png',
@@ -80,7 +80,7 @@ export const generateDataCard = () => ({
 
 export const generateComment = () => ({
   emotion: generateEmoji(),
-  commentText: generateCommentText(),
+  commentText: generateComments(),
   name: getRandomElementArray(NAMES),
   date: generateDateComment(),
 });

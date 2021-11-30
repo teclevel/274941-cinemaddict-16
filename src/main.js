@@ -18,6 +18,7 @@ const NUMBER_CARDS_PER_STEP = 5;
 const MAX_NUMBER_COMMENTS = 5;
 
 const cards = Array.from({ length: NUMBER_CARDS }, generateDataCard);
+const dataPopup = cards[0];
 const filter = generateFilter(cards);
 const comments = Array.from({ length: NUMBER_CARDS }, generateComment);
 
@@ -59,11 +60,11 @@ if (cards.length > NUMBER_CARDS_PER_STEP) {
 
 }
 
-const link = document.querySelector('.film-card__link');
+const openPopup = document.querySelector('.film-card__link');
 
-link.addEventListener('click', (evt) => {
+openPopup.addEventListener('click', (evt) => {
   evt.preventDefault();
-  renderComponent(footer, createFilmsPopup(cards[1]), RenderPosition.AFTEREND);
+  renderComponent(footer, createFilmsPopup(dataPopup), RenderPosition.AFTEREND);
 
   const commentContainer = document.querySelector('.film-details__comments-list');
   for (let i = 0; i < getRandomInteger(0, MAX_NUMBER_COMMENTS); i++) {
