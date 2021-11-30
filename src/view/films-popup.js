@@ -1,8 +1,16 @@
 import { getTimeFromMins } from '../utility';
 
+const createGenresTemplate = (genres) => {
+  let list = '';
+  for (const genre of genres) {
+    list += `<span class="film-details__genre">${genre}</span>`;
+  }
+  return list;
+};
+
 export const createFilmsPopup = (card) => {
   const { poster, title, rating, duration, genres, age, director, writers, actors, dateRelease, isAddedToWatch, isWatched, isFavorite } = card;
-  console.log(genres);
+  const itemsGenres = createGenresTemplate(genres);
 
   const addWatchListClassName = isAddedToWatch
     ? 'film-details__control-button--active'
@@ -69,9 +77,7 @@ export const createFilmsPopup = (card) => {
             <tr class="film-details__row">
               <td class="film-details__term">Genres</td>
               <td class="film-details__cell">
-                <span class="film-details__genre">${genres[0]}</span>
-                <span class="film-details__genre">${genres[1]}</span>
-                <span class="film-details__genre">${genres[2]}</span></td>
+                ${itemsGenres}
             </tr>
           </table>
 
