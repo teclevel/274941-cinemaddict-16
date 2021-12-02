@@ -1,3 +1,4 @@
+import { createElement } from '../render';
 import { getTimeFromMins } from '../utility';
 
 const createGenresTemplate = (genres) => {
@@ -8,7 +9,7 @@ const createGenresTemplate = (genres) => {
   return list;
 };
 
-export const createFilmsPopup = (card) => {
+const createFilmsPopup = (card) => {
   const { poster, title, rating, duration, genres, age, director, writers, actors, dateRelease, isAddedToWatch, isWatched, isFavorite } = card;
   const itemsGenres = createGenresTemplate(genres);
 
@@ -136,3 +137,27 @@ export const createFilmsPopup = (card) => {
   </form>
 </section>`;
 };
+
+export default class FilmsPopup {
+  #element = null;
+  #cards = null;
+
+  constructor(cards) {
+    this.#cards = cards;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+    return this.#element;
+  }
+
+  get template() {
+    return createFilmsPopup(this.#cards);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}

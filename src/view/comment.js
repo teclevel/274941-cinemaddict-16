@@ -1,4 +1,6 @@
-export const createComment = (comment) => {
+import { createElement } from '../render';
+
+const createComment = (comment) => {
   const { emotion, commentText, name, date } = comment;
 
   return `<li class="film-details__comment">
@@ -15,3 +17,28 @@ export const createComment = (comment) => {
     </div>
   </li>`;
 };
+
+export default class Comment {
+  #element = null;
+  #comment = null;
+
+  constructor(comment) {
+    this.#comment = comment;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createComment(this.#comment);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
