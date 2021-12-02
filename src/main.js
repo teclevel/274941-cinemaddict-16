@@ -1,16 +1,16 @@
-import { RenderPosition, renderComponent } from './render';
 import MainNavigation from './view/main-navigation';
+import Statistic from './view/statistic';
 import ProfileUser from './view/profile';
 import SortFilms from './view/sort';
-import ContainerFilms from './view/content';
+import ContainerFilms from './view/films-container';
 import FilmsCard from './view/films-card';
 import ButtonShowMore from './view/button-show-more';
 import FilmsPopup from './view/films-popup';
-import { generateDataCard, generateComment } from './generator-data';
 import Comment from './view/comment';
+import { generateDataCard, generateComment } from './generator-data';
+import { RenderPosition, render } from './render';
 import { getRandomInteger } from './utility';
 import { generateFilter } from './filter';
-import Statistic from './view/statistic';
 
 
 const NUMBER_CARDS = 6;
@@ -27,25 +27,25 @@ const header = document.querySelector('.header');
 const footer = document.querySelector('.footer');
 
 
-renderComponent(header, new ProfileUser());
-renderComponent(main, new MainNavigation(filter));
-renderComponent(main, new SortFilms());
-renderComponent(main, new ContainerFilms);
-renderComponent(footer, new Statistic(cards));
+render(header, new ProfileUser().element, RenderPosition.BEFOREBEGIN);
+render(main, new MainNavigation(filter).element, RenderPosition.BEFOREBEGIN);
+render(main, new SortFilms().element, RenderPosition.BEFOREBEGIN);
+render(main, new ContainerFilms().element, RenderPosition.BEFOREBEGIN);
+render(footer, new Statistic(cards).element, RenderPosition.BEFOREBEGIN);
 
 
 const filmsContainer = main.querySelector('.films-list');
 const films = filmsContainer.querySelector('.films-list__container');
 
 for (let i = 0; i < Math.min(cards.length, NUMBER_CARDS_PER_STEP); i++) {
-  renderComponent(films, new FilmsCard(cards[i]));
+  render(films, new FilmsCard(cards[i]).element, RenderPosition.BEFOREBEGIN);
 }
 
 if (cards.length > NUMBER_CARDS_PER_STEP) {
 
   let renderedCards = NUMBER_CARDS_PER_STEP;
 
-  renderComponent(filmsContainer, new ButtonShowMore);
+  render(filmsContainer, new ButtonShowMore().element, RenderPosition.BEFOREBEGIN);
 
   const buttonShow = filmsContainer.querySelector('.films-list__show-more');
 
@@ -53,7 +53,7 @@ if (cards.length > NUMBER_CARDS_PER_STEP) {
     evt.preventDefault();
     cards
       .slice(renderedCards, renderedCards + NUMBER_CARDS_PER_STEP)
-      .forEach((card) => renderComponent(films, new FilmsCard(card)));
+      .forEach((card) => render(films, new FilmsCard(card).element, RenderPosition.BEFOREBEGIN));
 
     renderedCards += NUMBER_CARDS_PER_STEP;
 
@@ -63,16 +63,37 @@ if (cards.length > NUMBER_CARDS_PER_STEP) {
   });
 }
 
-const openPopup = document.querySelector('.film-card__link');
 
-openPopup.addEventListener('click', (evt) => {
+const openPopup = (data) => {
+
+  const popup = new FilmsPopup(data).element;
+  render(footer, popup.element, RenderPosition.AFTEREND);
+  // add hide-overflow
+};
+//   const openPopup = () => {
+//   };
+
+//   const buttonShowPopup = document.querySelector('.film-card__link');
+
+//   buttonShowPopup.addEventListener('click', (evt) => {
+//     evt.preventDefault();
+//     openPopup();
+//   });
+
+// };
+
+
+const buttonShowPopup = document.querySelector('.film-card__link');
+
+buttonShowPopup.addEventListener('click', (evt) => {
   evt.preventDefault();
-  renderComponent(footer, new FilmsPopup(dataPopup), RenderPosition.AFTEREND);
+  openPopup(dataPopup);
+  // renderComponent(footer, new FilmsPopup(dataPopup).element, RenderPosition.AFTEREND);
 
   const commentContainer = document.querySelector('.film-details__comments-list');
 
   for (let i = 0; i < getRandomInteger(0, MAX_NUMBER_COMMENTS); i++) {
-    renderComponent(commentContainer, new Comment(comments[i]));
+    render(commentContainer, new Comment(comments[i]).element, RenderPosition.BEFOREBEGIN);
   }
 
   const buttonClose = document.querySelector('.film-details__close-btn');
