@@ -1,6 +1,7 @@
+import { createElement } from '../render';
 import { getTimeFromMins } from '../utility';
 
-export const createFilmsCard = (card) => {
+const createFilmsCard = (card) => {
   const { title, rating, year, duration, genres, description, poster, isAddedToWatch, isWatched, isFavorite } = card;
   const classActive = 'film-card__controls-item--active';
 
@@ -36,3 +37,27 @@ export const createFilmsCard = (card) => {
     </div>
   </article>`;
 };
+
+export default class FilmsCard {
+  #element = null;
+  #cards = null;
+
+  constructor(cards) {
+    this.#cards = cards;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+    return this.#element;
+  }
+
+  get template() {
+    return createFilmsCard(this.#cards);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
