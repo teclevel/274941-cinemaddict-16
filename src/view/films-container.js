@@ -10,7 +10,7 @@ const createContainer = () => (
   </section>`
 );
 
-export default class ContainerFilms {
+export default class FilmsContainer {
   #element = null;
 
   get element() {

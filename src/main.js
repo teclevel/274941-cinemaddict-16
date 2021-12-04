@@ -2,35 +2,28 @@ import MainNavigation from './view/main-navigation';
 import Statistic from './view/statistic';
 import ProfileUser from './view/profile';
 import SortFilms from './view/sort';
-import ContainerFilms from './view/films-container';
+import FilmsContainer from './view/films-container';
 import FilmsCard from './view/films-card';
 import ButtonShowMore from './view/button-show-more';
 import FilmsPopup from './view/films-popup';
 import Comment from './view/comment';
+import TitleFilmsList from './view/title-films-list';
 import { generateDataCard, generateComment } from './generator-data';
 import { RenderPosition, render } from './render';
 import { getRandomInteger } from './utility';
 import { generateFilter } from './filter';
 
-
-const NUMBER_CARDS = 6;
+const NUMBER_CARDS = 7;
 const NUMBER_CARDS_PER_STEP = 5;
 const MAX_NUMBER_COMMENTS = 5;
+
+const header = document.querySelector('.header');
+const main = document.querySelector('.main');
+const footer = document.querySelector('.footer');
 
 const cards = Array.from({ length: NUMBER_CARDS }, generateDataCard);
 const filter = generateFilter(cards);
 const comments = Array.from({ length: NUMBER_CARDS }, generateComment);
-
-const main = document.querySelector('.main');
-const header = document.querySelector('.header');
-const footer = document.querySelector('.footer');
-
-
-render(header, new ProfileUser().element, RenderPosition.BEFOREEND);
-render(main, new MainNavigation(filter).element, RenderPosition.BEFOREEND);
-render(main, new SortFilms().element, RenderPosition.BEFOREEND);
-render(main, new ContainerFilms().element, RenderPosition.BEFOREEND);
-render(footer, new Statistic(cards).element, RenderPosition.BEFOREEND);
 
 
 const renderCard = (container, data) => {
@@ -38,7 +31,6 @@ const renderCard = (container, data) => {
   const card = new FilmsCard(data);
 
   const body = document.querySelector('body');
-
 
   const closePopup = () => {
     popup.element.remove();
@@ -84,31 +76,56 @@ const renderCard = (container, data) => {
 };
 
 
-const filmsContainer = main.querySelector('.films-list');
-const films = filmsContainer.querySelector('.films-list__container');
+const renderBoard = (boardContainer, boardCards) => {
 
-for (let i = 0; i < Math.min(cards.length, NUMBER_CARDS_PER_STEP); i++) {
-  renderCard(films, cards[i]);
-}
+  const filmsList = boardContainer.element.querySelector('.films-list');
+  const filmsListContainer = filmsList.querySelector('.films-list__container');
 
-if (cards.length > NUMBER_CARDS_PER_STEP) {
+  const sortFilms = new SortFilms();
 
-  let renderedCards = NUMBER_CARDS_PER_STEP;
+  render(boardContainer.element, sortFilms.element, RenderPosition.BEFOREBEGIN);
 
-  render(filmsContainer, new ButtonShowMore().element, RenderPosition.BEFOREEND);
+  if (boardCards.every((element) => !element)) {
+    render(filmsList, new TitleFilmsList().element, RenderPosition.AFTERBEGIN);
+    sortFilms.element.remove();
+    sortFilms.removeElement();
+    filmsListContainer.remove();
+  }
 
-  const buttonShow = filmsContainer.querySelector('.films-list__show-more');
+  for (let i = 0; i < Math.min(boardCards.length, NUMBER_CARDS_PER_STEP); i++) {
+    renderCard(filmsListContainer, boardCards[i]);
+  }
 
-  buttonShow.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    cards
-      .slice(renderedCards, renderedCards + NUMBER_CARDS_PER_STEP)
-      .forEach((card) => renderCard(films, card));
+  if (boardCards.length > NUMBER_CARDS_PER_STEP) {
 
-    renderedCards += NUMBER_CARDS_PER_STEP;
+    let renderedCards = NUMBER_CARDS_PER_STEP;
 
-    if (renderedCards > cards.length) {
-      buttonShow.remove();
-    }
-  });
-}
+    const buttonShow = new ButtonShowMore();
+    render(filmsList, buttonShow.element, RenderPosition.BEFOREEND);
+
+
+    buttonShow.element.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      boardCards
+        .slice(renderedCards, renderedCards + NUMBER_CARDS_PER_STEP)
+        .forEach((card) => renderCard(filmsListContainer, card));
+
+      renderedCards += NUMBER_CARDS_PER_STEP;
+
+      if (renderedCards >= boardCards.length) {
+        buttonShow.element.remove();
+        buttonShow.removeElement();
+      }
+    });
+  }
+};
+
+render(header, new ProfileUser().element, RenderPosition.BEFOREEND);
+render(main, new MainNavigation(filter).element, RenderPosition.BEFOREEND);
+
+const filmsContainer = new FilmsContainer();
+render(main, filmsContainer.element, RenderPosition.BEFOREEND);
+
+renderBoard(filmsContainer, cards);
+
+render(footer, new Statistic(cards).element, RenderPosition.BEFOREEND);
