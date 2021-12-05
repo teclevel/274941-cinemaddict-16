@@ -7,7 +7,7 @@ const createFilterItemTemplate = (filter) => {
   );
 };
 
-const createMainNavigation = (filterItems) => {
+const createMainNavigationTemplate = (filterItems) => {
   const filterItemsTemplate = filterItems
     .map((filter, index) => createFilterItemTemplate(filter, index === 0))
     .join('');
@@ -23,7 +23,7 @@ const createMainNavigation = (filterItems) => {
   );
 };
 
-export default class MainNavigation {
+export default class MainNavigationView {
   #element = null;
   filters = null;
 
@@ -40,7 +40,7 @@ export default class MainNavigation {
   }
 
   get template() {
-    return createMainNavigation(this.filters);
+    return createMainNavigationTemplate(this.filters);
   }
 
   removeElement() {

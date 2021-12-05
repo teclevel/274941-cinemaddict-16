@@ -1,13 +1,13 @@
-import MainNavigation from './view/main-navigation-view';
-import Statistic from './view/statistic-view';
-import ProfileUser from './view/profile-view';
-import SortFilms from './view/sort-view';
-import FilmsContainer from './view/films-container-view';
-import FilmsCard from './view/films-card-view';
-import ButtonShowMore from './view/show-more-button-view';
-import FilmsPopup from './view/films-popup-view';
-import Comment from './view/comment-view';
-import TitleFilmsList from './view/films-title-view';
+import MainNavigationView from './view/main-navigation-view';
+import MovieCounterView from './view/movie-counter-view';
+import ProfileUserView from './view/profile-view';
+import FilmsSortView from './view/sort-view';
+import FilmsContainerView from './view/films-container-view';
+import FilmsCardView from './view/films-card-view';
+import ButtonShowMoreView from './view/show-more-button-view';
+import FilmsPopupView from './view/films-popup-view';
+import CommentView from './view/comment-view';
+import FilmsTitleView from './view/films-title-view';
 import { generateDataCard, generateComment } from './generator-data';
 import { RenderPosition, render } from './render';
 import { getRandomInteger } from './utility';
@@ -27,8 +27,8 @@ const comments = Array.from({ length: NUMBER_CARDS }, generateComment);
 
 
 const renderCard = (container, data) => {
-  const popup = new FilmsPopup(data);
-  const card = new FilmsCard(data);
+  const popup = new FilmsPopupView(data);
+  const card = new FilmsCardView(data);
 
   const body = document.querySelector('body');
 
@@ -53,7 +53,7 @@ const renderCard = (container, data) => {
     const commentContainer = document.querySelector('.film-details__comments-list');
 
     for (let i = 0; i < getRandomInteger(0, MAX_NUMBER_COMMENTS); i++) {
-      render(commentContainer, new Comment(comments[i]).element, RenderPosition.BEFOREEND);
+      render(commentContainer, new CommentView(comments[i]).element, RenderPosition.BEFOREEND);
     }
 
     document.addEventListener('keydown', onEscKeyDown);
@@ -81,12 +81,12 @@ const renderBoard = (boardContainer, boardCards) => {
   const filmsList = boardContainer.element.querySelector('.films-list');
   const filmsListContainer = filmsList.querySelector('.films-list__container');
 
-  const sortFilms = new SortFilms();
+  const sortFilms = new FilmsSortView();
 
   render(boardContainer.element, sortFilms.element, RenderPosition.BEFOREBEGIN);
 
   if (boardCards.every((element) => !element)) {
-    render(filmsList, new TitleFilmsList().element, RenderPosition.AFTERBEGIN);
+    render(filmsList, new FilmsTitleView().element, RenderPosition.AFTERBEGIN);
     sortFilms.element.remove();
     sortFilms.removeElement();
     filmsListContainer.remove();
@@ -100,7 +100,7 @@ const renderBoard = (boardContainer, boardCards) => {
 
     let renderedCards = NUMBER_CARDS_PER_STEP;
 
-    const buttonShow = new ButtonShowMore();
+    const buttonShow = new ButtonShowMoreView();
     render(filmsList, buttonShow.element, RenderPosition.BEFOREEND);
 
 
@@ -120,12 +120,12 @@ const renderBoard = (boardContainer, boardCards) => {
   }
 };
 
-render(header, new ProfileUser().element, RenderPosition.BEFOREEND);
-render(main, new MainNavigation(filter).element, RenderPosition.BEFOREEND);
+render(header, new ProfileUserView().element, RenderPosition.BEFOREEND);
+render(main, new MainNavigationView(filter).element, RenderPosition.BEFOREEND);
 
-const filmsContainer = new FilmsContainer();
+const filmsContainer = new FilmsContainerView();
 render(main, filmsContainer.element, RenderPosition.BEFOREEND);
 
 renderBoard(filmsContainer, cards);
 
-render(footer, new Statistic(cards).element, RenderPosition.BEFOREEND);
+render(footer, new MovieCounterView(cards).element, RenderPosition.BEFOREEND);

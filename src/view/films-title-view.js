@@ -9,13 +9,13 @@ import { createElement } from '../render';
 // скрытый заголовок
 //  <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
 
-const createTileFilmsList = () => (
+const createFilmsTitleTemplate = () => (
   `<h2 class="films-list__title">
     There are no movies in our database
   </h2>`
 );
 
-export default class TitleFilmsList {
+export default class FilmsTitleView {
   #element = null;
 
   get element() {
@@ -27,7 +27,7 @@ export default class TitleFilmsList {
   }
 
   get template() {
-    return createTileFilmsList();
+    return createFilmsTitleTemplate();
   }
 
   removeElement() {

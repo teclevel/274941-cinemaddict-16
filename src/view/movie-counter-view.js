@@ -1,12 +1,12 @@
 import { createElement } from '../render';
 
-const createStatisticTemplate = (cards) => {
+const createMovieCounterTemplate = (cards) => {
   const counter = cards.length;
 
   return (`<section class="footer__statistics">${counter}</section>`);
 };
 
-export default class Statistic  {
+export default class MovieCounterView  {
   #element = null;
   #cards = null;
 
@@ -23,7 +23,7 @@ export default class Statistic  {
   }
 
   get template() {
-    return createStatisticTemplate(this.#cards);
+    return createMovieCounterTemplate(this.#cards);
   }
 
   removeElement() {
