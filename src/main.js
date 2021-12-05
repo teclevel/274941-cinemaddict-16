@@ -12,6 +12,7 @@ import { generateDataCard, generateComment } from './generator-data';
 import { RenderPosition, render } from './render';
 import { getRandomInteger } from './utility';
 import { generateFilter } from './filter';
+import FilmsListContainerView from './view/films-list-container-view';
 
 const NUMBER_CARDS = 7;
 const NUMBER_CARDS_PER_STEP = 5;
@@ -79,21 +80,21 @@ const renderCard = (container, data) => {
 const renderBoard = (boardContainer, boardCards) => {
 
   const filmsList = boardContainer.element.querySelector('.films-list');
-  const filmsListContainer = filmsList.querySelector('.films-list__container');
+  const filmsListContainer = new FilmsListContainerView();
 
-  const sortFilms = new FilmsSortView();
 
-  render(boardContainer.element, sortFilms.element, RenderPosition.BEFOREBEGIN);
+  for (let i = 0; i < Math.min(boardCards.length, NUMBER_CARDS_PER_STEP); i++) {
+
+    if (!filmsList.querySelector('.films-list__container')) {
+      render(filmsList, filmsListContainer.element, RenderPosition.BEFOREEND);
+      render(boardContainer.element, new FilmsSortView().element, RenderPosition.BEFOREBEGIN);
+    }
+
+    renderCard(filmsListContainer.element, boardCards[i]);
+  }
 
   if (boardCards.every((element) => !element)) {
     render(filmsList, new FilmsTitleView().element, RenderPosition.AFTERBEGIN);
-    sortFilms.element.remove();
-    sortFilms.removeElement();
-    filmsListContainer.remove();
-  }
-
-  for (let i = 0; i < Math.min(boardCards.length, NUMBER_CARDS_PER_STEP); i++) {
-    renderCard(filmsListContainer, boardCards[i]);
   }
 
   if (boardCards.length > NUMBER_CARDS_PER_STEP) {
@@ -108,7 +109,7 @@ const renderBoard = (boardContainer, boardCards) => {
       evt.preventDefault();
       boardCards
         .slice(renderedCards, renderedCards + NUMBER_CARDS_PER_STEP)
-        .forEach((card) => renderCard(filmsListContainer, card));
+        .forEach((card) => renderCard(filmsListContainer.element, card));
 
       renderedCards += NUMBER_CARDS_PER_STEP;
 
