@@ -7,14 +7,14 @@ import FilmsCardView from './view/films-card-view';
 import ButtonShowMoreView from './view/show-more-button-view';
 import FilmsPopupView from './view/films-popup-view';
 import CommentView from './view/comment-view';
-import FilmsTitleView from './view/films-title-view';
+import FilmsListContainerView from './view/films-list-container-view';
+import FilmsBlockView from './view/films-block-view';
 import { generateDataCard, generateComment } from './generator-data';
 import { RenderPosition, render } from './render';
 import { getRandomInteger } from './utility';
 import { generateFilter } from './filter';
-import FilmsListContainerView from './view/films-list-container-view';
 
-const NUMBER_CARDS = 7;
+const NUMBER_CARDS = 17;
 const NUMBER_CARDS_PER_STEP = 5;
 const MAX_NUMBER_COMMENTS = 5;
 
@@ -79,14 +79,15 @@ const renderCard = (container, data) => {
 
 const renderBoard = (boardContainer, boardCards) => {
 
-  const filmsList = boardContainer.element.querySelector('.films-list');
-  const filmsListContainer = new FilmsListContainerView();
+  const filmsBlock = new FilmsBlockView();
+  render(boardContainer.element, filmsBlock.element, RenderPosition.BEFOREEND);
 
+  const filmsListContainer = new FilmsListContainerView();
 
   for (let i = 0; i < Math.min(boardCards.length, NUMBER_CARDS_PER_STEP); i++) {
 
-    if (!filmsList.querySelector('.films-list__container')) {
-      render(filmsList, filmsListContainer.element, RenderPosition.BEFOREEND);
+    if (!boardContainer.element.querySelector('.films-list__container')) {
+      render(filmsBlock.element, filmsListContainer.element, RenderPosition.BEFOREEND);
       render(boardContainer.element, new FilmsSortView().element, RenderPosition.BEFOREBEGIN);
     }
 
@@ -94,7 +95,9 @@ const renderBoard = (boardContainer, boardCards) => {
   }
 
   if (boardCards.every((element) => !element)) {
-    render(filmsList, new FilmsTitleView().element, RenderPosition.AFTERBEGIN);
+    const title = filmsBlock.element.querySelector('.films-list__title');
+    title.classList.remove('visually-hidden');
+    title.textContent = 'There are no movies in our database';
   }
 
   if (boardCards.length > NUMBER_CARDS_PER_STEP) {
@@ -102,7 +105,7 @@ const renderBoard = (boardContainer, boardCards) => {
     let renderedCards = NUMBER_CARDS_PER_STEP;
 
     const buttonShow = new ButtonShowMoreView();
-    render(filmsList, buttonShow.element, RenderPosition.BEFOREEND);
+    render(filmsBlock.element, buttonShow.element, RenderPosition.BEFOREEND);
 
 
     buttonShow.element.addEventListener('click', (evt) => {
@@ -128,5 +131,4 @@ const filmsContainer = new FilmsContainerView();
 render(main, filmsContainer.element, RenderPosition.BEFOREEND);
 
 renderBoard(filmsContainer, cards);
-
 render(footer, new MovieCounterView(cards).element, RenderPosition.BEFOREEND);
