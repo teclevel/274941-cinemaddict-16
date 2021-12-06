@@ -1,6 +1,6 @@
 import { createElement } from '../render';
 
-const createComment = (comment) => {
+const createCommentTemplate = (comment) => {
   const { emotion, commentText, name, date } = comment;
 
   return `<li class="film-details__comment">
@@ -18,7 +18,7 @@ const createComment = (comment) => {
   </li>`;
 };
 
-export default class Comment {
+export default class CommentView {
   #element = null;
   #comment = null;
 
@@ -35,7 +35,7 @@ export default class Comment {
   }
 
   get template() {
-    return createComment(this.#comment);
+    return createCommentTemplate(this.#comment);
   }
 
   removeElement() {

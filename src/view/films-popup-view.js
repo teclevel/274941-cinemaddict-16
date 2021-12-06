@@ -9,7 +9,7 @@ const createGenresTemplate = (genres) => {
   return list;
 };
 
-const createFilmsPopup = (card) => {
+const createFilmsPopupTemplate = (card) => {
   const { poster, title, rating, duration, genres, age, director, writers, actors, dateRelease, isAddedToWatch, isWatched, isFavorite } = card;
   const itemsGenres = createGenresTemplate(genres);
 
@@ -138,7 +138,7 @@ const createFilmsPopup = (card) => {
 </section>`;
 };
 
-export default class FilmsPopup {
+export default class FilmsPopupView {
   #element = null;
   #cards = null;
 
@@ -154,7 +154,7 @@ export default class FilmsPopup {
   }
 
   get template() {
-    return createFilmsPopup(this.#cards);
+    return createFilmsPopupTemplate(this.#cards);
   }
 
   removeElement() {
