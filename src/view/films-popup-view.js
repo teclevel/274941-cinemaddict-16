@@ -1,5 +1,5 @@
-import { createElement } from '../render';
 import { getTimeFromMins } from '../utility';
+import AbstractView from './abstract-view';
 
 const createGenresTemplate = (genres) => {
   let list = '';
@@ -138,26 +138,26 @@ const createFilmsPopupTemplate = (card) => {
 </section>`;
 };
 
-export default class FilmsPopupView {
-  #element = null;
+export default class FilmsPopupView extends AbstractView {
   #cards = null;
 
   constructor(cards) {
+    super();
     this.#cards = cards;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
   }
 
   get template() {
     return createFilmsPopupTemplate(this.#cards);
   }
 
-  removeElement() {
-    this.#element = null;
+  setClosePopupClickHandler(callback) {
+    this._callback.closePopupClick = callback;
+    this.element.querySelector('.film-details__close-btn')
+      .addEventListener('click', this.#closePopupClickHandler);
+  }
+
+  #closePopupClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.closePopupClick();
   }
 }
