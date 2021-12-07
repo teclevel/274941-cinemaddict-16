@@ -1,5 +1,5 @@
-import { createElement } from '../render';
 import { getTimeFromMins } from '../utility';
+import AbstractView from './abstract-view';
 
 const createFilmsCardTemplate = (card) => {
   const { title, rating, year, duration, genres, description, poster, isAddedToWatch, isWatched, isFavorite } = card;
@@ -38,26 +38,26 @@ const createFilmsCardTemplate = (card) => {
   </article>`;
 };
 
-export default class FilmsCardView {
-  #element = null;
+export default class FilmsCardView extends AbstractView {
   #cards = null;
 
   constructor(cards) {
+    super();
     this.#cards = cards;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
   }
 
   get template() {
     return createFilmsCardTemplate(this.#cards);
   }
 
-  removeElement() {
-    this.#element = null;
+  setFilmClickHandler = (callback) => {
+    this._callback.filmClick = callback;
+    this.element.querySelector('.film-card__link')
+      .addEventListener('click', this.#filmClickHandler);
+  }
+
+  #filmClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.filmClick();
   }
 }

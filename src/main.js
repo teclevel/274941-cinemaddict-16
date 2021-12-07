@@ -10,11 +10,11 @@ import CommentView from './view/comment-view';
 import FilmsListContainerView from './view/films-list-container-view';
 import FilmsBlockView from './view/films-block-view';
 import { generateDataCard, generateComment } from './generator-data';
-import { RenderPosition, render } from './render';
+import { RenderPosition, render, remove } from './render';
 import { getRandomInteger } from './utility';
 import { generateFilter } from './filter';
 
-const NUMBER_CARDS = 17;
+const NUMBER_CARDS = 15;
 const NUMBER_CARDS_PER_STEP = 5;
 const MAX_NUMBER_COMMENTS = 5;
 
@@ -34,8 +34,7 @@ const renderCard = (container, data) => {
   const body = document.querySelector('body');
 
   const closePopup = () => {
-    popup.element.remove();
-    popup.removeElement();
+    remove(popup);
     body.classList.remove('hide-overflow');
   };
 
@@ -49,12 +48,12 @@ const renderCard = (container, data) => {
 
   const openPopup = () => {
     body.classList.add('hide-overflow');
-    render(footer, popup.element, RenderPosition.AFTEREND);
+    render(footer, popup, RenderPosition.AFTEREND);
 
     const commentContainer = document.querySelector('.film-details__comments-list');
 
     for (let i = 0; i < getRandomInteger(0, MAX_NUMBER_COMMENTS); i++) {
-      render(commentContainer, new CommentView(comments[i]).element, RenderPosition.BEFOREEND);
+      render(commentContainer, new CommentView(comments[i]), RenderPosition.BEFOREEND);
     }
 
     document.addEventListener('keydown', onEscKeyDown);
@@ -73,22 +72,22 @@ const renderCard = (container, data) => {
   });
 
 
-  render(container, card.element, RenderPosition.BEFOREEND);
+  render(container, card, RenderPosition.BEFOREEND);
 };
 
 
 const renderBoard = (boardContainer, boardCards) => {
 
   const filmsBlock = new FilmsBlockView();
-  render(boardContainer.element, filmsBlock.element, RenderPosition.BEFOREEND);
+  render(boardContainer, filmsBlock, RenderPosition.BEFOREEND);
 
   const filmsListContainer = new FilmsListContainerView();
 
   for (let i = 0; i < Math.min(boardCards.length, NUMBER_CARDS_PER_STEP); i++) {
 
     if (!boardContainer.element.querySelector('.films-list__container')) {
-      render(filmsBlock.element, filmsListContainer.element, RenderPosition.BEFOREEND);
-      render(boardContainer.element, new FilmsSortView().element, RenderPosition.BEFOREBEGIN);
+      render(filmsBlock, filmsListContainer, RenderPosition.BEFOREEND);
+      render(boardContainer, new FilmsSortView(), RenderPosition.BEFOREBEGIN);
     }
 
     renderCard(filmsListContainer.element, boardCards[i]);
@@ -105,7 +104,7 @@ const renderBoard = (boardContainer, boardCards) => {
     let renderedCards = NUMBER_CARDS_PER_STEP;
 
     const buttonShow = new ButtonShowMoreView();
-    render(filmsBlock.element, buttonShow.element, RenderPosition.BEFOREEND);
+    render(filmsBlock, buttonShow, RenderPosition.BEFOREEND);
 
 
     buttonShow.element.addEventListener('click', (evt) => {
@@ -117,18 +116,17 @@ const renderBoard = (boardContainer, boardCards) => {
       renderedCards += NUMBER_CARDS_PER_STEP;
 
       if (renderedCards >= boardCards.length) {
-        buttonShow.element.remove();
-        buttonShow.removeElement();
+        remove(buttonShow);
       }
     });
   }
 };
 
-render(header, new ProfileUserView().element, RenderPosition.BEFOREEND);
-render(main, new MainNavigationView(filter).element, RenderPosition.BEFOREEND);
+render(header, new ProfileUserView(), RenderPosition.BEFOREEND);
+render(main, new MainNavigationView(filter), RenderPosition.BEFOREEND);
 
 const filmsContainer = new FilmsContainerView();
-render(main, filmsContainer.element, RenderPosition.BEFOREEND);
+render(main, filmsContainer, RenderPosition.BEFOREEND);
 
 renderBoard(filmsContainer, cards);
-render(footer, new MovieCounterView(cards).element, RenderPosition.BEFOREEND);
+render(footer, new MovieCounterView(cards), RenderPosition.BEFOREEND);

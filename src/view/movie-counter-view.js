@@ -1,32 +1,20 @@
-import { createElement } from '../render';
+import AbstractView from './abstract-view';
 
-const createMovieCounterTemplate = (cards) => {
+const createStatisticTemplate = (cards) => {
   const counter = cards.length;
 
   return (`<section class="footer__statistics">${counter}</section>`);
 };
 
-export default class MovieCounterView  {
-  #element = null;
+export default class MovieCounterView extends AbstractView {
   #cards = null;
 
   constructor(cards) {
+    super();
     this.#cards = cards;
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
   get template() {
-    return createMovieCounterTemplate(this.#cards);
-  }
-
-  removeElement() {
-    this.#element = null;
+    return createStatisticTemplate(this.#cards);
   }
 }
