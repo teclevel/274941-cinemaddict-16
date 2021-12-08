@@ -59,7 +59,9 @@ const renderCard = (container, data) => {
     document.addEventListener('keydown', onEscKeyDown);
 
     const buttonClosePopup = popup.element.querySelector('.film-details__close-btn');
+
     buttonClosePopup.addEventListener('click', () => {
+      document.removeEventListener('keydown', onEscKeyDown);
       closePopup();
     });
   };
