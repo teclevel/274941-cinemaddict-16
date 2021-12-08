@@ -95,9 +95,11 @@ const renderBoard = (boardContainer, boardCards) => {
     render(boardContainer, new FilmsSortView(), RenderPosition.BEFOREBEGIN);
   }
 
-  for (let i = 0; i < Math.min(boardCards.length, NUMBER_CARDS_PER_STEP); i++) {
-    renderCard(filmsListContainer.element, boardCards[i]);
-  }
+  boardCards.forEach((card, index) => {
+    if (index < Math.min(boardCards.length, NUMBER_CARDS_PER_STEP)) {
+      renderCard(filmsListContainer.element, card);
+    }
+  });
 
   if (boardCards.length > NUMBER_CARDS_PER_STEP) {
 
