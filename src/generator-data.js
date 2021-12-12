@@ -1,4 +1,5 @@
 import { getRandomInteger, getArraySentences, getRandomElementArray, getRandomText, getShuffleArray } from './utility';
+import { nanoid } from 'nanoid';
 import dayjs from 'dayjs';
 import RelativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(RelativeTime);
@@ -61,6 +62,7 @@ const generateDateComment = () => {
 };
 
 export const generateDataCard = () => ({
+  id: nanoid(),
   title: generateTitle(),
   rating: generateRating(),
   year: generateYear(),
