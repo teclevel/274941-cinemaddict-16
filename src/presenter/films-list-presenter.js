@@ -16,7 +16,7 @@ const MAX_NUMBER_COMMENTS = 5;
 const comments = Array.from({ length: MAX_NUMBER_COMMENTS }, generateComment);
 
 
-export default class FilmsPresenter {
+export default class FilmsListPresenter {
   #filmsContainer = null;
 
   #filmsSortComponent = new FilmsSortView();

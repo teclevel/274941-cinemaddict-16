@@ -4,7 +4,7 @@ import ProfileUserView from './view/profile-view';
 import { generateDataCard } from './generator-data';
 import { RenderPosition, render } from './render';
 import { generateFilter } from './filter';
-import FilmsPresenter from './presenter/movie-list-presenter';
+import FilmsListPresenter from './presenter/films-list-presenter';
 
 const NUMBER_CARDS = 17;
 
@@ -14,7 +14,7 @@ const footer = document.querySelector('.footer');
 
 const cards = Array.from({ length: NUMBER_CARDS }, generateDataCard);
 const filter = generateFilter(cards);
-const boardPresenter = new FilmsPresenter(main);
+const boardPresenter = new FilmsListPresenter(main);
 
 render(header, new ProfileUserView(), RenderPosition.BEFOREEND);
 render(main, new MainNavigationView(filter), RenderPosition.BEFOREEND);
