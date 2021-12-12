@@ -24,8 +24,11 @@ export default class FilmsPresenter {
   #filmsListComponent = new FilmsListView();
   #filmsListNoCardsComponent = new FilmsListNoCardsView();
   #filmsListContainerComponent = new FilmsListContainerView();
+  #showMoreButton = new ButtonShowMoreView();
+
 
   #filmsCards = [];
+  #renderedCards = NUMBER_CARDS_PER_STEP;
 
   constructor(filmsContainer) {
     this.#filmsContainer = filmsContainer;
@@ -108,23 +111,21 @@ export default class FilmsPresenter {
     render(this.#filmsContainerComponent, this.#filmsSortComponent, RenderPosition.BEFOREBEGIN);
   }
 
-  #renderButtonShowMore = () => {
-    let renderedCards = NUMBER_CARDS_PER_STEP;
+  #handleShowMoreButtonClick = () => {
+    this.#filmsCards
+      .slice(this.#renderedCards, this.#renderedCards + NUMBER_CARDS_PER_STEP)
+      .forEach((card) => this.#renderCard(card));
 
-    const buttonShow = new ButtonShowMoreView();
-    render(this.#filmsListComponent, buttonShow, RenderPosition.BEFOREEND);
+    this.#renderedCards += NUMBER_CARDS_PER_STEP;
 
-    buttonShow.setClickHandler(() => {
-      this.#filmsCards
-        .slice(renderedCards, renderedCards + NUMBER_CARDS_PER_STEP)
-        .forEach((card) => this.#renderCard(card));
+    if (this.#renderedCards >= this.#filmsCards.length) {
+      remove(this.#showMoreButton);
+    }
+  }
 
-      renderedCards += NUMBER_CARDS_PER_STEP;
-
-      if (renderedCards >= this.#filmsCards.length) {
-        remove(buttonShow);
-      }
-    });
+  #renderShowMoreButton = () => {
+    render(this.#filmsListComponent, this.#showMoreButton, RenderPosition.BEFOREEND);
+    this.#showMoreButton.setClickHandler(this.#handleShowMoreButtonClick);
   }
 
   #renderBoard = () => {
@@ -139,7 +140,7 @@ export default class FilmsPresenter {
     this.#renderCardsList();
 
     if (this.#filmsCards.length > NUMBER_CARDS_PER_STEP) {
-      this.#renderButtonShowMore();
+      this.#renderShowMoreButton();
     }
   }
 }
