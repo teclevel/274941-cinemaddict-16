@@ -9,7 +9,7 @@ import CommentView from '../view/comment-view';
 import FilmsListNoCardsView from '../view/films-list-no-cards-view';
 import { render, RenderPosition, remove } from '../render';
 import { getRandomInteger } from '../utility';
-import { generateDataCard, generateComment } from '../generator-data';
+import { generateComment } from '../generator-data';
 
 const NUMBER_CARDS_PER_STEP = 5;
 const MAX_NUMBER_COMMENTS = 5;
@@ -24,8 +24,6 @@ export default class FilmsPresenter {
   #filmsListComponent = new FilmsListView();
   #filmsListNoCardsComponent = new FilmsListNoCardsView();
   #filmsListContainerComponent = new FilmsListContainerView();
-  // #filmsCardComponent = new FilmsCardView();
-  // #filmsPopupComponent = new FilmsPopupView();
 
   #filmsCards = [];
 
@@ -37,10 +35,16 @@ export default class FilmsPresenter {
     this.#filmsCards = [...cards];
 
     render(this.#filmsContainer, this.#filmsContainerComponent, RenderPosition.BEFOREEND);
-    // render(this.#filmsContainerComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
-    // render(this.#filmsListComponent, this.#filmsListContainerComponent, RenderPosition.BEFOREEND);
 
     this.#renderBoard();
+  }
+
+  #renderFilmsList = () => {
+    render(this.#filmsContainerComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
+  }
+
+  #renderFilmsListContainer = () => {
+    render(this.#filmsListComponent, this.#filmsListContainerComponent, RenderPosition.BEFOREEND);
   }
 
   #renderCard = (card) => {
@@ -75,23 +79,25 @@ export default class FilmsPresenter {
 
       document.addEventListener('keydown', onEscKeyDown);
 
-      const buttonClosePopup = popup.element.querySelector('.film-details__close-btn');
-
-      buttonClosePopup.addEventListener('click', () => {
+      popup.setClosePopupClickHandler(() => {
         document.removeEventListener('keydown', onEscKeyDown);
         closePopup();
       });
     };
 
-    const buttonShowPopup = filmsCard.element.querySelector('.film-card__link');
-
-    buttonShowPopup.addEventListener('click', (evt) => {
-      evt.preventDefault();
+    filmsCard.setFilmClickHandler(() => {
       openPopup();
     });
 
-
     render(this.#filmsListContainerComponent, filmsCard, RenderPosition.BEFOREEND);
+  }
+
+  #renderCardsList = () => {
+    this.#filmsCards.forEach((card, index, array) => {
+      if (index < Math.min(array.length, NUMBER_CARDS_PER_STEP)) {
+        this.#renderCard(card);
+      }
+    });
   }
 
   #renderFilmsListNoCards = () => {
@@ -102,47 +108,38 @@ export default class FilmsPresenter {
     render(this.#filmsContainerComponent, this.#filmsSortComponent, RenderPosition.BEFOREBEGIN);
   }
 
-  // #renderFilmsPopup = () => {
+  #renderButtonShowMore = () => {
+    let renderedCards = NUMBER_CARDS_PER_STEP;
 
-  // }
+    const buttonShow = new ButtonShowMoreView();
+    render(this.#filmsListComponent, buttonShow, RenderPosition.BEFOREEND);
 
-  // #renderButtonShowMore = () => {
+    buttonShow.setClickHandler(() => {
+      this.#filmsCards
+        .slice(renderedCards, renderedCards + NUMBER_CARDS_PER_STEP)
+        .forEach((card) => this.#renderCard(card));
 
-  // }
+      renderedCards += NUMBER_CARDS_PER_STEP;
+
+      if (renderedCards >= this.#filmsCards.length) {
+        remove(buttonShow);
+      }
+    });
+  }
 
   #renderBoard = () => {
-    if(this.#filmsCards.every((card) => !card)){
+    if (this.#filmsCards.every((card) => !card)) {
       this.#renderFilmsListNoCards();
       return;
     }
 
+    this.#renderFilmsList();
+    this.#renderFilmsListContainer();
     this.#renderFilmsSort();
+    this.#renderCardsList();
 
-    // this.#filmsCards.forEach((card, index, array) => {
-    //   if (index < Math.min(array.length, NUMBER_CARDS_PER_STEP)) {
-    //     this.#renderCard(card);
-    //   }
-    // });
-
-    // if (this.#filmsCards.length > NUMBER_CARDS_PER_STEP) {
-
-    //   let renderedCards = NUMBER_CARDS_PER_STEP;
-
-    //   const buttonShow = new ButtonShowMoreView();
-    //   render(this.#filmsListComponent, buttonShow, RenderPosition.BEFOREEND);
-
-    //   buttonShow.element.addEventListener('click', (evt) => {
-    //     evt.preventDefault();
-    //     this.#filmsCards
-    //       .slice(renderedCards, renderedCards + NUMBER_CARDS_PER_STEP)
-    //       .forEach((card) => this.#renderCard(card));
-
-    //     renderedCards += NUMBER_CARDS_PER_STEP;
-
-    //     if (renderedCards >= this.#filmsCards.length) {
-    //       remove(buttonShow);
-    //     }
-    //   });
-    // }
+    if (this.#filmsCards.length > NUMBER_CARDS_PER_STEP) {
+      this.#renderButtonShowMore();
+    }
   }
 }
