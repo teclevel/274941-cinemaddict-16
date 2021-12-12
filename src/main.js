@@ -14,6 +14,7 @@ const footer = document.querySelector('.footer');
 
 const cards = Array.from({ length: NUMBER_CARDS }, generateDataCard);
 const filter = generateFilter(cards);
+
 const boardPresenter = new FilmsListPresenter(main);
 
 render(header, new ProfileUserView(), RenderPosition.BEFOREEND);
