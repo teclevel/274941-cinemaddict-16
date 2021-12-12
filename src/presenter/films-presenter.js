@@ -27,12 +27,21 @@ export default class FilmsPresenter {
   init = (card) => {
     this.#filmsCard = card;
 
+
+    // const prevCardComponent = this.#filmsCardComponent;
+    // const prevPopupComponent = this.#filmsPopupComponent;
+
     this.#filmsCardComponent = new FilmsCardView(card);
     this.#filmsPopupComponent = new FilmsPopupView(card);
 
+    // if (prevCardComponent === null || prevPopupComponent === null) {
     render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFOREEND);
+    //   return;
+    // }
 
+    // if (this.#filmsListContainer.element.contains(prevPopupComponent.element)){
     this.#filmsCardComponent.setFilmClickHandler(() => this.#openPopup());
+    // }
   }
 
   #escKeyDownHandler = (evt) => {

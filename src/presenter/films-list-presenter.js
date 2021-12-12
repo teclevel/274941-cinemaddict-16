@@ -21,6 +21,7 @@ export default class FilmsListPresenter {
 
   #filmsCards = [];
   #renderedCards = NUMBER_CARDS_PER_STEP;
+  #cardPresenter = new Map();
 
   constructor(filmsContainer) {
     this.#filmsContainer = filmsContainer;
@@ -45,6 +46,14 @@ export default class FilmsListPresenter {
   #renderCard = (card) => {
     const cardPresenter = new FilmsPresenter(this.#filmsListContainerComponent);
     cardPresenter.init(card);
+    this.#cardPresenter.set(card.id, cardPresenter);
+  }
+
+  #clearCardList = () => {
+    this.#cardPresenter.forEach((presenter) => presenter.destroy());
+    this.#cardPresenter.clear();
+    this.#renderedCards = NUMBER_CARDS_PER_STEP;
+    remove(this.#showMoreButton);
   }
 
   #renderCardsList = () => {
