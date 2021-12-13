@@ -27,30 +27,23 @@ export default class FilmsPresenter {
   init = (card) => {
     this.#filmsCard = card;
 
-
     // const prevCardComponent = this.#filmsCardComponent;
     // const prevPopupComponent = this.#filmsPopupComponent;
 
     this.#filmsCardComponent = new FilmsCardView(card);
     this.#filmsPopupComponent = new FilmsPopupView(card);
 
+    // if (this.#filmsListContainer.element.contains(prevPopupComponent.element)){
+    this.#filmsCardComponent.setFilmClickHandler(this.#handleCardClick);
+    this.#filmsPopupComponent.setPopupClickHandler(this.#handlePopupClick);
+
+    // }
+
     // if (prevCardComponent === null || prevPopupComponent === null) {
     render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFOREEND);
     //   return;
     // }
-
-    // if (this.#filmsListContainer.element.contains(prevPopupComponent.element)){
-    this.#filmsCardComponent.setFilmClickHandler(() => this.#openPopup());
-    // }
   }
-
-  #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      this.#closePopup();
-      document.removeEventListener('keydown', this.#escKeyDownHandler);
-    }
-  };
 
   #closePopup = () => {
     remove(this.#filmsPopupComponent);
@@ -65,12 +58,30 @@ export default class FilmsPresenter {
     this.#renderComment();
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
+  }
 
-    this.#filmsPopupComponent.setClosePopupClickHandler(() => {
+  #handleCardClick = () => {
+    this.#openPopup();
+
+    this.#filmsPopupComponent.setPopupClickHandler(() => {
       document.removeEventListener('keydown', this.#escKeyDownHandler);
       this.#closePopup();
     });
   }
+
+  #handlePopupClick = () => {
+    console.log('click1');
+    // this.#closePopup();
+    // document.removeEventListener('keydown', this.#escKeyDownHandler);
+  }
+
+  #escKeyDownHandler = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this.#closePopup();
+      document.removeEventListener('keydown', this.#escKeyDownHandler);
+    }
+  };
 
   #renderFilmsPopup = () => {
     render(footer, this.#filmsPopupComponent, RenderPosition.AFTEREND);
