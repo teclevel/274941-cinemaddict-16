@@ -1,7 +1,7 @@
 import FilmsCardView from '../view/films-card-view';
 import FilmsPopupView from '../view/films-popup-view';
 import CommentView from '../view/comment-view';
-import { render, RenderPosition, remove } from '../render';
+import { render, RenderPosition, } from '../render';
 import { getRandomInteger } from '../utility';
 import { generateComment } from '../generator-data';
 
@@ -12,7 +12,7 @@ const footer = document.querySelector('.footer');
 const body = document.querySelector('body');
 
 
-export default class FilmsPresenter {
+export default class FilmPresenter {
   #filmsListContainer = null;
 
   #filmsCardComponent = null;
@@ -27,27 +27,32 @@ export default class FilmsPresenter {
   init = (card) => {
     this.#filmsCard = card;
 
-    // const prevCardComponent = this.#filmsCardComponent;
-    // const prevPopupComponent = this.#filmsPopupComponent;
+    const prevCardComponent = this.#filmsCardComponent;
+    const prevPopupComponent = this.#filmsPopupComponent;
 
     this.#filmsCardComponent = new FilmsCardView(card);
     this.#filmsPopupComponent = new FilmsPopupView(card);
 
-    // if (this.#filmsListContainer.element.contains(prevPopupComponent.element)){
     this.#filmsCardComponent.setFilmClickHandler(this.#handleCardClick);
-    this.#filmsPopupComponent.setPopupClickHandler(this.#handlePopupClick);
+    this.#filmsPopupComponent.setPopupClickHandler(this.#handleClosePopupClick);
+
+    if (prevCardComponent === null || prevPopupComponent === null) {
+      render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    // if (this.#filmsListContainer.element.contains(prevCardComponent.element)){
 
     // }
 
-    // if (prevCardComponent === null || prevPopupComponent === null) {
-    render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFOREEND);
-    //   return;
-    // }
   }
 
   #closePopup = () => {
-    remove(this.#filmsPopupComponent);
     body.classList.remove('hide-overflow');
+
+    this.#filmsPopupComponent.element.remove();
+
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   #openPopup = () => {
@@ -63,23 +68,17 @@ export default class FilmsPresenter {
   #handleCardClick = () => {
     this.#openPopup();
 
-    this.#filmsPopupComponent.setPopupClickHandler(() => {
-      document.removeEventListener('keydown', this.#escKeyDownHandler);
-      this.#closePopup();
-    });
   }
 
-  #handlePopupClick = () => {
-    console.log('click1');
-    // this.#closePopup();
-    // document.removeEventListener('keydown', this.#escKeyDownHandler);
+  #handleClosePopupClick = () => {
+    this.#closePopup();
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.#closePopup();
-      document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
   };
 

@@ -5,7 +5,7 @@ import ButtonShowMoreView from '../view/show-more-button-view';
 import FilmsSortView from '../view/sort-view';
 import FilmsListNoCardsView from '../view/films-list-no-cards-view';
 import { render, RenderPosition, remove } from '../render';
-import FilmsPresenter from './films-presenter';
+import FilmPresenter from './films-presenter';
 
 const NUMBER_CARDS_PER_STEP = 5;
 
@@ -44,7 +44,7 @@ export default class FilmsListPresenter {
   }
 
   #renderCard = (card) => {
-    const cardPresenter = new FilmsPresenter(this.#filmsListContainerComponent);
+    const cardPresenter = new FilmPresenter(this.#filmsListContainerComponent);
     cardPresenter.init(card);
     this.#cardPresenter.set(card.id, cardPresenter);
   }
