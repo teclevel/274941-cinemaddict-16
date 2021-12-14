@@ -36,10 +36,11 @@ export default class FilmPresenter {
     this.#filmsPopupComponent = new FilmsPopupView(card);
 
     this.#filmsCardComponent.setFilmClickHandler(this.#handleCardClick);
-    //
-    //
     this.#filmsPopupComponent.setPopupClickHandler(this.#handleClosePopupClick);
 
+    this.#filmsCardComponent.setAddToWatchClickHandler(this.#handleAddToWatchClick);
+    this.#filmsCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#filmsCardComponent.setWatchedClickHandler(this.#handleWatchedClick);
 
     if (prevCardComponent === null || prevPopupComponent === null) {
       render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFOREEND);
@@ -88,9 +89,22 @@ export default class FilmPresenter {
     this.#openPopup();
   }
 
-  #handleClosePopupClick = () => {
+  #handleClosePopupClick = (card) => {
+    this.#changeData(card);
     this.#closePopup();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+  }
+
+  #handleFavoriteClick = () => {
+    this.#changeData({ ...this.#filmsCard, isFavorite: !this.filmsCard.isFavorite });
+  }
+
+  #handleAddToWatchClick = () => {
+    this.#changeData({ ...this.#filmsCard, isWatched: !this.filmsCard.isWatched });
+  }
+
+  #handleWatchedClick = () => {
+    this.#changeData({ ...this.#filmsCard, isAddedToWatch: !this.filmsCards.isAddedToWatch });
   }
 
   #escKeyDownHandler = (evt) => {

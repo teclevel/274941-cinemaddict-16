@@ -139,15 +139,15 @@ const createFilmsPopupTemplate = (card) => {
 };
 
 export default class FilmsPopupView extends AbstractView {
-  #cards = null;
+  #card = null;
 
   constructor(cards) {
     super();
-    this.#cards = cards;
+    this.#card = cards;
   }
 
   get template() {
-    return createFilmsPopupTemplate(this.#cards);
+    return createFilmsPopupTemplate(this.#card);
   }
 
   setPopupClickHandler(callback) {
@@ -158,6 +158,6 @@ export default class FilmsPopupView extends AbstractView {
 
   #closePopupClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.closePopupClick();
+    this._callback.closePopupClick(this.#card);
   }
 }
