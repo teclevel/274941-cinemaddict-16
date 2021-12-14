@@ -1,7 +1,7 @@
 import FilmsCardView from '../view/films-card-view';
 import FilmsPopupView from '../view/films-popup-view';
 import CommentView from '../view/comment-view';
-import { render, RenderPosition, } from '../render';
+import { remove, render, RenderPosition, replace, } from '../render';
 import { getRandomInteger } from '../utility';
 import { generateComment } from '../generator-data';
 
@@ -14,14 +14,16 @@ const body = document.querySelector('body');
 
 export default class FilmPresenter {
   #filmsListContainer = null;
+  #changeData = null;
 
   #filmsCardComponent = null;
   #filmsPopupComponent = null;
 
   #filmsCard = null;
 
-  constructor(filmsListContainer) {
+  constructor(filmsListContainer, changeData) {
     this.#filmsListContainer = filmsListContainer;
+    this.#changeData = changeData;
   }
 
   init = (card) => {
@@ -34,17 +36,34 @@ export default class FilmPresenter {
     this.#filmsPopupComponent = new FilmsPopupView(card);
 
     this.#filmsCardComponent.setFilmClickHandler(this.#handleCardClick);
+    //
+    //
     this.#filmsPopupComponent.setPopupClickHandler(this.#handleClosePopupClick);
+
 
     if (prevCardComponent === null || prevPopupComponent === null) {
       render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFOREEND);
       return;
     }
 
-    // if (this.#filmsListContainer.element.contains(prevCardComponent.element)){
+    // console.log(this.#filmsListContainer.element.contains(prevCardComponent.element));
+    // console.log(document.querySelector('.film-details'));
 
-    // }
+    if (this.#filmsListContainer.element.contains(prevCardComponent.element)) {
+      replace(this.#filmsCardComponent, prevCardComponent);
+    }
 
+    if (document.querySelector('.film-details')) {
+      replace(this.#filmsPopupComponent, prevPopupComponent);
+    }
+
+    remove(prevCardComponent);
+    remove(prevPopupComponent);
+  }
+
+  destroy = () => {
+    remove(this.#filmsCardComponent);
+    remove(this.#filmsPopupComponent);
   }
 
   #closePopup = () => {
@@ -67,7 +86,6 @@ export default class FilmPresenter {
 
   #handleCardClick = () => {
     this.#openPopup();
-
   }
 
   #handleClosePopupClick = () => {
