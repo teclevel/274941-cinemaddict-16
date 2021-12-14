@@ -94,8 +94,10 @@ export default class FilmPresenter {
     this.#openPopup();
   }
 
-  #handleClosePopupClick = (card) => {
-    this.#changeData(card);
+  // ?????????????????????????
+
+  #handleClosePopupClick = (card) => {////////////
+    this.#changeData(card);/////////
     this.#closePopup();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
