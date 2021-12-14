@@ -19,7 +19,7 @@ export default class FilmPresenter {
   #filmsCardComponent = null;
   #filmsPopupComponent = null;
 
-  #filmsCard = null;
+  #card = null;
 
   constructor(filmsListContainer, changeData) {
     this.#filmsListContainer = filmsListContainer;
@@ -27,7 +27,7 @@ export default class FilmPresenter {
   }
 
   init = (card) => {
-    this.#filmsCard = card;
+    this.#card = card;
 
     const prevCardComponent = this.#filmsCardComponent;
     const prevPopupComponent = this.#filmsPopupComponent;
@@ -51,9 +51,6 @@ export default class FilmPresenter {
       render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFOREEND);
       return;
     }
-
-    // console.log(this.#filmsListContainer.element.contains(prevCardComponent.element));
-    // console.log(document.querySelector('.film-details'));
 
     if (this.#filmsListContainer.element.contains(prevCardComponent.element)) {
       replace(this.#filmsCardComponent, prevCardComponent);
@@ -94,24 +91,22 @@ export default class FilmPresenter {
     this.#openPopup();
   }
 
-  // ?????????????????????????
-
-  #handleClosePopupClick = (card) => {////////////
-    this.#changeData(card);/////////
+  #handleClosePopupClick = (card) => {
+    this.#changeData(card);
     this.#closePopup();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   #handleFavoriteClick = () => {
-    this.#changeData({ ...this.#filmsCard, isFavorite: !this.filmsCard.isFavorite });
-  }
-
-  #handleAddToWatchClick = () => {
-    this.#changeData({ ...this.#filmsCard, isWatched: !this.filmsCard.isWatched });
+    this.#changeData({ ...this.#card, isFavorite: !this.#card.isFavorite });
   }
 
   #handleWatchedClick = () => {
-    this.#changeData({ ...this.#filmsCard, isAddedToWatch: !this.filmsCards.isAddedToWatch });
+    this.#changeData({ ...this.#card, isWatched: !this.#card.isWatched });
+  }
+
+  #handleAddToWatchClick = () => {
+    this.#changeData({ ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch });
   }
 
   #escKeyDownHandler = (evt) => {
