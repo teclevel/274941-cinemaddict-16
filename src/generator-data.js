@@ -1,4 +1,4 @@
-import { getRandomInteger, getArraySentences, getRandomElementArray, getRandomText, getShuffleArray } from './utility';
+import { getRandomInteger, getArraySentences, getRandomElementArray, getRandomText, getShuffleArray } from './utils';
 import { nanoid } from 'nanoid';
 import dayjs from 'dayjs';
 import RelativeTime from 'dayjs/plugin/relativeTime';

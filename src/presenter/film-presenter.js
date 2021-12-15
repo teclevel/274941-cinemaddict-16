@@ -2,7 +2,7 @@ import FilmsCardView from '../view/films-card-view';
 import FilmsPopupView from '../view/films-popup-view';
 import CommentView from '../view/comment-view';
 import { remove, render, RenderPosition, replace, } from '../render';
-import { getRandomInteger } from '../utility';
+import { getRandomInteger } from '../utils';
 import { generateComment } from '../generator-data';
 
 
@@ -69,6 +69,18 @@ export default class FilmPresenter {
     remove(this.#filmsPopupComponent);
   }
 
+  #renderFilmsPopup = () => {
+    render(footer, this.#filmsPopupComponent, RenderPosition.AFTEREND);
+  }
+
+  #renderComment = () => {
+    const commentContainer = document.querySelector('.film-details__comments-list');
+
+    for (let i = 0; i < getRandomInteger(0, MAX_NUMBER_COMMENTS); i++) {
+      render(commentContainer, new CommentView(comments[i]), RenderPosition.BEFOREEND);
+    }
+  }
+
   #closePopup = () => {
     body.classList.remove('hide-overflow');
 
@@ -79,11 +91,8 @@ export default class FilmPresenter {
 
   #openPopup = () => {
     body.classList.add('hide-overflow');
-
     this.#renderFilmsPopup();
-
     this.#renderComment();
-
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
@@ -91,8 +100,8 @@ export default class FilmPresenter {
     this.#openPopup();
   }
 
-  #handleClosePopupClick = (card) => {
-    this.#changeData(card);
+  #handleClosePopupClick = (/* card */) => {
+    // this.#changeData(card);
     this.#closePopup();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
@@ -115,16 +124,4 @@ export default class FilmPresenter {
       this.#closePopup();
     }
   };
-
-  #renderFilmsPopup = () => {
-    render(footer, this.#filmsPopupComponent, RenderPosition.AFTEREND);
-  }
-
-  #renderComment = () => {
-    const commentContainer = document.querySelector('.film-details__comments-list');
-
-    for (let i = 0; i < getRandomInteger(0, MAX_NUMBER_COMMENTS); i++) {
-      render(commentContainer, new CommentView(comments[i]), RenderPosition.BEFOREEND);
-    }
-  }
 }
