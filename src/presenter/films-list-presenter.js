@@ -60,7 +60,7 @@ export default class FilmsListPresenter {
   #renderCard = (card) => {
     const filmPresenter = new FilmPresenter(this.#filmsListContainerComponent, this.#handleCardChange);
     filmPresenter.init(card);
-    this.#filmPresenter.set(card.id, filmPresenter);//MAP
+    this.#filmPresenter.set(card.id, filmPresenter);
   }
 
   #renderFilmsListNoCards = () => {
@@ -93,7 +93,7 @@ export default class FilmsListPresenter {
     }
   }
 
-  #clearCardList = () => {////////////////////////////
+  #clearCardList = () => {
     this.#filmPresenter.forEach((presenter) => presenter.destroy());
     this.#filmPresenter.clear();
     this.#renderedCards = NUMBER_CARDS_PER_STEP;
@@ -119,31 +119,27 @@ export default class FilmsListPresenter {
   }
 
   #sortCards = (sortType) => {
-    // 2. Этот исходный массив задач необходим,
-    // потому что для сортировки мы будем мутировать
-    // массив в свойстве _boardTasks
     switch (sortType) {
       case SortType.DATE:
-        this.#boardCards.sort(sortDate);
+        this.#boardCards.sort((a,b)=>a.year-b.year);
         break;
       case SortType.RATING:
-        this.#boardCards.sort(sortRating);
+        this.#boardCards.sort((a,b)=>a.rating-b.rating);
         break;
       default:
-        // 3. А когда пользователь захочет "вернуть всё, как было",
-        // мы просто запишем в _boardTasks исходный массив
         this.#boardCards = [...this.#sourcedBoardCards];
     }
-
-
-
 
     this.#currentSortType = sortType;
   }
 
   #handleSortTypeChange = (sortType) => {
-    //
-    //
-    //
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortCards(sortType);
+    this.#clearCardList();
+    this.#renderBoard();
   }
 }
