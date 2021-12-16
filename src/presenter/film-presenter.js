@@ -96,18 +96,18 @@ export default class FilmPresenter {
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
-  // #handleCardClick = () => {
-  //   if (!body.querySelector('.film-details')) {
-  //     this.#openPopup();
-  //   }
-  // }
-
   #handleCardClick = () => {
-    this.#filmsPopupComponent.element.remove();
-    if (!body.contains(this.#filmsPopupComponent.element)) {
+    if (!body.querySelector('.film-details')) {
       this.#openPopup();
     }
   }
+
+  // #handleCardClick = () => {
+  //   this.#filmsPopupComponent.element.remove();
+  //   if (!body.contains(this.#filmsPopupComponent.element)) {
+  //     this.#openPopup();
+  //   }
+  // }
 
   #handleClosePopupClick = (/* card */) => {
     // this.#changeData(card);

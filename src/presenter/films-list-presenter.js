@@ -120,10 +120,10 @@ export default class FilmsListPresenter {
   #sortCards = (sortType) => {
     switch (sortType) {
       case SortType.DATE:
-        this.#boardCards.sort((a,b)=>a.year-b.year);
+        this.#boardCards.sort((a, b) => a.year - b.year);
         break;
       case SortType.RATING:
-        this.#boardCards.sort((a,b)=>a.rating-b.rating);
+        this.#boardCards.sort((a, b) => a.rating - b.rating);
         break;
       default:
         this.#boardCards = [...this.#sourcedBoardCards];
