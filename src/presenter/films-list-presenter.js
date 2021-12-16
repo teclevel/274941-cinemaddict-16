@@ -8,7 +8,6 @@ import { render, RenderPosition, remove } from '../render';
 import FilmPresenter from './film-presenter';
 import { updateItem } from '../utils/common';
 import { SortType } from '../const';
-import { sortDate } from '../utils';
 
 const NUMBER_CARDS_PER_STEP = 5;
 

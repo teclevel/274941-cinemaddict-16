@@ -60,6 +60,4 @@ const getTimeFromMins = (mins) => {
   return `${hours}h ${minutes}m`;
 };
 
-export const sortDate = (cardA, cardB) => cardB.year - cardA.year;
-
 export { getRandomInteger, getArraySentences, getRandomElementArray, getRandomText, getShuffleArray, getTimeFromMins/* formatDateComment */ };
