@@ -74,7 +74,7 @@ export default class FilmPresenter {
   }
 
   #renderComment = () => {
-    const commentContainer = document.querySelector('.film-details__comments-list');
+    const commentContainer = this.#filmsPopupComponent.element.querySelector('.film-details__comments-list');
 
     for (let i = 0; i < getRandomInteger(0, MAX_NUMBER_COMMENTS); i++) {
       render(commentContainer, new CommentView(comments[i]), RenderPosition.BEFOREEND);
@@ -117,14 +117,17 @@ export default class FilmPresenter {
 
   #handleFavoriteClick = () => {
     this.#changeData({ ...this.#card, isFavorite: !this.#card.isFavorite });
+    this.#renderComment();
   }
 
   #handleWatchedClick = () => {
     this.#changeData({ ...this.#card, isWatched: !this.#card.isWatched });
+    this.#renderComment();
   }
 
   #handleAddToWatchClick = () => {
     this.#changeData({ ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch });
+    this.#renderComment();
   }
 
   #escKeyDownHandler = (evt) => {
