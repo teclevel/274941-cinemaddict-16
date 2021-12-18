@@ -2,8 +2,9 @@ import { getTimeFromMins } from '../utils';
 import AbstractView from './abstract-view';
 
 const createFilmsCardTemplate = (card) => {
-  const { title, rating, year, duration, genres, description, poster, isAddedToWatch, isWatched, isFavorite } = card;
+  const { title, comments, rating, year, duration, genres, description, poster, isAddedToWatch, isWatched, isFavorite } = card;
   const classActive = 'film-card__controls-item--active';
+  const count = comments.length;
 
   const addWatchListClassName = isAddedToWatch
     ? classActive
@@ -28,7 +29,7 @@ const createFilmsCardTemplate = (card) => {
       </p>
       <img src="${poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${description}</p>
-      <span class="film-card__comments">5 comments</span>
+      <span class="film-card__comments">${count} comments</span>
     </a>
     <div class="film-card__controls">
       <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${addWatchListClassName}" type="button">Add to watchlist</button>

@@ -10,6 +10,7 @@ const MAX_NUMBER_SENTENCE = 5;
 const MAX_NUMBER_NAME = 3;
 const MAX_NUMBER_GENRES = 4;
 const MAX_NUMBER_COMMENTS_TEXT = 3;
+const MAX_NUMBER_COMMENTS = 5;
 
 const getNames = () => getShuffleArray(NAMES).slice(0, getRandomInteger(1, MAX_NUMBER_NAME)).join(', ');
 const getGenres = () => getShuffleArray(GENRES).slice(0, getRandomInteger(1, MAX_NUMBER_GENRES));
@@ -61,8 +62,18 @@ const generateDateComment = () => {
   return dayComment.format('YYYY/MM/D hh:mm');
 };
 
+export const generateComment = () => ({
+  emotion: generateEmoji(),
+  commentText: generateComments(),
+  name: getRandomElementArray(NAMES),
+  date: generateDateComment(),
+});
+
+const comments = Array.from({ length: MAX_NUMBER_COMMENTS }, generateComment);
+
 export const generateDataCard = () => ({
   id: nanoid(),
+  comments: comments.slice(0, getRandomInteger(0, MAX_NUMBER_COMMENTS)),
   title: generateTitle(),
   rating: generateRating(),
   year: generateYear(),
@@ -78,11 +89,4 @@ export const generateDataCard = () => ({
   isAddedToWatch: Boolean(getRandomInteger(0, 1)),
   isWatched: Boolean(getRandomInteger(0, 1)),
   isFavorite: Boolean(getRandomInteger(0, 1)),
-});
-
-export const generateComment = () => ({
-  emotion: generateEmoji(),
-  commentText: generateComments(),
-  name: getRandomElementArray(NAMES),
-  date: generateDateComment(),
 });

@@ -1,13 +1,7 @@
 import FilmsCardView from '../view/films-card-view';
 import FilmsPopupView from '../view/films-popup-view';
-import CommentView from '../view/comment-view';
 import { remove, render, RenderPosition, replace, } from '../render';
-import { getRandomInteger } from '../utils';
-import { generateComment } from '../generator-data';
 
-
-const MAX_NUMBER_COMMENTS = 5;
-const comments = Array.from({ length: MAX_NUMBER_COMMENTS }, generateComment);
 const footer = document.querySelector('.footer');
 const body = document.querySelector('body');
 
@@ -73,14 +67,6 @@ export default class FilmPresenter {
     render(footer, this.#filmsPopupComponent, RenderPosition.AFTEREND);
   }
 
-  #renderComment = () => {
-    const commentContainer = this.#filmsPopupComponent.element.querySelector('.film-details__comments-list');
-
-    for (let i = 0; i < getRandomInteger(0, MAX_NUMBER_COMMENTS); i++) {
-      render(commentContainer, new CommentView(comments[i]), RenderPosition.BEFOREEND);
-    }
-  }
-
   #closePopup = () => {
     body.classList.remove('hide-overflow');
 
@@ -92,7 +78,6 @@ export default class FilmPresenter {
   #openPopup = () => {
     body.classList.add('hide-overflow');
     this.#renderFilmsPopup();
-    this.#renderComment();
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
@@ -109,25 +94,21 @@ export default class FilmPresenter {
   //   }
   // }
 
-  #handleClosePopupClick = (/* card */) => {
-    // this.#changeData(card);
+  #handleClosePopupClick = () => {
     this.#closePopup();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   #handleFavoriteClick = () => {
     this.#changeData({ ...this.#card, isFavorite: !this.#card.isFavorite });
-    this.#renderComment();
   }
 
   #handleWatchedClick = () => {
     this.#changeData({ ...this.#card, isWatched: !this.#card.isWatched });
-    this.#renderComment();
   }
 
   #handleAddToWatchClick = () => {
     this.#changeData({ ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch });
-    this.#renderComment();
   }
 
   #escKeyDownHandler = (evt) => {
