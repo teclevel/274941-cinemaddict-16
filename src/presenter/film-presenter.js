@@ -69,16 +69,13 @@ export default class FilmPresenter {
 
   #closePopup = () => {
     body.classList.remove('hide-overflow');
-
     this.#filmsPopupComponent.element.remove();
-
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   #openPopup = () => {
     body.classList.add('hide-overflow');
     this.#renderFilmsPopup();
-    document.addEventListener('keydown', this.#escKeyDownHandler);
+    document.addEventListener('keydown', this.#escKeyDownHandler, {once: true});
   }
 
   #handleCardClick = () => {
@@ -88,7 +85,6 @@ export default class FilmPresenter {
   }
 
   // #handleCardClick = () => {
-  //   this.#filmsPopupComponent.element.remove();
   //   if (!body.contains(this.#filmsPopupComponent.element)) {
   //     this.#openPopup();
   //   }
