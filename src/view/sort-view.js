@@ -29,7 +29,6 @@ export default class FilmsSortView extends AbstractView {
     evt.preventDefault();
     this.#removeClassActive();
     this._callback.sortTypeChange(evt.target.dataset.sortType);
-    // sortType откуда берётся?
     evt.target.classList.add(this.#classActive);
   };
 
