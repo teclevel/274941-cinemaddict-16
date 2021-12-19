@@ -5,6 +5,7 @@ import { generateDataCard } from './mock/card';
 import { generateFilter } from './mock/filter';
 import FilmsListPresenter from './presenter/films-list-presenter';
 import { RenderPosition } from './const';
+import { render } from './utils/render';
 
 const NUMBER_CARDS = 17;
 
