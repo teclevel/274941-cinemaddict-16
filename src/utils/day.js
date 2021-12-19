@@ -21,6 +21,3 @@ export const getTimeFromMins = (mins) => {
   }
   return `${hours}h ${minutes}m`;
 };
-
-// export const sortDate = (cardA, cardB) => cardA.year - cardB.year;
-
