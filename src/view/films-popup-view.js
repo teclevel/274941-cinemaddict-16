@@ -1,4 +1,4 @@
-import { getTimeFromMins } from '../utils';
+import { formatDateComment, getTimeFromMins } from '../utils/day';
 import AbstractView from './abstract-view';
 
 const createGenresTemplate = (genres) => {
@@ -22,7 +22,7 @@ const createCommentTemplate = (comments) => {
               <p class="film-details__comment-text">${commentText}</p>
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${name}</span>
-                <span class="film-details__comment-day">${date}</span>
+                <span class="film-details__comment-day">${formatDateComment(date)}</span>
                 <button class="film-details__comment-delete">Delete</button>
               </p>
             </div>

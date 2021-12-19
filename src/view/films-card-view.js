@@ -1,4 +1,4 @@
-import { getTimeFromMins } from '../utils';
+import { getTimeFromMins } from '../utils/day';
 import AbstractView from './abstract-view';
 
 const createFilmsCardTemplate = (card) => {

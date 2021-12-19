@@ -1,8 +1,10 @@
-import { getRandomInteger, getArraySentences, getRandomElementArray, getRandomText, getShuffleArray } from './utils';
+import { getArraySentences, getRandomElementArray, getRandomText, getShuffleArray } from '../utils/common';
 import { nanoid } from 'nanoid';
 import dayjs from 'dayjs';
 import RelativeTime from 'dayjs/plugin/relativeTime';
+import { getRandomInteger } from '../utils/common';
 dayjs.extend(RelativeTime);
+
 
 const NAMES = ['Tim Makoveev', 'Jon Doe', 'Alex Smith', 'Antony Mann', 'Anne Wington', 'Heinz Herald', 'Richard Weil'];
 const GENRES = ['Musical', 'Western', 'Cartoon', 'Comedy'];

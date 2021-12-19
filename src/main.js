@@ -1,9 +1,9 @@
 import MainNavigationView from './view/main-navigation-view';
 import MovieCounterView from './view/movie-counter-view';
 import ProfileUserView from './view/profile-view';
-import { generateDataCard } from './generator-data';
-import { RenderPosition, render } from './render';
-import { generateFilter } from './filter';
+import { generateDataCard } from './mock/card';
+import { RenderPosition, render } from './utils/render';
+import { generateFilter } from './mock/filter';
 import FilmsListPresenter from './presenter/films-list-presenter';
 
 const NUMBER_CARDS = 17;

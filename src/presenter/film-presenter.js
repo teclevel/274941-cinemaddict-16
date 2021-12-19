@@ -1,6 +1,6 @@
 import FilmsCardView from '../view/films-card-view';
 import FilmsPopupView from '../view/films-popup-view';
-import { remove, render, RenderPosition, replace, } from '../render';
+import { remove, render, RenderPosition, replace, } from '../utils/render';
 
 const footer = document.querySelector('.footer');
 const body = document.querySelector('body');

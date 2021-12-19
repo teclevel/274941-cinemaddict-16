@@ -4,7 +4,7 @@ import FilmsListContainerView from '../view/films-list-container-view';
 import ButtonShowMoreView from '../view/show-more-button-view';
 import FilmsSortView from '../view/sort-view';
 import FilmsListNoCardsView from '../view/films-list-no-cards-view';
-import { render, RenderPosition, remove } from '../render';
+import { render, RenderPosition, remove } from '../utils/render';
 import FilmPresenter from './film-presenter';
 import { updateItem } from '../utils/common';
 import { SortType } from '../const';
