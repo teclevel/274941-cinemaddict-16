@@ -7,7 +7,7 @@ const footer = document.querySelector('.footer');
 const body = document.querySelector('body');
 const Mode = {
   DEFAULT: 'DEFAULT',
-  EDITING: 'POPUP',
+  POPUP: 'POPUP',
 };
 
 export default class FilmPresenter {
@@ -29,7 +29,7 @@ export default class FilmPresenter {
 
   init = (card) => {
     this.#card = card;
-console.log(this.#mode);
+
     const prevCardComponent = this.#filmsCardComponent;
     const prevPopupComponent = this.#filmsPopupComponent;
 
@@ -53,11 +53,11 @@ console.log(this.#mode);
       return;
     }
 
-    if (this.#filmsListContainer.element.contains(prevCardComponent.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#filmsCardComponent, prevCardComponent);
     }
 
-    if (body.contains(this.#filmsPopupComponent.element) || body.contains(prevPopupComponent.element)) {
+    if (this.#mode === Mode.POPUP) {
       replace(this.#filmsPopupComponent, prevPopupComponent);
     }
 
@@ -75,9 +75,9 @@ console.log(this.#mode);
   }
 
   resetView = () => {
-    console.log(this.#mode);
+
     if (this.#mode !== Mode.DEFAULT) {
-      this.#openPopup();
+      this.#closePopup();
     }
   };
 
@@ -95,14 +95,10 @@ console.log(this.#mode);
     this.#mode = Mode.POPUP;
   }
 
-  // #handleCardClick = () => {
-  //   if (!body.querySelector('.film-details')) {
-  //     this.#openPopup();
-  //   }
-  // }
-
   #handleCardClick = () => {
-    this.#openPopup();
+    if (this.#mode === Mode.DEFAULT) {
+      this.#openPopup();
+    }
   }
 
   #handleClosePopupClick = () => {
