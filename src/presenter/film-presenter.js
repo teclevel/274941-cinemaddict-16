@@ -5,24 +5,31 @@ import FilmsPopupView from '../view/films-popup-view';
 
 const footer = document.querySelector('.footer');
 const body = document.querySelector('body');
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'POPUP',
+};
 
 export default class FilmPresenter {
   #filmsListContainer = null;
   #changeData = null;
+  #changeMode = null;
 
   #filmsCardComponent = null;
   #filmsPopupComponent = null;
 
   #card = null;
+  #mode = Mode.DEFAULT;
 
-  constructor(filmsListContainer, changeData) {
+  constructor(filmsListContainer, changeData, changeMode) {
     this.#filmsListContainer = filmsListContainer;
     this.#changeData = changeData;
+    this.#changeMode = changeMode;
   }
 
   init = (card) => {
     this.#card = card;
-
+console.log(this.#mode);
     const prevCardComponent = this.#filmsCardComponent;
     const prevPopupComponent = this.#filmsPopupComponent;
 
@@ -67,28 +74,36 @@ export default class FilmPresenter {
     render(footer, this.#filmsPopupComponent, RenderPosition.AFTEREND);
   }
 
+  resetView = () => {
+    console.log(this.#mode);
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#openPopup();
+    }
+  };
+
   #closePopup = () => {
     body.classList.remove('hide-overflow');
     this.#filmsPopupComponent.element.remove();
+    this.#mode = Mode.DEFAULT;
   }
 
   #openPopup = () => {
     body.classList.add('hide-overflow');
     this.#renderFilmsPopup();
-    document.addEventListener('keydown', this.#escKeyDownHandler, {once: true});
-  }
-
-  #handleCardClick = () => {
-    if (!body.querySelector('.film-details')) {
-      this.#openPopup();
-    }
+    document.addEventListener('keydown', this.#escKeyDownHandler, { once: true });
+    this.#changeMode();
+    this.#mode = Mode.POPUP;
   }
 
   // #handleCardClick = () => {
-  //   if (!body.contains(this.#filmsPopupComponent.element)) {
+  //   if (!body.querySelector('.film-details')) {
   //     this.#openPopup();
   //   }
   // }
+
+  #handleCardClick = () => {
+    this.#openPopup();
+  }
 
   #handleClosePopupClick = () => {
     this.#closePopup();

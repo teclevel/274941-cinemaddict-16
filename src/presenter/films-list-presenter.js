@@ -57,7 +57,7 @@ export default class FilmsListPresenter {
   }
 
   #renderCard = (card) => {
-    const filmPresenter = new FilmPresenter(this.#filmsListContainerComponent, this.#handleCardChange);
+    const filmPresenter = new FilmPresenter(this.#filmsListContainerComponent, this.#handleCardChange, this.#handleModeChange);
     filmPresenter.init(card);
     this.#filmPresenter.set(card.id, filmPresenter);
   }
@@ -116,6 +116,10 @@ export default class FilmsListPresenter {
     this.#sourcedBoardCards = updateItem(this.#sourcedBoardCards, updatedCard);
     this.#filmPresenter.get(updatedCard.id).init(updatedCard);
   }
+
+  #handleModeChange = () => {
+    this.#filmPresenter.forEach((presenter) => presenter.resetView());
+  };
 
   #sortCards = (sortType) => {
     switch (sortType) {
