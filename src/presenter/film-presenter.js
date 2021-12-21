@@ -85,12 +85,14 @@ export default class FilmPresenter {
     body.classList.remove('hide-overflow');
     this.#filmsPopupComponent.element.remove();
     this.#mode = Mode.DEFAULT;
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+
   }
 
   #openPopup = () => {
     body.classList.add('hide-overflow');
     this.#renderFilmsPopup();
-    document.addEventListener('keydown', this.#escKeyDownHandler, { once: true });
+    document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#changeMode();
     this.#mode = Mode.POPUP;
   }
@@ -103,7 +105,6 @@ export default class FilmPresenter {
 
   #handleClosePopupClick = () => {
     this.#closePopup();
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   #handleFavoriteClick = () => {
