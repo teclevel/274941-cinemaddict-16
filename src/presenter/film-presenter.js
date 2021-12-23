@@ -47,19 +47,13 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
 
-
     if (prevCardComponent === null || prevPopupComponent === null) {
       render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFOREEND);
       return;
     }
 
-    if (this.#mode === Mode.DEFAULT) {
-      replace(this.#filmsCardComponent, prevCardComponent);
-    }
-
-    if (this.#mode === Mode.POPUP) {
-      replace(this.#filmsPopupComponent, prevPopupComponent);
-    }
+    replace(this.#filmsCardComponent, prevCardComponent);
+    replace(this.#filmsPopupComponent, prevPopupComponent);
 
     remove(prevCardComponent);
     remove(prevPopupComponent);
@@ -86,11 +80,9 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.element.remove();
     this.#mode = Mode.DEFAULT;
     document.removeEventListener('keydown', this.#escKeyDownHandler);
-
   }
 
   #openPopup = () => {
-    body.classList.add('hide-overflow');
     this.#renderFilmsPopup();
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#changeMode();
@@ -100,6 +92,7 @@ export default class FilmPresenter {
   #handleCardClick = () => {
     if (this.#mode === Mode.DEFAULT) {
       this.#openPopup();
+      body.classList.add('hide-overflow');
     }
   }
 
