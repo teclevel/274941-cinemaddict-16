@@ -30,7 +30,7 @@ export default class FilmsSortView extends AbstractView {
     this.#removeClassActive();
     this._callback.sortTypeChange(evt.target.dataset.sortType);
     evt.target.classList.add(this.#classActive);
-  };
+  }
 
   #removeClassActive = () => {
     const button = this.element.querySelector(`.${this.#classActive}`);
