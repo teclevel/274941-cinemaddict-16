@@ -166,12 +166,10 @@ const createFilmsPopupTemplate = (card) => {
 
 export default class FilmsPopupView extends AbstractView {
   #card = null;
-  // #newComment = null;
 
   constructor(cards) {
     super();
     this.#card = cards;
-    // this.#newComment = newComments;
   }
 
   get template() {

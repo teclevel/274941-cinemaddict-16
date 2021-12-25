@@ -1,17 +1,17 @@
 import { SortType } from '../const';
 import AbstractView from './abstract-view';
 
+const CLASS_SORT_BUTTON_ACTIVE = 'sort__button--active';
+
 const createSortTemplate = () => (
   `<ul class="sort">
-      <li><a href="#" class="sort__button sort__button--active" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
+      <li><a href="#" class="sort__button ${CLASS_SORT_BUTTON_ACTIVE}" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
       <li><a href="#" class="sort__button" data-sort-type="${SortType.DATE}">Sort by date</a></li>
       <li><a href="#" class="sort__button" data-sort-type="${SortType.RATING}">Sort by rating</a></li>
   </ul>`
 );
 
 export default class FilmsSortView extends AbstractView {
-
-  #classActive = 'sort__button--active';
 
   get template() {
     return createSortTemplate();
@@ -29,14 +29,14 @@ export default class FilmsSortView extends AbstractView {
     evt.preventDefault();
     this.#removeClassActive();
     this._callback.sortTypeChange(evt.target.dataset.sortType);
-    evt.target.classList.add(this.#classActive);
+    evt.target.classList.add(CLASS_SORT_BUTTON_ACTIVE);
   }
 
   #removeClassActive = () => {
-    const button = this.element.querySelector(`.${this.#classActive}`);
+    const button = this.element.querySelector(`.${CLASS_SORT_BUTTON_ACTIVE}`);
 
     if (button) {
-      button.classList.remove(this.#classActive);
+      button.classList.remove(CLASS_SORT_BUTTON_ACTIVE);
     }
   }
 }

@@ -47,17 +47,14 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
 
-
-    if (prevCardComponent === null || prevPopupComponent === null) {
-      render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFOREEND);
+    if (!prevCardComponent || !prevPopupComponent) {
+      render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFORE_END);
       return;
     }
 
-    if (this.#mode === Mode.DEFAULT) {
-      replace(this.#filmsCardComponent, prevCardComponent);
-    }
+    replace(this.#filmsCardComponent, prevCardComponent);
 
-    if (this.#mode === Mode.POPUP) {
+    if(this.#mode === Mode.POPUP){
       replace(this.#filmsPopupComponent, prevPopupComponent);
     }
 
@@ -71,7 +68,7 @@ export default class FilmPresenter {
   }
 
   #renderFilmsPopup = () => {
-    render(footer, this.#filmsPopupComponent, RenderPosition.AFTEREND);
+    render(footer, this.#filmsPopupComponent, RenderPosition.AFTER_END);
   }
 
   resetView = () => {
@@ -85,12 +82,12 @@ export default class FilmPresenter {
     body.classList.remove('hide-overflow');
     this.#filmsPopupComponent.element.remove();
     this.#mode = Mode.DEFAULT;
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   #openPopup = () => {
-    body.classList.add('hide-overflow');
     this.#renderFilmsPopup();
-    document.addEventListener('keydown', this.#escKeyDownHandler, { once: true });
+    document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#changeMode();
     this.#mode = Mode.POPUP;
   }
@@ -98,12 +95,12 @@ export default class FilmPresenter {
   #handleCardClick = () => {
     if (this.#mode === Mode.DEFAULT) {
       this.#openPopup();
+      body.classList.add('hide-overflow');
     }
   }
 
   #handleClosePopupClick = () => {
     this.#closePopup();
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   #handleFavoriteClick = () => {
@@ -120,7 +117,6 @@ export default class FilmPresenter {
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
       this.#closePopup();
     }
   };
