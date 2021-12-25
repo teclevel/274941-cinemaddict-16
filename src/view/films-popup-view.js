@@ -1,4 +1,4 @@
-import { getTimeFromMins } from '../utility';
+import { formatDateComment, getTimeFromMins } from '../utils/day';
 import AbstractView from './abstract-view';
 
 const createGenresTemplate = (genres) => {
@@ -9,9 +9,33 @@ const createGenresTemplate = (genres) => {
   return list;
 };
 
+const createCommentTemplate = (comments) => {
+  let list = '';
+  for (const comment of comments) {
+    const { emotion, commentText, name, date } = comment;
+
+    list += `<li class="film-details__comment">
+            <span class="film-details__comment-emoji">
+              <img src="${emotion}" width="55" height="55" alt="emoji-smile">
+            </span>
+            <div>
+              <p class="film-details__comment-text">${commentText}</p>
+              <p class="film-details__comment-info">
+                <span class="film-details__comment-author">${name}</span>
+                <span class="film-details__comment-day">${formatDateComment(date)}</span>
+                <button class="film-details__comment-delete">Delete</button>
+              </p>
+            </div>
+          </li>`;
+  }
+  return list;
+};
+
 const createFilmsPopupTemplate = (card) => {
-  const { poster, title, rating, duration, genres, age, director, writers, actors, dateRelease, isAddedToWatch, isWatched, isFavorite } = card;
+  const { poster, comments, title, rating, duration, genres, age, director, writers, actors, dateRelease, isAddedToWatch, isWatched, isFavorite } = card;
   const itemsGenres = createGenresTemplate(genres);
+  const itemsComments = createCommentTemplate(comments);
+  const count = comments.length;
 
   const addWatchListClassName = isAddedToWatch
     ? 'film-details__control-button--active'
@@ -97,10 +121,10 @@ const createFilmsPopupTemplate = (card) => {
 
     <div class="film-details__bottom-container">
       <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${count}</span></h3>
 
         <ul class="film-details__comments-list">
-
+        ${itemsComments}
         </ul>
 
         <div class="film-details__new-comment">
@@ -139,25 +163,58 @@ const createFilmsPopupTemplate = (card) => {
 };
 
 export default class FilmsPopupView extends AbstractView {
-  #cards = null;
+  #card = null;
 
   constructor(cards) {
     super();
-    this.#cards = cards;
+    this.#card = cards;
   }
 
   get template() {
-    return createFilmsPopupTemplate(this.#cards);
+    return createFilmsPopupTemplate(this.#card);
   }
 
-  setClosePopupClickHandler(callback) {
+  setPopupClickHandler(callback) {
     this._callback.closePopupClick = callback;
     this.element.querySelector('.film-details__close-btn')
       .addEventListener('click', this.#closePopupClickHandler);
   }
 
+  setAddToWatchClickHandler = (callback) => {
+    this._callback.addToWatchClick = callback;
+    this.element.querySelector('#watchlist')
+      .addEventListener('click', this.#addToWatchClickHandler);
+  }
+
+  setFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('#favorite')
+      .addEventListener('click', this.#favoriteClickHandler);
+  }
+
+  setWatchedClickHandler = (callback) => {
+    this._callback.watchedClick = callback;
+    this.element.querySelector('#watched')
+      .addEventListener('click', this.#watchedClickHandler);
+  }
+
   #closePopupClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.closePopupClick();
+    this._callback.closePopupClick(this.#card);
+  }
+
+  #addToWatchClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.addToWatchClick();
+  }
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  #watchedClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.watchedClick();
   }
 }
