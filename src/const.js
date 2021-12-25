@@ -5,8 +5,8 @@ export const SortType = {
 };
 
 export const RenderPosition = {
-  BEFOREBEGIN: 'beforebegin',
-  AFTERBEGIN: 'afterbegin',
-  BEFOREEND: 'beforeend',
-  AFTEREND: 'afterend',
+  BEFORE_BEGIN: 'beforebegin',
+  AFTER_BEGIN: 'afterbegin',
+  BEFORE_END: 'beforeend',
+  AFTER_END: 'afterend',
 };

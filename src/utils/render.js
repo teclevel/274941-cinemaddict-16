@@ -6,16 +6,16 @@ export const render = (container, element, place) => {
   const child = element instanceof AbstractView ? element.element : element;
 
   switch (place) {
-    case RenderPosition.BEFOREBEGIN:
+    case RenderPosition.BEFORE_BEGIN:
       parent.before(child);
       break;
-    case RenderPosition.AFTERBEGIN:
+    case RenderPosition.AFTER_BEGIN:
       parent.prepend(child);
       break;
-    case RenderPosition.BEFOREEND:
+    case RenderPosition.BEFORE_END:
       parent.append(child);
       break;
-    case RenderPosition.AFTEREND:
+    case RenderPosition.AFTER_END:
       parent.after(child);
       break;
   }
@@ -29,7 +29,7 @@ export const createElement = (template) => {
 };
 
 export const replace = (newElement, oldElement) => {
-  if (newElement === null || oldElement === null) {
+  if (!newElement || !oldElement) {
     throw new Error('Can\'t replace unexisting elements');
   }
 
@@ -38,7 +38,7 @@ export const replace = (newElement, oldElement) => {
 
   const parent = oldChild.parentElement;
 
-  if (parent === null) {
+  if (!parent) {
     throw new Error('Parent element doesn\'t exist');
   }
 
@@ -46,7 +46,7 @@ export const replace = (newElement, oldElement) => {
 };
 
 export const remove = (component) => {
-  if (component === null) {
+  if (!component) {
     return;
   }
 

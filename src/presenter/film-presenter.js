@@ -47,8 +47,8 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
 
-    if (prevCardComponent === null || prevPopupComponent === null) {
-      render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFOREEND);
+    if (!prevCardComponent || !prevPopupComponent) {
+      render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFORE_END);
       return;
     }
 
@@ -68,7 +68,7 @@ export default class FilmPresenter {
   }
 
   #renderFilmsPopup = () => {
-    render(footer, this.#filmsPopupComponent, RenderPosition.AFTEREND);
+    render(footer, this.#filmsPopupComponent, RenderPosition.AFTER_END);
   }
 
   resetView = () => {
@@ -117,7 +117,6 @@ export default class FilmPresenter {
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
       this.#closePopup();
     }
   };

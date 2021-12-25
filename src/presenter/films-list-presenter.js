@@ -35,17 +35,17 @@ export default class FilmsListPresenter {
     this.#boardCards = [...boardCards];
     this.#sourcedBoardCards = [...boardCards];
 
-    render(this.#filmsContainer, this.#filmsContainerComponent, RenderPosition.BEFOREEND);
+    render(this.#filmsContainer, this.#filmsContainerComponent, RenderPosition.BEFORE_END);
 
     this.#renderBoard();
   }
 
   #renderFilmsList = () => {
-    render(this.#filmsContainerComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
+    render(this.#filmsContainerComponent, this.#filmsListComponent, RenderPosition.BEFORE_END);
   }
 
   #renderFilmsListContainer = () => {
-    render(this.#filmsListComponent, this.#filmsListContainerComponent, RenderPosition.BEFOREEND);
+    render(this.#filmsListComponent, this.#filmsListContainerComponent, RenderPosition.BEFORE_END);
   }
 
   #renderCardsList = () => {
@@ -63,16 +63,16 @@ export default class FilmsListPresenter {
   }
 
   #renderFilmsListNoCards = () => {
-    render(this.#filmsContainerComponent, this.#filmsListNoCardsComponent, RenderPosition.BEFOREEND);
+    render(this.#filmsContainerComponent, this.#filmsListNoCardsComponent, RenderPosition.BEFORE_END);
   }
 
   #renderFilmsSort = () => {
-    render(this.#filmsContainerComponent, this.#filmsSortComponent, RenderPosition.BEFOREBEGIN);
+    render(this.#filmsContainerComponent, this.#filmsSortComponent, RenderPosition.BEFORE_BEGIN);
     this.#filmsSortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   }
 
   #renderShowMoreButton = () => {
-    render(this.#filmsListComponent, this.#showMoreButton, RenderPosition.BEFOREEND);
+    render(this.#filmsListComponent, this.#showMoreButton, RenderPosition.BEFORE_END);
     this.#showMoreButton.setClickHandler(this.#handleShowMoreButtonClick);
   }
 
