@@ -10,3 +10,4 @@ export const RenderPosition = {
   BEFORE_END: 'beforeend',
   AFTER_END: 'afterend',
 };
+export const EMOJIS =['smile', 'sleeping', 'puke', 'angry'];
