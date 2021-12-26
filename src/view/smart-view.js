@@ -1,20 +1,35 @@
-// import AbstractView from './abstract-view';
+import AbstractView from './abstract-view.js';
 
-// export default class SmartView extends AbstractView {
-//   restoreHandler = () => {
-//     // его нужно будет реализовать в наследнике.
-//     //  Его задача — восстанавливать обработчики событий после перерисовки;
-//   }
+export default class SmartView extends AbstractView {
+  _data = {};
 
-//   updateElement = () => {
-//     // удалить старый DOM-элемент компонента;
-//     // создать новый DOM-элемент;
-//     // поместить новый элемент вместо старого;
-//     // восстановить обработчики событий, вызвав restoreHandlers
-//   }
+  updateData = (update, justDataUpdating) => {
+    if (!update) {
+      return;
+    }
 
-//   updateData = () => {
-//     // будет обновлять данные и, если нужно, вызывать метод updateElement.
-//   }
+    this._data = {...this._data, ...update};
 
-// }
+    if (justDataUpdating) {
+      return;
+    }
+
+    this.updateElement();
+  }
+
+  updateElement = () => {
+    const prevElement = this.element;
+    const parent = prevElement.parentElement;
+    this.removeElement();
+
+    const newElement = this.element;
+
+    parent.replaceChild(newElement, prevElement);
+
+    this.restoreHandlers();
+  }
+
+  restoreHandlers = () => {
+    throw new Error('Abstract method not implemented: restoreHandlers');
+  }
+}

@@ -2,8 +2,10 @@ import { EMOJIS } from '../const';
 import { formatDateComment, getTimeFromMins } from '../utils/day';
 import AbstractView from './abstract-view';
 
-const newComment = {
+const blanckComment = {
   emoji: EMOJIS[0],
+  description:'',
+  showEmoji: false
 };
 
 const createGenresTemplate = (genres) => {
@@ -39,41 +41,43 @@ const createCommentTemplate = (comments) => {
 const createEmojiListTemplate = (currentEmoji) => (
   EMOJIS.map((emoji) =>
     `<input class="film-details__emoji-item visually-hidden"
-  name="comment-emoji"
-  type="radio"
-  id="emoji-${emoji}"
-  value="${emoji}" ${currentEmoji === emoji ? 'checked' : ''}>
-  <label class="film-details__emoji-label" for="emoji-${emoji}">
-  <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
-  </label>`
+        name="comment-emoji"
+        type="radio"
+        id="emoji-${emoji}"
+        value="${emoji}" ${currentEmoji === emoji ? 'checked' : ''}>
+      <label class="film-details__emoji-label" for="emoji-${emoji}">
+      <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
+    </label>`
   ).join('')
 );
 
 const createNewCommentTemplate = (comment) => {
-  const {emoji} = comment;
+  const { emoji } = comment;
   const emojiTemplate = createEmojiListTemplate(emoji);
-  const emojiView = emoji ? `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">`: '' ;
+
+  /////////////////////////////////
+  const emojiView = emoji ? `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">` : '';
 
   return `<div class="film-details__new-comment">
-  <div class="film-details__add-emoji-label">
-  ${emojiView}
-  </div>
-  <label class="film-details__comment-label">
-  <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
-  </label>
-  <div class="film-details__emoji-list">
-  ${emojiTemplate}
-  </div>
+    <div class="film-details__add-emoji-label">
+      ${emojiView}
+    </div>
+    <label class="film-details__comment-label">
+      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+    </label>
+    <div class="film-details__emoji-list">
+      ${emojiTemplate}
+    </div>
   </div>`;
 };
 
 const createFilmsPopupTemplate = (card) => {
-  const { poster, comments, title, rating, duration, genres, age, director, writers, actors, dateRelease, isAddedToWatch, isWatched, isFavorite } = card;
+  const newCard = {...card, ...newComment };
+  const { emoji, poster, comments, title, rating, duration, genres, age, director, writers, actors, dateRelease, isAddedToWatch, isWatched, isFavorite } = newCard;
   const itemsGenres = createGenresTemplate(genres);
   const itemsComments = createCommentTemplate(comments);
   const count = comments.length;
-  const { emoji } = newComment;
-  console.log(emoji);
+console.log(newCard);
   const newCommentTemplate = createNewCommentTemplate(emoji);
   const addWatchListClassName = isAddedToWatch
     ? 'film-details__control-button--active'
@@ -219,4 +223,19 @@ export default class FilmsPopupView extends AbstractView {
     evt.preventDefault();
     this._callback.watchedClick();
   }
+
+  // static parseFilmToData = (card) => ({
+  //   ...card,
+  //   isEmojiView: comment.emoji !== null
+  // })
+
+  // static parseDataToFilm = (data) => {
+  //   const card = {...data};
+
+  //   if(!comment.emoji) {
+  //     comment.emoji == null;
+  //   }
+
+  //   delete
+  // }
 }
