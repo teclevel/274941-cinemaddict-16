@@ -5,11 +5,11 @@ import AbstractView from './abstract-view';
 const BLANK_DETAILS_FILM = {
   emoji: EMOJIS[0],
   description: '',
-  showEmoji: false,
+  isShowEmoji: false,
 
-  isWatched: false,
-  isAddedToWatch: false,
-  isFavorite: false
+  // isWatched: false,
+  // isAddedToWatch: false,
+  // isFavorite: false
 };
 
 const createGenresTemplate = (genres) => {
@@ -55,17 +55,20 @@ const createEmojiListTemplate = (currentEmoji) => (
   ).join('')
 );
 
-const createNewCommentTemplate = (newComment) => {
-  const { emoji, description, showEmoji } = newComment;
+const createNewCommentTemplate = (newComment, isEmojiChecked) => {
+  const { emoji, description } = newComment;
   const emojiTemplate = createEmojiListTemplate(emoji);
-  const emojiView = showEmoji ? `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">` : '';
+  const emojiView = isEmojiChecked ? `<img src="images/emoji/${emoji}.png"
+   width="55" height="55" alt="emoji-smile">` : '';
 
   return `<div class="film-details__new-comment">
     <div class="film-details__add-emoji-label">
       ${emojiView}
     </div>
     <label class="film-details__comment-label">
-      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${description}</textarea>
+      <textarea class="film-details__comment-input"
+      placeholder="Select reaction below and write comment here"
+      name="comment">${description}</textarea>
     </label>
     <div class="film-details__emoji-list">
       ${emojiTemplate}
@@ -73,13 +76,14 @@ const createNewCommentTemplate = (newComment) => {
   </div>`;
 };
 
-const createFilmsPopupTemplate = (card) => {
-  const { poster, comments, title, rating, duration, genres, age, director, writers, actors, dateRelease, isAddedToWatch, isWatched, isFavorite } = card;
-
+const createFilmsPopupTemplate = (data) => {
+  const { poster, comments, title, rating, duration, genres, age, director, writers,
+    actors, dateRelease, isAddedToWatch, isWatched, isFavorite, isEmojiChecked } = data;
+  console.log(data);
   const itemsGenres = createGenresTemplate(genres);
   const itemsComments = createCommentTemplate(comments);
   const count = comments.length;
-  const newCommentTemplate = createNewCommentTemplate(BLANK_DETAILS_FILM);
+  const newCommentTemplate = createNewCommentTemplate(BLANK_DETAILS_FILM, isEmojiChecked);
   const addWatchListClassName = isAddedToWatch
     ? 'film-details__control-button--active'
     : '';
@@ -170,17 +174,48 @@ const createFilmsPopupTemplate = (card) => {
 };
 
 export default class FilmsPopupView extends AbstractView {
-  // #card = null;
 
   constructor(card = BLANK_DETAILS_FILM) {
     super();
-    // this.#card = cards;
-    this._data = FilmsPopupView.parseFilmToData(card);
+    this._data = FilmsPopupView.parseCardToData(card);
+    this.#setInnerHandler();
   }
 
   get template() {
     return createFilmsPopupTemplate(this._data);
   }
+
+  updateData = (update, justDataUpdating) => {
+    if (!update) {
+      return;
+    }
+
+    this._data = { ...this._data, ...update };
+
+    if (justDataUpdating) {
+      return;
+    }
+
+    this.updateElement();
+  }
+
+  updateElement = () => {
+    const prevElement = this.element;
+    const parent = prevElement.parentElement;
+    this.removeElement();
+
+    const newElement = this.element;
+
+    parent.replaceChild(newElement, prevElement);
+
+    this.restoreHandler();
+  }
+
+  restoreHandler = () => {
+    this.#setInnerHandler();
+    ////////
+  }
+
 
   setPopupClickHandler(callback) {
     this._callback.closePopupClick = callback;
@@ -206,6 +241,36 @@ export default class FilmsPopupView extends AbstractView {
       .addEventListener('click', this.#watchedClickHandler);
   }
 
+  // setEmojiChecked = (callback) => {
+  //   this._callback.emojiClick = callback;
+  //   this.element.querySelector('.film-details__emoji-item')
+  //     .addEventListener('change', this.#emojiClickHandler);
+  // }
+
+  #setInnerHandler = () => {
+    this.element.addEventListener('click', this.#emojiClickHandler);
+    this.element.querySelector('.film-details__comment-input')
+      .addEventListener('input', this.#descriptionInputHandler);
+
+  }
+
+  #descriptionInputHandler = (evt) => {
+    evt.preventDefault();
+    this.updateData({
+      description: evt.target.value,
+    }, true);
+  }
+
+  #emojiClickHandler = (evt) => {
+    if(evt.target.tagName !== 'INPUT'){
+      return;
+    }
+    evt.preventDefault();
+    console.log(evt.target.value);
+    this.updateData({ isEmojiChecked: !this._data.isShowEmoji });
+    // this._callback.emojiClick(FilmsPopupView.parseDataToCard(this._data));
+  }
+
   #closePopupClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.closePopupClick(this._card);
@@ -226,16 +291,16 @@ export default class FilmsPopupView extends AbstractView {
     this._callback.watchedClick();
   }
 
-  static parseFilmToData = (card) => ({
+  static parseCardToData = (card) => ({
     ...card,
-    isEmojiChecked: card.showEmoji       //??????????????????????????
+    isEmojiChecked: BLANK_DETAILS_FILM.isShowEmoji       //??????????????????????????
   })
 
-  static parseDataToFilm = (data) => {
+  static parseDataToCard = (data) => {
     const card = { ...data };
 
     if (!card.isEmojiChecked) {
-      card.isEmojiChecked === false;
+      card.isEmojiChecked = false;
     }
 
     delete card.isEmojiChecked;
