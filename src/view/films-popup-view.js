@@ -3,14 +3,15 @@ import { formatDateComment, getTimeFromMins } from '../utils/day';
 import AbstractView from './abstract-view';
 
 const BLANK_DETAILS_FILM = {
-  emoji: EMOJIS[0],
+  newEmoji: null,
   description: '',
-  isShowEmoji: false,
+  // isShowEmoji: false,
 
-  // isWatched: false,
-  // isAddedToWatch: false,
-  // isFavorite: false
+  isWatched: false,
+  isAddedToWatch: false,
+  isFavorite: false
 };
+console.log(BLANK_DETAILS_FILM);
 
 const createGenresTemplate = (genres) => {
   let list = '';
@@ -55,10 +56,10 @@ const createEmojiListTemplate = (currentEmoji) => (
   ).join('')
 );
 
-const createNewCommentTemplate = (newComment, isEmojiChecked) => {
-  const { emoji, description } = newComment;
-  const emojiTemplate = createEmojiListTemplate(emoji);
-  const emojiView = isEmojiChecked ? `<img src="images/emoji/${emoji}.png"
+const createNewCommentTemplate = (newComment, isEmoji) => {
+  const { description } = newComment;
+  const emojiTemplate = createEmojiListTemplate(isEmoji);
+  const emojiView = isEmoji ? `<img src="images/emoji/${isEmoji}.png"
    width="55" height="55" alt="emoji-smile">` : '';
 
   return `<div class="film-details__new-comment">
@@ -78,12 +79,12 @@ const createNewCommentTemplate = (newComment, isEmojiChecked) => {
 
 const createFilmsPopupTemplate = (data) => {
   const { poster, comments, title, rating, duration, genres, age, director, writers,
-    actors, dateRelease, isAddedToWatch, isWatched, isFavorite, isEmojiChecked } = data;
-  console.log(data);
+    actors, dateRelease, isAddedToWatch, isWatched, isFavorite, newEmoji } = data;
+  // console.log(data);
   const itemsGenres = createGenresTemplate(genres);
   const itemsComments = createCommentTemplate(comments);
   const count = comments.length;
-  const newCommentTemplate = createNewCommentTemplate(BLANK_DETAILS_FILM, isEmojiChecked);
+  const newCommentTemplate = createNewCommentTemplate(BLANK_DETAILS_FILM, newEmoji);
   const addWatchListClassName = isAddedToWatch
     ? 'film-details__control-button--active'
     : '';
@@ -213,9 +214,14 @@ export default class FilmsPopupView extends AbstractView {
 
   restoreHandler = () => {
     this.#setInnerHandler();
-    ////////
+
   }
 
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form')
+      .addEventListener('submit', this.#formSubmitHandler);
+  }
 
   setPopupClickHandler(callback) {
     this._callback.closePopupClick = callback;
@@ -241,17 +247,10 @@ export default class FilmsPopupView extends AbstractView {
       .addEventListener('click', this.#watchedClickHandler);
   }
 
-  // setEmojiChecked = (callback) => {
-  //   this._callback.emojiClick = callback;
-  //   this.element.querySelector('.film-details__emoji-item')
-  //     .addEventListener('change', this.#emojiClickHandler);
-  // }
-
   #setInnerHandler = () => {
     this.element.addEventListener('click', this.#emojiClickHandler);
     this.element.querySelector('.film-details__comment-input')
       .addEventListener('input', this.#descriptionInputHandler);
-
   }
 
   #descriptionInputHandler = (evt) => {
@@ -262,13 +261,19 @@ export default class FilmsPopupView extends AbstractView {
   }
 
   #emojiClickHandler = (evt) => {
-    if(evt.target.tagName !== 'INPUT'){
+    if (evt.target.tagName !== 'INPUT') {
       return;
     }
-    evt.preventDefault();
-    console.log(evt.target.value);
+
+    this._data.newEmoji = evt.target.value;
     this.updateData({ isEmojiChecked: !this._data.isShowEmoji });
-    // this._callback.emojiClick(FilmsPopupView.parseDataToCard(this._data));
+
+    console.log(this._data);
+  }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit(FilmsPopupView.parseDataToCard(this._data));
   }
 
   #closePopupClickHandler = (evt) => {
@@ -293,7 +298,8 @@ export default class FilmsPopupView extends AbstractView {
 
   static parseCardToData = (card) => ({
     ...card,
-    isEmojiChecked: BLANK_DETAILS_FILM.isShowEmoji       //??????????????????????????
+    // isEmojiChecked: BLANK_DETAILS_FILM.isShowEmoji,
+    newEmoji: null
   })
 
   static parseDataToCard = (data) => {

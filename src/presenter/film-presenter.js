@@ -47,6 +47,8 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
 
+    this.#filmsPopupComponent.setFormSubmitHandler(this.#handleFormSubmit);
+
     if (!prevCardComponent || !prevPopupComponent) {
       render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFORE_END);
       return;
@@ -54,7 +56,7 @@ export default class FilmPresenter {
 
     replace(this.#filmsCardComponent, prevCardComponent);
 
-    if(this.#mode === Mode.POPUP){
+    if (this.#mode === Mode.POPUP) {
       replace(this.#filmsPopupComponent, prevPopupComponent);
     }
 
@@ -83,11 +85,13 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.element.remove();
     this.#mode = Mode.DEFAULT;
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#ctrlEnterKeyDownHandler);
   }
 
   #openPopup = () => {
     this.#renderFilmsPopup();
     document.addEventListener('keydown', this.#escKeyDownHandler);
+    document.addEventListener('keydown', this.#ctrlEnterKeyDownHandler);
     this.#changeMode();
     this.#mode = Mode.POPUP;
   }
@@ -119,5 +123,15 @@ export default class FilmPresenter {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       this.#closePopup();
     }
-  };
+  }
+
+  #handleFormSubmit = (card) => {
+    this.#changeData(card);
+  }
+
+  #ctrlEnterKeyDownHandler = (evt) => {
+    if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
+      console.log('ctrlEnter');
+    }
+  }
 }
