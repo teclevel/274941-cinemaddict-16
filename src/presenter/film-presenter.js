@@ -132,8 +132,6 @@ export default class FilmPresenter {
   #ctrlEnterKeyDownHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
       console.log('ctrlEnter');
-      // this.#handleFormSubmit();
-      this.#closePopup();
     }
   }
 }
