@@ -259,8 +259,16 @@ export default class FilmsPopupView extends AbstractView {
     if (evt.target.tagName !== 'INPUT') {
       return;
     }
+    // определить положение
+
+    // const scrollPopup = window.pageYOffset;
 
     this.updateData({ isUserEmoji: evt.target.value });
+
+    // вернуть на место
+    // window.scrollTo(0, scrollPopup);
+
+    this.element.scrollIntoView({ top: false });
   }
 
   #textCommentInputHandler = (evt) => {
@@ -277,8 +285,8 @@ export default class FilmsPopupView extends AbstractView {
 
   #closePopupClickHandler = (evt) => {
     evt.preventDefault();
+    this.updateData({ isUserEmoji: null });
     this._callback.closePopupClick(FilmsPopupView.parseDataToCard(this._data));
-    this.updateData({ isUserEmoji: null });/////////////////////////////////////////////
   }
 
   #addToWatchClickHandler = (evt) => {
