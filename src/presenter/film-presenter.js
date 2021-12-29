@@ -116,7 +116,7 @@ export default class FilmPresenter {
   }
 
   #handleAddToWatchClick = () => {
-    this.#changeData({ ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch });
+    this.#changeData({ ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch } );
   }
 
   #escKeyDownHandler = (evt) => {
@@ -126,12 +126,14 @@ export default class FilmPresenter {
   }
 
   #handleFormSubmit = (card) => {
-    this.#changeData(card);
+    // this.#changeData(card);
   }
 
   #ctrlEnterKeyDownHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
       console.log('ctrlEnter');
+      // this.#handleFormSubmit();
+      this.#closePopup();
     }
   }
 }

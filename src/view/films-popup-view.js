@@ -1,17 +1,15 @@
 import { EMOJIS } from '../const';
 import { formatDateComment, getTimeFromMins } from '../utils/day';
 import AbstractView from './abstract-view';
-
 const BLANK_DETAILS_FILM = {
-  newEmoji: null,
-  description: '',
-  // isShowEmoji: false,
+
+  isUserEmoji: null,
+  textComment: '',
 
   isWatched: false,
   isAddedToWatch: false,
   isFavorite: false
 };
-console.log(BLANK_DETAILS_FILM);
 
 const createGenresTemplate = (genres) => {
   let list = '';
@@ -56,10 +54,10 @@ const createEmojiListTemplate = (currentEmoji) => (
   ).join('')
 );
 
-const createNewCommentTemplate = (newComment, isEmoji) => {
-  const { description } = newComment;
-  const emojiTemplate = createEmojiListTemplate(isEmoji);
-  const emojiView = isEmoji ? `<img src="images/emoji/${isEmoji}.png"
+const createNewCommentTemplate = (newComment, isUserEmoji) => {
+  const { textComment } = newComment;
+  const emojiTemplate = createEmojiListTemplate(isUserEmoji);
+  const emojiView = isUserEmoji ? `<img src="images/emoji/${isUserEmoji}.png"
    width="55" height="55" alt="emoji-smile">` : '';
 
   return `<div class="film-details__new-comment">
@@ -69,7 +67,7 @@ const createNewCommentTemplate = (newComment, isEmoji) => {
     <label class="film-details__comment-label">
       <textarea class="film-details__comment-input"
       placeholder="Select reaction below and write comment here"
-      name="comment">${description}</textarea>
+      name="comment">${textComment}</textarea>
     </label>
     <div class="film-details__emoji-list">
       ${emojiTemplate}
@@ -79,12 +77,12 @@ const createNewCommentTemplate = (newComment, isEmoji) => {
 
 const createFilmsPopupTemplate = (data) => {
   const { poster, comments, title, rating, duration, genres, age, director, writers,
-    actors, dateRelease, isAddedToWatch, isWatched, isFavorite, newEmoji } = data;
-  // console.log(data);
+    actors, dateRelease, isAddedToWatch, isWatched, isFavorite, isUserEmoji } = data;
   const itemsGenres = createGenresTemplate(genres);
   const itemsComments = createCommentTemplate(comments);
   const count = comments.length;
-  const newCommentTemplate = createNewCommentTemplate(BLANK_DETAILS_FILM, newEmoji);
+
+  const newCommentTemplate = createNewCommentTemplate(BLANK_DETAILS_FILM, isUserEmoji);
   const addWatchListClassName = isAddedToWatch
     ? 'film-details__control-button--active'
     : '';
@@ -214,7 +212,11 @@ export default class FilmsPopupView extends AbstractView {
 
   restoreHandler = () => {
     this.#setInnerHandler();
-
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setPopupClickHandler(this._callback.closePopupClick);
+    this.setAddToWatchClickHandler(this._callback.addToWatchClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
   }
 
   setFormSubmitHandler = (callback) => {
@@ -250,14 +252,7 @@ export default class FilmsPopupView extends AbstractView {
   #setInnerHandler = () => {
     this.element.addEventListener('click', this.#emojiClickHandler);
     this.element.querySelector('.film-details__comment-input')
-      .addEventListener('input', this.#descriptionInputHandler);
-  }
-
-  #descriptionInputHandler = (evt) => {
-    evt.preventDefault();
-    this.updateData({
-      description: evt.target.value,
-    }, true);
+      .addEventListener('input', this.#textCommentInputHandler);
   }
 
   #emojiClickHandler = (evt) => {
@@ -265,10 +260,14 @@ export default class FilmsPopupView extends AbstractView {
       return;
     }
 
-    this._data.newEmoji = evt.target.value;
-    this.updateData({ isEmojiChecked: !this._data.isShowEmoji });
+    this.updateData({ isUserEmoji: evt.target.value });
+  }
 
-    console.log(this._data);
+  #textCommentInputHandler = (evt) => {
+    evt.preventDefault();
+    this.updateData({
+      textComment: evt.target.value,
+    }, true);
   }
 
   #formSubmitHandler = (evt) => {
@@ -278,7 +277,8 @@ export default class FilmsPopupView extends AbstractView {
 
   #closePopupClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.closePopupClick(this._card);
+    this._callback.closePopupClick(FilmsPopupView.parseDataToCard(this._data));
+    this.updateData({ isUserEmoji: null });/////////////////////////////////////////////
   }
 
   #addToWatchClickHandler = (evt) => {
@@ -298,18 +298,17 @@ export default class FilmsPopupView extends AbstractView {
 
   static parseCardToData = (card) => ({
     ...card,
-    // isEmojiChecked: BLANK_DETAILS_FILM.isShowEmoji,
-    newEmoji: null
+    isUserEmoji: null
   })
 
   static parseDataToCard = (data) => {
     const card = { ...data };
 
-    if (!card.isEmojiChecked) {
-      card.isEmojiChecked = false;
+    if (card.isUserEmoji) {
+      card.isUserEmoji = null;
     }
 
-    delete card.isEmojiChecked;
+    delete card.isUserEmoji;
 
     return card;
   }
