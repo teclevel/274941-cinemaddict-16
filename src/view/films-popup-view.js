@@ -1,6 +1,7 @@
 import { EMOJIS } from '../const';
 import { formatDateComment, getTimeFromMins } from '../utils/day';
-import AbstractView from './abstract-view';
+import SmartView from './smart-view';
+
 const BLANK_DETAILS_FILM = {
 
   isUserEmoji: null,
@@ -172,7 +173,7 @@ const createFilmsPopupTemplate = (data) => {
   </section>`;
 };
 
-export default class FilmsPopupView extends AbstractView {
+export default class FilmsPopupView extends SmartView {
 
   constructor(card = BLANK_DETAILS_FILM) {
     super();
@@ -184,33 +185,7 @@ export default class FilmsPopupView extends AbstractView {
     return createFilmsPopupTemplate(this._data);
   }
 
-  updateData = (update, justDataUpdating) => {
-    if (!update) {
-      return;
-    }
-
-    this._data = { ...this._data, ...update };
-
-    if (justDataUpdating) {
-      return;
-    }
-
-    this.updateElement();
-  }
-
-  updateElement = () => {
-    const prevElement = this.element;
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.element;
-
-    parent.replaceChild(newElement, prevElement);
-
-    this.restoreHandler();
-  }
-
-  restoreHandler = () => {
+  restoreHandlers = () => {
     this.#setInnerHandler();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setPopupClickHandler(this._callback.closePopupClick);
