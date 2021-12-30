@@ -47,7 +47,7 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
 
-    this.#filmsPopupComponent.setFormSubmitHandler(this.#handleFormSubmit);
+    // this.#filmsPopupComponent.setFormSubmitHandler(this.#handleFormSubmit);
 
     if (!prevCardComponent || !prevPopupComponent) {
       render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFORE_END);
@@ -74,11 +74,11 @@ export default class FilmPresenter {
   }
 
   resetView = () => {
-
     if (this.#mode !== Mode.DEFAULT) {
+      this.#filmsPopupComponent.reset(this.#card);
       this.#closePopup();
     }
-  };
+  }
 
   #closePopup = () => {
     body.classList.remove('hide-overflow');
@@ -95,6 +95,10 @@ export default class FilmPresenter {
     this.#changeMode();
     this.#mode = Mode.POPUP;
   }
+
+  // #submitForm =(card)=>{
+  //   this.#filmsPopupComponent.element.querySelector('form').submit(card);
+  // }
 
   #handleCardClick = () => {
     if (this.#mode === Mode.DEFAULT) {
@@ -116,22 +120,25 @@ export default class FilmPresenter {
   }
 
   #handleAddToWatchClick = () => {
-    this.#changeData({ ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch } );
+    this.#changeData({ ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch });
   }
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
+      this.#filmsPopupComponent.reset(this.#card);
       this.#closePopup();
     }
   }
 
-  #handleFormSubmit = (card) => {
-    // this.#changeData(card);
-  }
+  // #handleFormSubmit = (card) => {
+  //   // this.#changeData(card);
+  //   this.#submitForm(card);
+  // }
 
   #ctrlEnterKeyDownHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
-      console.log('ctrlEnter');
+      this.#filmsPopupComponent.submitForm();
+      // console.log('ctrlEnter');
     }
   }
 }

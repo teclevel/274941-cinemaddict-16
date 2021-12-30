@@ -185,19 +185,21 @@ export default class FilmsPopupView extends SmartView {
     return createFilmsPopupTemplate(this._data);
   }
 
+  reset = (card) => {
+    this.updateData(FilmsPopupView.parseCardToData(card));
+  }
+
   restoreHandlers = () => {
     this.#setInnerHandler();
-    this.setFormSubmitHandler(this._callback.formSubmit);
     this.setPopupClickHandler(this._callback.closePopupClick);
     this.setAddToWatchClickHandler(this._callback.addToWatchClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
   }
 
-  setFormSubmitHandler = (callback) => {
-    this._callback.formSubmit = callback;
+  submitForm = () => {
     this.element.querySelector('form')
-      .addEventListener('submit', this.#formSubmitHandler);
+      .submit(FilmsPopupView.parseDataToCard(this._data));
   }
 
   setPopupClickHandler(callback) {
@@ -249,14 +251,13 @@ export default class FilmsPopupView extends SmartView {
     }, true);
   }
 
-  #formSubmitHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.formSubmit(FilmsPopupView.parseDataToCard(this._data));
-  }
+  // #formSubmitHandler = (evt) => {
+  //   evt.preventDefault();
+  //   this._callback.formSubmit(FilmsPopupView.parseDataToCard(this._data));
+  // }
 
   #closePopupClickHandler = (evt) => {
     evt.preventDefault();
-    this.updateData({ isUserEmoji: null });
     this._callback.closePopupClick(FilmsPopupView.parseDataToCard(this._data));
   }
 
