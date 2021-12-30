@@ -82,6 +82,7 @@ export default class FilmPresenter {
 
   #closePopup = () => {
     body.classList.remove('hide-overflow');
+    this.#filmsPopupComponent.reset(this.#card);
     this.#filmsPopupComponent.element.remove();
     this.#mode = Mode.DEFAULT;
     document.removeEventListener('keydown', this.#escKeyDownHandler);
@@ -125,7 +126,6 @@ export default class FilmPresenter {
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
-      this.#filmsPopupComponent.reset(this.#card);
       this.#closePopup();
     }
   }
