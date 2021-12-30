@@ -259,16 +259,12 @@ export default class FilmsPopupView extends AbstractView {
     if (evt.target.tagName !== 'INPUT') {
       return;
     }
-    // определить положение
 
-    // const scrollPopup = window.pageYOffset;
+    const scrollPopup = this.element.scrollTop;
 
     this.updateData({ isUserEmoji: evt.target.value });
 
-    // вернуть на место
-    // window.scrollTo(0, scrollPopup);
-
-    this.element.scrollIntoView({ top: false });
+    this.element.scroll(0, scrollPopup);
   }
 
   #textCommentInputHandler = (evt) => {
