@@ -13,6 +13,7 @@ const NUMBER_CARDS_PER_STEP = 5;
 
 export default class FilmsListPresenter {
   #filmsContainer = null;
+  #filmsModel = null;
 
   #filmsSortComponent = new FilmsSortView();
   #filmsContainerComponent = new FilmsContainerView();
@@ -27,8 +28,13 @@ export default class FilmsListPresenter {
   #currentSortType = SortType.DEFAULT;
   #sourcedBoardCards = [];
 
-  constructor(filmsContainer) {
+  constructor(filmsContainer, filmsModel) {
     this.#filmsContainer = filmsContainer;
+    this.#filmsModel = filmsModel;
+  }
+
+  get cards(){
+    return this.#filmsModel.cards;
   }
 
   init = (boardCards) => {
