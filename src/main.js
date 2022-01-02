@@ -22,4 +22,4 @@ render(header, new ProfileUserView(), RenderPosition.BEFORE_END);
 render(main, new MainNavigationView(filter), RenderPosition.BEFORE_END);
 render(footer, new MovieCounterView(cards), RenderPosition.BEFORE_END);
 
-boardPresenter.init();
+boardPresenter.init(cards);

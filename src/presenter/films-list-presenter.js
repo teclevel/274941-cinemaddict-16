@@ -19,7 +19,6 @@ export default class FilmsListPresenter {
   #filmsListComponent = new FilmsListView();
   #filmsListNoCardsComponent = new FilmsListNoCardsView();
   #filmsListContainerComponent = new FilmsListContainerView();
-<<<<<<< HEAD
   #showMoreButton = new ButtonShowMoreView();
 
   #boardCards = [];
@@ -27,37 +26,14 @@ export default class FilmsListPresenter {
   #filmPresenter = new Map();
   #currentSortType = SortType.DEFAULT;
   #sourcedBoardCards = [];
-=======
-  #filmsSortComponent = null;
-  #showMoreButton = null;
-
-  // #boardCards = [];
-  #renderedCardCount = NUMBER_CARDS_PER_STEP;
-  #filmPresenter = new Map();
-  #currentSortType = SortType.DEFAULT;
-  // #sourcedBoardCards = [];
->>>>>>> parent of 1788da5 (модель)
 
   constructor(filmsContainer) {
     this.#filmsContainer = filmsContainer;
   }
 
-<<<<<<< HEAD
   init = (boardCards) => {
     this.#boardCards = [...boardCards];
     this.#sourcedBoardCards = [...boardCards];
-=======
-  get cards() {
-    switch (this.#currentSortType) {
-      case SortType.DATE:
-        return [...this.#filmsModel].sort((a, b) => b.year - a.year);
-      case SortType.RATING:
-        return [...this.#filmsModel].sort((a, b) => b.rating - a.rating);
-    }
-
-    return this.#filmsModel.cards;
-  }
->>>>>>> parent of 1788da5 (модель)
 
     render(this.#filmsContainer, this.#filmsContainerComponent, RenderPosition.BEFORE_END);
 
@@ -91,10 +67,6 @@ export default class FilmsListPresenter {
   }
 
   #renderFilmsSort = () => {
-<<<<<<< HEAD
-=======
-    
->>>>>>> parent of 1788da5 (модель)
     render(this.#filmsContainerComponent, this.#filmsSortComponent, RenderPosition.BEFORE_BEGIN);
     this.#filmsSortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   }
@@ -102,51 +74,6 @@ export default class FilmsListPresenter {
   #renderShowMoreButton = () => {
     render(this.#filmsListComponent, this.#showMoreButton, RenderPosition.BEFORE_END);
     this.#showMoreButton.setClickHandler(this.#handleShowMoreButtonClick);
-<<<<<<< HEAD
-=======
-  }
-
-  // #clearCardList = () => {
-  //   this.#filmPresenter.forEach((presenter) => presenter.destroy());
-  //   this.#filmPresenter.clear();
-  //   this.#renderedCardCount = NUMBER_CARDS_PER_STEP;
-  //   remove(this.#showMoreButton);////
-  // }
-
-  // #renderCardList = () => {
-  //   const cardCount = this.cards.length;
-  //   const cards = this.tasks.slice(0, Math.min(cardCount, NUMBER_CARDS_PER_STEP));
-
-  //   this.#renderCards(cards);
-  //   if (cardCount > NUMBER_CARDS_PER_STEP) {
-  //     this.#renderShowMoreButton();
-  //   }
-  // }
-
-  #clearBoard = ({ resetRenderedCardCount = false, resetSortType = false } = {}) => {
-    const cardCount = this.card.length;
-
-    this.#filmPresenter.forEach((presenter) => presenter.destroy());
-    this.#filmPresenter.clear();
-
-
-    remove(this.#filmsSortComponent);
-    remove(this.#filmsListNoCardsComponent);
-    remove(this.#showMoreButton);
-
-    if (resetRenderedCardCount) {
-      this.#renderedCardCount = NUMBER_CARDS_PER_STEP;
-    } else {
-      // На случай, если перерисовка доски вызвана
-      // уменьшением количества задач (например, удаление или перенос в архив)
-      // нужно скорректировать число показанных задач
-      this.#renderedCardCount = Math.min(cardCount, this.#renderedCardCount);
-    }
-
-    if (resetSortType) {
-      this.#currentSortType = SortType.DEFAULT;
-    }
->>>>>>> parent of 1788da5 (модель)
   }
 
   #renderBoard = () => {
@@ -179,11 +106,7 @@ export default class FilmsListPresenter {
 
     this.#renderedCards += NUMBER_CARDS_PER_STEP;
 
-<<<<<<< HEAD
     if (this.#renderedCards >= this.#boardCards.length) {
-=======
-    if (this.#renderedCardCount >= filmsCount) {
->>>>>>> parent of 1788da5 (модель)
       remove(this.#showMoreButton);
     }
   }
