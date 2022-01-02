@@ -1,8 +1,7 @@
-import { RenderPosition, UpdateType, UserAction } from '../const';
+import { RenderPosition } from '../const';
 import { remove, render, replace } from '../utils/render';
 import FilmsCardView from '../view/films-card-view';
 import FilmsPopupView from '../view/films-popup-view';
-
 
 const footer = document.querySelector('.footer');
 const body = document.querySelector('body');
@@ -114,27 +113,15 @@ export default class FilmPresenter {
   }
 
   #handleFavoriteClick = () => {
-    this.#changeData(
-      UserAction.UPDATE_CARD,
-      UpdateType.MINOR,
-      { ...this.#card, isFavorite: !this.#card.isFavorite }
-    );
+    this.#changeData({ ...this.#card, isFavorite: !this.#card.isFavorite });
   }
 
   #handleWatchedClick = () => {
-    this.#changeData(
-      UserAction.UPDATE_CARD,
-      UpdateType.MINOR,
-      { ...this.#card, isWatched: !this.#card.isWatched }
-    );
+    this.#changeData({ ...this.#card, isWatched: !this.#card.isWatched });
   }
 
   #handleAddToWatchClick = () => {
-    this.#changeData(
-      UserAction.UPDATE_CARD,
-      UpdateType.MINOR,
-      { ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch }
-    );
+    this.#changeData({ ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch });
   }
 
   #escKeyDownHandler = (evt) => {
@@ -149,9 +136,9 @@ export default class FilmPresenter {
   // }
 
   #ctrlEnterKeyDownHandler = (evt) => {
-    // if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
-    //   this.#filmsPopupComponent.submitForm();
-    //   // console.log('ctrlEnter');
-    // }
+    if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
+      this.#filmsPopupComponent.submitForm();
+      // console.log('ctrlEnter');
+    }
   }
 }

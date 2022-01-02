@@ -197,10 +197,10 @@ export default class FilmsPopupView extends SmartView {
     this.setWatchedClickHandler(this._callback.watchedClick);
   }
 
-  // submitForm = () => {
-  //   this.element.querySelector('form')
-  //     .submit(FilmsPopupView.parseDataToCard(this._data));
-  // }
+  submitForm = () => {
+    this.element.querySelector('form')
+      .submit(FilmsPopupView.parseDataToCard(this._data));
+  }
 
   setPopupClickHandler(callback) {
     this._callback.closePopupClick = callback;
