@@ -6,7 +6,6 @@ import { generateDataCard } from './mock/card';
 import { generateFilmsFilter } from './mock/filter';
 import { RenderPosition } from './const';
 import { render } from './utils/render';
-import FilmsModel from './model/films-model';
 
 const NUMBER_CARDS = 17;
 
@@ -17,10 +16,7 @@ const footer = document.querySelector('.footer');
 const cards = Array.from({ length: NUMBER_CARDS }, generateDataCard);
 const filter = generateFilmsFilter(cards);
 
-const filmsModel = new FilmsModel();
-filmsModel.card = cards;
-
-const boardPresenter = new FilmsListPresenter(main, filmsModel);
+const boardPresenter = new FilmsListPresenter(main);
 
 render(header, new ProfileUserView(), RenderPosition.BEFORE_END);
 render(main, new MainNavigationView(filter), RenderPosition.BEFORE_END);
