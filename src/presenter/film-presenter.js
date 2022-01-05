@@ -47,6 +47,8 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
 
+    // this.#filmsPopupComponent.setDeleteCommentClickHandler(this.#handleDeleteCommentClick);
+
     // this.#filmsPopupComponent.setFormSubmitHandler(this.#handleFormSubmit);
 
     if (!prevCardComponent || !prevPopupComponent) {
@@ -131,6 +133,15 @@ export default class FilmPresenter {
       UserAction.UPDATE_CARD,
       UpdateType.MINOR,
       { ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch });
+  }
+
+  #handleDeleteCommentClick = (card) => {
+    console.log('del');
+    this.#changeMode(
+      UserAction.UPDATE_CARD,
+      UpdateType.PATCH,
+      card
+    );
   }
 
   #escKeyDownHandler = (evt) => {

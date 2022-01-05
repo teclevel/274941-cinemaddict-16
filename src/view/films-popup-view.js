@@ -12,20 +12,15 @@ const BLANK_DETAILS_FILM = {
   isFavorite: false
 };
 
-const createGenresTemplate = (genres) => {
-  let list = '';
-  for (const genre of genres) {
-    list += `<span class="film-details__genre">${genre}</span>`;
-  }
-  return list;
-};
+const createGenresTemplate = (genres) => (
+  genres.map((genre) =>
+    `<span class="film-details__genre">${genre}</span>`
+  ).join('')
+);
 
-const createCommentTemplate = (comments) => {
-  let list = '';
-  for (const comment of comments) {
-    const { emotion, commentText, name, date } = comment;
-
-    list += `<li class="film-details__comment">
+const createCommentTemplate = (comments) => (
+  comments.map(({ emotion, commentText, name, date }) =>
+    `<li class="film-details__comment">
       <span class="film-details__comment-emoji">
         <img src="${emotion}" width="55" height="55" alt="emoji-smile">
       </span>
@@ -37,10 +32,9 @@ const createCommentTemplate = (comments) => {
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
-    </li>`;
-  }
-  return list;
-};
+    </li>`
+  ).join('')
+);
 
 const createEmojiListTemplate = (currentEmoji) => (
   EMOJIS.map((emoji) =>
@@ -195,6 +189,7 @@ export default class FilmsPopupView extends SmartView {
     this.setAddToWatchClickHandler(this._callback.addToWatchClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setDeleteCommentClickHandler(this._callback.deleteCommentClick);
   }
 
   submitForm = () => {
@@ -224,6 +219,20 @@ export default class FilmsPopupView extends SmartView {
     this._callback.watchedClick = callback;
     this.element.querySelector('#watched')
       .addEventListener('click', this.#watchedClickHandler);
+  }
+
+  setDeleteCommentClickHandler = (callback) => {
+    this._callback.deleteCommentClick = callback;
+    this.element.addEventListener('click', this.#deleteCommentHandler);
+  }
+
+  #deleteCommentHandler = (evt) => {
+    if (evt.target.tagName !== 'BUTTON') {
+      return;
+    }
+    evt.preventDefault();
+    // this.updateData
+    this._callback.deleteCommentClick();
   }
 
   #setInnerHandler = () => {

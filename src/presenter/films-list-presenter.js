@@ -125,20 +125,8 @@ export default class FilmsListPresenter {
     }
   }
 
-  #handleShowMoreButtonClick = () => {
-    const cardCount = this.cards.length;
-    const newRenderedCardCount = Math.min(cardCount, this.#renderedCardCount + NUMBER_CARDS_PER_STEP);
-    const cards = this.cards.slice(this.#renderedCardCount, newRenderedCardCount);
-
-    this.#renderCards(cards);
-    this.#renderedCardCount = newRenderedCardCount;
-
-    if (this.#renderedCardCount >= cardCount) {
-      remove(this.#showMoreButtonComponent);
-    }
-  }
-
   #handleViewAction = (actionType, updateType, update) => {
+    //реагирует на то, что происходит с VIEW
     // Здесь будем вызывать обновление модели.
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
     // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
@@ -157,6 +145,7 @@ export default class FilmsListPresenter {
   }
 
   #handleModelEvent = (updateType, data) => {
+    //реагирует на то что происходит с моделью
     // В зависимости от типа изменений решаем, что делать:
     // - обновить часть списка (например, когда поменялось описание)
     // - обновить список (например, когда задача ушла в архив)
@@ -191,5 +180,18 @@ export default class FilmsListPresenter {
     this.#currentSortType = sortType;
     this.#clearBoard({ resetRenderedCardCount: true });
     this.#renderBoard();
+  }
+
+  #handleShowMoreButtonClick = () => {
+    const cardCount = this.cards.length;
+    const newRenderedCardCount = Math.min(cardCount, this.#renderedCardCount + NUMBER_CARDS_PER_STEP);
+    const cards = this.cards.slice(this.#renderedCardCount, newRenderedCardCount);
+
+    this.#renderCards(cards);
+    this.#renderedCardCount = newRenderedCardCount;
+
+    if (this.#renderedCardCount >= cardCount) {
+      remove(this.#showMoreButtonComponent);
+    }
   }
 }
