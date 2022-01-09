@@ -6,7 +6,7 @@ const createStatisticTemplate = (cards) => {
   return (`<section class="footer__statistics">${counter}</section>`);
 };
 
-export default class MovieCounterView extends AbstractView {
+export default class FilmCounterView extends AbstractView {
   #cards = null;
 
   constructor(cards) {
