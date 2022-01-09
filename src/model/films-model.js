@@ -11,7 +11,7 @@ export default class FilmsModel extends AbstractObservable {
     return this.#cards;
   }
 
-  updateCard = (updateType, update) => {
+  updateCard = (updateType, update) => {//если обновляются данные , то
     const index = this.#cards.findIndex((card) => card.id === update.id);
 
     if (index === -1) {
@@ -24,16 +24,16 @@ export default class FilmsModel extends AbstractObservable {
       ...this.#cards.slice(index + 1),
     ];
 
-    this._notify(updateType, update);
+    this._notify(updateType, update); //вызывается уведомление подписчиков
   }
 
-  addCard = (updateType, update) => {
+  addCard = (updateType, update) => {//аналогично
     this.#cards = [
       update,
       ...this.#cards,
     ];
 
-    this._notify(updateType, update);
+    this._notify(updateType, update);//
   }
 
   deleteCard = (updateType, update) => {

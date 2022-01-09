@@ -47,7 +47,7 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
 
-    // this.#filmsPopupComponent.setDeleteCommentClickHandler(this.#handleDeleteCommentClick);
+    this.#filmsPopupComponent.setDeleteCommentClickHandler(this.#handleDeleteCommentClick);
 
     // this.#filmsPopupComponent.setFormSubmitHandler(this.#handleFormSubmit);
 
@@ -71,15 +71,15 @@ export default class FilmPresenter {
     remove(this.#filmsPopupComponent);
   }
 
-  #renderFilmsPopup = () => {
-    render(footer, this.#filmsPopupComponent, RenderPosition.AFTER_END);
-  }
-
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#filmsPopupComponent.reset(this.#card);
       this.#closePopup();
     }
+  }
+
+  #renderFilmsPopup = () => {
+    render(footer, this.#filmsPopupComponent, RenderPosition.AFTER_END);
   }
 
   #closePopup = () => {
@@ -117,31 +117,31 @@ export default class FilmPresenter {
   #handleFavoriteClick = () => {
     this.#changeData(
       UserAction.UPDATE_CARD,
-      UpdateType.MINOR,
+      this.#mode === Mode. DEFAULT ? UpdateType.MINOR : UpdateType.PATCH,
       { ...this.#card, isFavorite: !this.#card.isFavorite });
   }
 
   #handleWatchedClick = () => {
     this.#changeData(
       UserAction.UPDATE_CARD,
-      UpdateType.MINOR,
+      this.#mode === Mode. DEFAULT ? UpdateType.MINOR : UpdateType.PATCH,
       { ...this.#card, isWatched: !this.#card.isWatched });
   }
 
   #handleAddToWatchClick = () => {
     this.#changeData(
       UserAction.UPDATE_CARD,
-      UpdateType.MINOR,
+      this.#mode === Mode. DEFAULT ? UpdateType.MINOR : UpdateType.PATCH,
       { ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch });
   }
 
   #handleDeleteCommentClick = (card) => {
     console.log('del');
-    this.#changeMode(
-      UserAction.UPDATE_CARD,
-      UpdateType.PATCH,
-      card
-    );
+    // this.#changeMode(
+    //   UserAction.UPDATE_CARD,
+    //   UpdateType.PATCH,
+    //   card
+    // );
   }
 
   #escKeyDownHandler = (evt) => {

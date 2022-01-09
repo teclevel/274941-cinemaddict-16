@@ -6,13 +6,15 @@ import FilmsSortView from '../view/sort-view';
 import FilmsListNoCardsView from '../view/films-list-no-cards-view';
 import { render, remove } from '../utils/render';
 import FilmPresenter from './film-presenter';
-import { RenderPosition, SortType, UpdateType, UserAction } from '../const';
+import { FilterType, RenderPosition, SortType, UpdateType, UserAction } from '../const';
+import { filter } from '../utils/filter';
 
 const NUMBER_CARDS_PER_STEP = 5;
 
 export default class FilmsListPresenter {
   #filmsContainer = null;
   #filmsModel = null;
+  #filterModel = null;
 
   #filmsContainerComponent = new FilmsContainerView();
   #filmsListComponent = new FilmsListView();
@@ -24,27 +26,35 @@ export default class FilmsListPresenter {
   #renderedCardCount = NUMBER_CARDS_PER_STEP;
   #filmPresenter = new Map();
   #currentSortType = SortType.DEFAULT;
+  #filterType = FilterType.ALL_MOVIES
 
-  constructor(filmsContainer, filmsModel) {
+  constructor(filmsContainer, filmsModel, filterModel) {
     this.#filmsContainer = filmsContainer;
     this.#filmsModel = filmsModel;
-
-    this.#filmsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel = filterModel;
   }
 
   get cards() {
+    this.#filterType = this.#filterModel.filter;
+    const cards = this.#filmsModel.cards;
+    const filteredCards = filter[this.#filterType](cards);
+
     switch (this.#currentSortType) {
       case SortType.DATE:
-        return [...this.#filmsModel.cards].sort((a, b) => b.year - a.year);
+        return filteredCards.sort((a, b) => b.year - a.year);
       case SortType.RATING:
-        return [...this.#filmsModel.cards].sort((a, b) => b.rating - a.rating);
+        return filteredCards.sort((a, b) => b.rating - a.rating);
     }
 
-    return this.#filmsModel.cards;
+    return filteredCards;
   }
 
   init = () => {
     render(this.#filmsContainer, this.#filmsContainerComponent, RenderPosition.BEFORE_END);
+
+    this.#filmsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
+
     this.#renderBoard();
   }
 
@@ -74,6 +84,7 @@ export default class FilmsListPresenter {
   #renderFilmsSort = () => {
     this.#filmsSortComponent = new FilmsSortView(this.#currentSortType);
     this.#filmsSortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
+
     render(this.#filmsContainerComponent, this.#filmsSortComponent, RenderPosition.BEFORE_BEGIN);
   }
 
@@ -96,7 +107,7 @@ export default class FilmsListPresenter {
     this.#renderFilmsSort();
     this.#renderCards(cards.slice(0, Math.min(cardCount, this.#renderedCardCount)));
 
-    if (cardCount > NUMBER_CARDS_PER_STEP) {
+    if (cardCount > this.#renderedCardCount) {
       this.#renderShowMoreButton();
     }
   }
@@ -125,8 +136,8 @@ export default class FilmsListPresenter {
     }
   }
 
-  #handleViewAction = (actionType, updateType, update) => {
-    //реагирует на то, что происходит с VIEW
+  #handleViewAction = (actionType, updateType, update) => {//передается VIEW  //реагирует на то, что происходит с VIEW
+    console.log(actionType, updateType, update);
     // Здесь будем вызывать обновление модели.
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
     // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
@@ -144,8 +155,8 @@ export default class FilmsListPresenter {
     }
   }
 
-  #handleModelEvent = (updateType, data) => {
-    //реагирует на то что происходит с моделью
+  #handleModelEvent = (updateType, data) => {         //   передается модели    //реагирует на то что происходит с моделью
+    console.log(updateType, data);
     // В зависимости от типа изменений решаем, что делать:
     // - обновить часть списка (например, когда поменялось описание)
     // - обновить список (например, когда задача ушла в архив)
@@ -161,6 +172,7 @@ export default class FilmsListPresenter {
         // - обновить список (например, когда задача ушла в архив)
         break;
       case UpdateType.MAJOR:
+        console.log('major');
         this.#clearBoard({ resetRenderedCardCount: true, resetSortType: true });
         this.#renderBoard();
         // - обновить всю доску (например, при переключении фильтра)

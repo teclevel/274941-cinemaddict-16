@@ -11,16 +11,13 @@ export default class FilterPresenter {
 
   #filterComponent = null;
 
-  constructor(filterContainer, filterModel, filmsModel) {
+  constructor(filterContainer, filterModel, filmsModel) {// получает модель
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
     this.#filmsModel = filmsModel;
-
-    this.#filmsModel.addObserver(this.#handleModelEvent);
-    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
-  get filters() {
+  get filters() {//обертка для удобства
     const cards = this.#filmsModel.cards;
 
     return [
@@ -32,17 +29,17 @@ export default class FilterPresenter {
       {
         type: FilterType.WATCH_LIST,
         name: 'Watchlist',
-        count: filter[FilterType.WATCH_LIST](cards).length > 0 ? filter[FilterType.WATCH_LIST](cards).length : '0'
+        count: filter[FilterType.WATCH_LIST](cards).length || '0'
       },
       {
         type: FilterType.HISTORY,
         name: 'History',
-        count: filter[FilterType.HISTORY](cards).length > 0 ? filter[FilterType.HISTORY](cards).length : '0'
+        count: filter[FilterType.HISTORY](cards).length || '0'
       },
       {
         type: FilterType.FAVORITES,
         name: 'Favorites',
-        count: filter[FilterType.FAVORITES](cards).length > 0 ? filter[FilterType.FAVORITES](cards).length : '0'
+        count: filter[FilterType.FAVORITES](cards).length || '0'
       }
     ];
   }
@@ -53,6 +50,9 @@ export default class FilterPresenter {
 
     this.#filterComponent = new FilterView(filters, this.#filterModel.filter);
     this.#filterComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
+
+    this.#filmsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
 
     if (prevFilterComponent === null) {
       render(this.#filterContainer, this.#filterComponent, RenderPosition.BEFORE_END);
@@ -71,7 +71,8 @@ export default class FilterPresenter {
     if (this.#filterModel.filter === filterType) {
       return;
     }
-    this.#handleModelEvent();
-    // this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+    // this.#handleModelEvent();
+    // console.log(this.#filterModel.filter);
   }
 }
