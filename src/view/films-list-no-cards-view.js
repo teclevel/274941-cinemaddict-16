@@ -1,13 +1,24 @@
+import { noFilmsTextType } from '../const';
 import AbstractView from './abstract-view';
 
-const createFilmsListNoCardsTemplate = () => (
-  `<section class="films-list">
-    <h2 class="films-list__title">There are no movies in our database</h2>
-  </section>`
-);
+const createFilmsListNoCardsTemplate = (filterType) => {
+  const noFilmsTextValue = noFilmsTextType[filterType];
+
+  return (
+    `<section class="films-list">
+      <h2 class="films-list__title">${noFilmsTextValue}</h2>
+    </section>`
+  );
+};
+
 
 export default class FilmsListNoCardsView extends AbstractView {
+  constructor(data) {
+    super();
+    this._data = data;
+  }
+
   get template() {
-    return createFilmsListNoCardsTemplate();
+    return createFilmsListNoCardsTemplate(this._data);
   }
 }

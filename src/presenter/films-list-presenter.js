@@ -18,15 +18,15 @@ export default class FilmsListPresenter {
 
   #filmsContainerComponent = new FilmsContainerView();
   #filmsListComponent = new FilmsListView();
-  #filmsListNoCardsComponent = new FilmsListNoCardsView();
   #filmsListContainerComponent = new FilmsListContainerView();
+  #noFilmsComponent = null;
   #showMoreButtonComponent = null;
   #filmsSortComponent = null;
 
   #renderedCardCount = NUMBER_CARDS_PER_STEP;
   #filmPresenter = new Map();
   #currentSortType = SortType.DEFAULT;
-  #filterType = FilterType.ALL_MOVIES
+  #filterType = FilterType.ALL_MOVIES;
 
   constructor(filmsContainer, filmsModel, filterModel) {
     this.#filmsContainer = filmsContainer;
@@ -77,8 +77,9 @@ export default class FilmsListPresenter {
     cards.forEach((card) => this.#renderCard(card));
   }
 
-  #renderFilmsListNoCards = () => {
-    render(this.#filmsContainerComponent, this.#filmsListNoCardsComponent, RenderPosition.BEFORE_END);
+  #renderNoFilms = () => {
+    this.#noFilmsComponent = new FilmsListNoCardsView(this.#filterType);
+    render(this.#filmsContainerComponent, this.#noFilmsComponent, RenderPosition.BEFORE_END);
   }
 
   #renderFilmsSort = () => {
@@ -99,7 +100,7 @@ export default class FilmsListPresenter {
     const cardCount = this.cards.length;
 
     if (cardCount === 0) {
-      this.#renderFilmsListNoCards();
+      this.#renderNoFilms();
     }
 
     this.#renderFilmsList();
@@ -119,8 +120,11 @@ export default class FilmsListPresenter {
     this.#filmPresenter.clear();
 
     remove(this.#filmsSortComponent);
-    remove(this.#filmsListNoCardsComponent);
     remove(this.#showMoreButtonComponent);
+
+    if (this.#noFilmsComponent) {
+      remove(this.#noFilmsComponent);
+    }
 
     if (resetRenderedCardCount) {
       this.#renderedCardCount = NUMBER_CARDS_PER_STEP;
@@ -137,7 +141,6 @@ export default class FilmsListPresenter {
   }
 
   #handleViewAction = (actionType, updateType, update) => {//передается VIEW  //реагирует на то, что происходит с VIEW
-    console.log(actionType, updateType, update);
     // Здесь будем вызывать обновление модели.
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
     // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
@@ -156,7 +159,6 @@ export default class FilmsListPresenter {
   }
 
   #handleModelEvent = (updateType, data) => {         //   передается модели    //реагирует на то что происходит с моделью
-    console.log(updateType, data);
     // В зависимости от типа изменений решаем, что делать:
     // - обновить часть списка (например, когда поменялось описание)
     // - обновить список (например, когда задача ушла в архив)
@@ -172,7 +174,6 @@ export default class FilmsListPresenter {
         // - обновить список (например, когда задача ушла в архив)
         break;
       case UpdateType.MAJOR:
-        console.log('major');
         this.#clearBoard({ resetRenderedCardCount: true, resetSortType: true });
         this.#renderBoard();
         // - обновить всю доску (например, при переключении фильтра)

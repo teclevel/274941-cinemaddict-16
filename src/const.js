@@ -13,7 +13,7 @@ export const RenderPosition = {
 
 export const EMOJIS = ['smile', 'sleeping', 'puke', 'angry'];
 
-export const UserAction = {//свои для конкретного задания
+export const UserAction = {
   UPDATE_CARD: 'UPDATE_CARD',
   ADD_CARD: 'ADD_CARD',
   DELETE_CARD: 'DELETE_CARD',
@@ -30,4 +30,11 @@ export const FilterType = {
   WATCH_LIST: 'watchList',
   HISTORY: 'history',
   FAVORITES: 'favorites'
+};
+
+export const noFilmsTextType = {
+  [FilterType.ALL_MOVIES]: 'There are no movies in our database',
+  [FilterType.WATCH_LIST]: 'There are no movies to watch now',
+  [FilterType.HISTORY]: 'There are no watched movies now',
+  [FilterType.FAVORITES]: 'There are no favorite movies now',
 };
