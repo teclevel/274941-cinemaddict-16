@@ -45,14 +45,16 @@ export default class FilterView extends AbstractView {
 
   setFilterTypeChangeHandler = (callback) => {
     this._callback.filterTypeChange = callback;
-    this.element.addEventListener('click', this.#filterTypeChangeHandler);
+    this.element.querySelector('.main-navigation__items')
+      .addEventListener('click', this.#filterTypeChangeHandler);
   }
 
   #filterTypeChangeHandler = (evt) => {
     evt.preventDefault();
-    if (evt.target.tagName !== 'A') {
-      return;
-    }
-    this._callback.filterTypeChange(evt.target.dataset.filterType);
+    const itemFilter = evt.target.closest('a');
+
+    if (!itemFilter) { return; }
+
+    this._callback.filterTypeChange(itemFilter.dataset.filterType);
   }
 }
