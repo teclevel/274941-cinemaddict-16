@@ -226,7 +226,7 @@ export default class FilmsPopupView extends SmartView {
     this.element.querySelector('.film-details__comments-list')
       .addEventListener('click', this.#deleteCommentHandler);
   }
-
+/////////////////////////////////////////
   #deleteCommentHandler = (evt) => {
     evt.preventDefault();
 
