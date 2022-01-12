@@ -62,6 +62,7 @@ const generateDateComment = () => {
 };
 
 export const generateComment = () => ({
+  id: nanoid(),
   emotion: generateEmoji(),
   commentText: generateComments(),
   name: getRandomElementArray(NAMES),

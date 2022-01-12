@@ -19,7 +19,7 @@ const createGenresTemplate = (genres) => (
 );
 
 const createCommentTemplate = (comments) => (
-  comments.map(({ emotion, commentText, name, date }) =>
+  comments.map(({ emotion, commentText, name, date, id }) =>
     `<li class="film-details__comment">
       <span class="film-details__comment-emoji">
         <img src="${emotion}" width="55" height="55" alt="emoji-smile">
@@ -29,7 +29,7 @@ const createCommentTemplate = (comments) => (
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${name}</span>
           <span class="film-details__comment-day">${formatDateComment(date)}</span>
-          <button class="film-details__comment-delete">Delete</button>
+          <button class="film-details__comment-delete" data-id-comment="${id}">Delete</button>
         </p>
       </div>
     </li>`
@@ -226,17 +226,14 @@ export default class FilmsPopupView extends SmartView {
     this.element.querySelector('.film-details__comments-list')
       .addEventListener('click', this.#deleteCommentHandler);
   }
-/////////////////////////////////////////
+
   #deleteCommentHandler = (evt) => {
     evt.preventDefault();
-
-    const comment = this.element.querySelector('.film-details__comment');
 
     if (evt.target.tagName !== 'BUTTON') {
       return;
     }
-    // this.updateData
-    this._callback.deleteCommentClick(comment);
+    this._callback.deleteCommentClick(evt.target.dataset.idComment);
   }
 
   #setInnerHandler = () => {

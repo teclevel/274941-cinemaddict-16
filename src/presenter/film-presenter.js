@@ -99,12 +99,11 @@ export default class FilmPresenter {
     this.#mode = Mode.POPUP;
   }
 
-//   #deleteComment = (cards) => {
-// console.log(this.#card);
-//   }
-  // #submitForm =(card)=>{
-  //   this.#filmsPopupComponent.element.querySelector('form').submit(card);
-  // }
+  #deleteComment = (cards, id) => {
+    const comments = cards.comments.filter((comment) => comment.id !== id);
+    delete cards.comments;
+    cards.comments = comments;
+  }
 
   #handleCardClick = () => {
     if (this.#mode === Mode.DEFAULT) {
@@ -137,15 +136,15 @@ export default class FilmPresenter {
       this.#mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.PATCH,
       { ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch });
   }
-/////////////////////////////////////
-  #handleDeleteCommentClick = (card) => {
-    console.log('del');
-    console.log(card);
-    // this.#changeMode(
-    //   UserAction.UPDATE_CARD,
-    //   UpdateType.PATCH,
-    //   card
-    // );
+
+  #handleDeleteCommentClick = (id) => {
+    this.#deleteComment(this.#card, id);
+
+    this.#changeData(
+      UserAction.UPDATE_CARD,
+      UpdateType.PATCH,
+      this.#card
+    );
   }
 
   #escKeyDownHandler = (evt) => {
@@ -155,14 +154,13 @@ export default class FilmPresenter {
   }
 
   // #handleFormSubmit = (card) => {
-  //   // this.#changeData(card);
+  //   this.#changeData(card);
   //   this.#submitForm(card);
   // }
 
   #ctrlEnterKeyDownHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
       this.#filmsPopupComponent.submitForm();
-      // console.log('ctrlEnter');
     }
   }
 }
