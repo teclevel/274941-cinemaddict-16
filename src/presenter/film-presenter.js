@@ -99,6 +99,9 @@ export default class FilmPresenter {
     this.#mode = Mode.POPUP;
   }
 
+//   #deleteComment = (cards) => {
+// console.log(this.#card);
+//   }
   // #submitForm =(card)=>{
   //   this.#filmsPopupComponent.element.querySelector('form').submit(card);
   // }
@@ -117,26 +120,27 @@ export default class FilmPresenter {
   #handleFavoriteClick = () => {
     this.#changeData(
       UserAction.UPDATE_CARD,
-      this.#mode === Mode. DEFAULT ? UpdateType.MINOR : UpdateType.PATCH,
+      this.#mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.PATCH,
       { ...this.#card, isFavorite: !this.#card.isFavorite });
   }
 
   #handleWatchedClick = () => {
     this.#changeData(
       UserAction.UPDATE_CARD,
-      this.#mode === Mode. DEFAULT ? UpdateType.MINOR : UpdateType.PATCH,
+      this.#mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.PATCH,
       { ...this.#card, isWatched: !this.#card.isWatched });
   }
 
   #handleAddToWatchClick = () => {
     this.#changeData(
       UserAction.UPDATE_CARD,
-      this.#mode === Mode. DEFAULT ? UpdateType.MINOR : UpdateType.PATCH,
+      this.#mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.PATCH,
       { ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch });
   }
-
+/////////////////////////////////////
   #handleDeleteCommentClick = (card) => {
     console.log('del');
+    console.log(card);
     // this.#changeMode(
     //   UserAction.UPDATE_CARD,
     //   UpdateType.PATCH,

@@ -228,12 +228,15 @@ export default class FilmsPopupView extends SmartView {
   }
 
   #deleteCommentHandler = (evt) => {
+    evt.preventDefault();
+
+    const comment = this.element.querySelector('.film-details__comment');
+
     if (evt.target.tagName !== 'BUTTON') {
       return;
     }
-    evt.preventDefault();
     // this.updateData
-    this._callback.deleteCommentClick();
+    this._callback.deleteCommentClick(comment);
   }
 
   #setInnerHandler = () => {
