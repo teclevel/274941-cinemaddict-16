@@ -96,7 +96,7 @@ const createFilmsPopupTemplate = (data, commentsTemplate) => {
 
 export default class FilmsPopupView extends SmartView {
   #card = null;
-  comments =  null;
+  // comments = null;
 
   constructor(card) {
     super();
@@ -105,7 +105,7 @@ export default class FilmsPopupView extends SmartView {
   }
 
   get template() {
-    return createFilmsPopupTemplate(this.#card, this.comments);
+    return createFilmsPopupTemplate(this.#card, this.comments.template);
   }
 
   // submitForm = () => {
