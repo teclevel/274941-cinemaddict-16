@@ -97,10 +97,8 @@ export default class FilmsPopupCommentsView extends SmartView {
 
   setDeleteCommentClickHandler = (callback) => {
     this._callback.deleteCommentClick = callback;
-    console.log(this.element.querySelector('.film-details__comments-list'));
-
     this.element.querySelector('.film-details__comments-list')
-      .addEventListener('click', ()=>{console.log('click');});
+      .addEventListener('click', this.#deleteCommentHandler);
   }
 
   #deleteCommentHandler = (evt) => {

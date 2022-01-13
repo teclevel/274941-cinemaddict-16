@@ -96,7 +96,7 @@ const createFilmsPopupTemplate = (data, commentsTemplate) => {
 
 export default class FilmsPopupView extends SmartView {
   #card = null;
-  // comments = null;
+  comments = null;
 
   constructor(card) {
     super();

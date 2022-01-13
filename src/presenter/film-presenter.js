@@ -48,7 +48,6 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
 
     this.#filmsPopupComponent.comments.setDeleteCommentClickHandler(this.#handleDeleteCommentClick);
-    // this.#filmsPopupComponent.comments.log();
     // this.#filmsPopupComponent.setFormSubmitHandler(this.#handleFormSubmit);
 
     if (!prevCardComponent || !prevPopupComponent) {
@@ -138,7 +137,6 @@ export default class FilmPresenter {
   }
 
   #handleDeleteCommentClick = (id) => {
-    console.log('del');
     this.#deleteComment(this.#card, id);
 
     this.#changeData(
