@@ -38,3 +38,12 @@ export const noFilmsTextType = {
   [FilterType.HISTORY]: 'There are no watched movies now',
   [FilterType.FAVORITES]: 'There are no favorite movies now',
 };
+
+export const BLANK_DETAILS_FILM = {
+  isUserEmoji: null,
+  textComment: '',
+
+  isWatched: false,
+  isAddedToWatch: false,
+  isFavorite: false
+};

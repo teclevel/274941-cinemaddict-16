@@ -47,7 +47,7 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
 
-    this.#filmsPopupComponent.setDeleteCommentClickHandler(this.#handleDeleteCommentClick);
+    this.#filmsPopupComponent.comments.setDeleteCommentClickHandler(this.#handleDeleteCommentClick);
 
     // this.#filmsPopupComponent.setFormSubmitHandler(this.#handleFormSubmit);
 
@@ -73,7 +73,7 @@ export default class FilmPresenter {
 
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
-      this.#filmsPopupComponent.reset(this.#card);
+      this.#filmsPopupComponent.comments.reset(this.#card);
       this.#closePopup();
     }
   }
@@ -84,7 +84,7 @@ export default class FilmPresenter {
 
   #closePopup = () => {
     body.classList.remove('hide-overflow');
-    this.#filmsPopupComponent.reset(this.#card);
+    this.#filmsPopupComponent.comments.reset(this.#card);
     this.#filmsPopupComponent.element.remove();
     this.#mode = Mode.DEFAULT;
     document.removeEventListener('keydown', this.#escKeyDownHandler);
