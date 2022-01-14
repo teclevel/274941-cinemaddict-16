@@ -3,13 +3,11 @@ import { getTimeFromMins } from '../utils/day';
 import FilmsPopupCommentsView from './films-popup-comments-view';
 import SmartView from './smart-view';
 
-const createGenresTemplate = (genres) => {
-  let list = '';
-  for (const genre of genres) {
-    list += `<span class="film-details__genre">${genre}</span>`;
-  }
-  return list;
-};
+const createGenresTemplate = (genres) => (
+  genres.map((genre) =>
+    `<span class="film-details__genre">${genre}</span>`
+  ).join('')
+);
 
 const createFilmsPopupTemplate = (data, commentsTemplate) => {
   const { poster, title, rating, duration, genres, age, director, writers,
