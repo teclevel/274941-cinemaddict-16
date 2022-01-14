@@ -1,4 +1,4 @@
-import { BLANK_DETAILS_FILM, EMOJIS } from '../const';
+import { EMOJIS } from '../const';
 import { formatDateComment } from '../utils/day';
 import SmartView from './smart-view';
 
@@ -54,12 +54,12 @@ const createNewCommentTemplate = (newComment, isUserEmoji) => {
   </div>`;
 };
 
-const createFilmsPopupCommentsTemplate = (data) => {
-  const { comments, isUserEmoji } = data;
+const createFilmsPopupCommentsTemplate = ({ comments, isUserEmoji }) => {
   const itemsComments = createCommentTemplate(comments);
   const count = comments.length;
 
-  const newCommentTemplate = createNewCommentTemplate(BLANK_DETAILS_FILM, isUserEmoji);
+  const newCommentTemplate = createNewCommentTemplate({}, isUserEmoji);
+  // const newCommentTemplate = createNewCommentTemplate(isUserEmoji);
 
   return `<div class="film-details__bottom-container">
       <section class="film-details__comments-wrap">
@@ -76,9 +76,9 @@ const createFilmsPopupCommentsTemplate = (data) => {
 
 export default class FilmsPopupCommentsView extends SmartView {
 
-  constructor(card = BLANK_DETAILS_FILM) {
+  constructor(commentsData) {
     super();
-    this._data = FilmsPopupCommentsView.parseCardToData(card);
+    this._data = commentsData;
     this.#setInnerHandler();
   }
 
@@ -86,9 +86,9 @@ export default class FilmsPopupCommentsView extends SmartView {
     return createFilmsPopupCommentsTemplate(this._data);
   }
 
-  reset = (card) => {
-    this.updateData(FilmsPopupCommentsView.parseCardToData(card));
-  }
+  // reset = (card) => {
+  //   this.updateData(FilmsPopupCommentsView.parseCardToData(card));
+  // }
 
   restoreHandlers = () => {
     this.#setInnerHandler();
@@ -102,6 +102,7 @@ export default class FilmsPopupCommentsView extends SmartView {
   }
 
   #deleteCommentHandler = (evt) => {
+    console.log('delete');
     evt.preventDefault();
     if (evt.target.tagName !== 'BUTTON') {
       return;
@@ -140,20 +141,20 @@ export default class FilmsPopupCommentsView extends SmartView {
   // }
 
 
-  static parseCardToData = (card) => ({
-    ...card,
-    isUserEmoji: null
-  })
+  // static parseCardToData = (card) => ({
+  //   ...card,
+  //   isUserEmoji: null
+  // })
 
-  static parseDataToCard = (data) => {
-    const card = { ...data };
+  // static parseDataToCard = (data) => {
+  //   const card = { ...data };
 
-    if (card.isUserEmoji) {
-      card.isUserEmoji = null;
-    }
+  //   if (card.isUserEmoji) {
+  //     card.isUserEmoji = null;
+  //   }
 
-    delete card.isUserEmoji;
+  //   delete card.isUserEmoji;
 
-    return card;
-  }
+  //   return card;
+  // }
 }

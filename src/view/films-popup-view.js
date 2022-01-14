@@ -1,16 +1,19 @@
+import { BLANK_DETAILS_FILM } from '../const';
 import { getTimeFromMins } from '../utils/day';
 import FilmsPopupCommentsView from './films-popup-comments-view';
 import SmartView from './smart-view';
 
-const createGenresTemplate = (genres) => (
-  genres.map((genre) =>
-    `<span class="film-details__genre">${genre}</span>`
-  ).join('')
-);
+const createGenresTemplate = (genres) => {
+  let list = '';
+  for (const genre of genres) {
+    list += `<span class="film-details__genre">${genre}</span>`;
+  }
+  return list;
+};
 
 const createFilmsPopupTemplate = (data, commentsTemplate) => {
   const { poster, title, rating, duration, genres, age, director, writers,
-    actors, dateRelease, isAddedToWatch, isWatched, isFavorite, } = data;
+    actors, dateRelease, isAddedToWatch, isWatched, isFavorite } = data;
   const itemsGenres = createGenresTemplate(genres);
 
   const addWatchListClassName = isAddedToWatch
@@ -95,30 +98,40 @@ const createFilmsPopupTemplate = (data, commentsTemplate) => {
 };
 
 export default class FilmsPopupView extends SmartView {
-  #card = null;
+  card = null;
   comments = null;
 
-  constructor(card) {
+  constructor(card = BLANK_DETAILS_FILM) {
     super();
-    this.#card = card;
-    this.comments = new FilmsPopupCommentsView(this.#card);
+    this._data = FilmsPopupView.parseCardToData(card);
+    this.comments = new FilmsPopupCommentsView({
+      comments: this._data.comments,
+      isUserEmoji: this._data.isUserEmoji
+    });
+    // this.#setInnerHandler();
   }
 
   get template() {
-    return createFilmsPopupTemplate(this.#card, this.comments.template);
+    return createFilmsPopupTemplate(this._data, this.comments.template);
   }
 
+  reset = (card) => {
+    this.updateData(FilmsPopupView.parseDataToCard(card));
+  }
 
   restoreHandlers = () => {
+    // this.#setInnerHandler();
     this.setPopupClickHandler(this._callback.closePopupClick);
-    this.setAddWatchedClickHandler(this._callback.addToWatchClick);
+    this.setAddToWatchClickHandler(this._callback.addToWatchClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
+    this.comments.setDeleteCommentClickHandler(this.comments_callback.deleteCommentClick);
   }
-  // submitForm = () => {
-  //   this.element.querySelector('form')
-  //     .submit(FilmsPopupView.parseDataToCard(this._data));
-  // }
+
+  submitForm = () => {
+    this.element.querySelector('form')
+      .submit(FilmsPopupView.parseDataToCard(this._data));
+  }
 
   setPopupClickHandler(callback) {
     this._callback.closePopupClick = callback;
@@ -144,7 +157,44 @@ export default class FilmsPopupView extends SmartView {
       .addEventListener('click', this.#watchedClickHandler);
   }
 
+  // setDeleteCommentClickHandler = (callback) => {
+  //   this._callback.deleteCommentClick = callback;
+  //   this.element.querySelector('.film-details__comments-list')
+  //     .addEventListener('click', this.#deleteCommentHandler);
+  // }
+
+  // #deleteCommentHandler = (evt) => {
+  //   console.log('delete');
+  //   evt.preventDefault();
+  //   if (evt.target.tagName !== 'BUTTON') {
+  //     return;
+  //   }
+  //   this._callback.deleteCommentClick(evt.target.dataset.idComment);
+  // }
+
   // #setInnerHandler = () => {
+  //   this.element.addEventListener('click', this.#emojiClickHandler);
+  //   this.element.querySelector('.film-details__comment-input')
+  //     .addEventListener('input', this.#textCommentInputHandler);
+  // }
+
+  // #emojiClickHandler = (evt) => {
+  //   if (evt.target.tagName !== 'INPUT') {
+  //     return;
+  //   }
+
+  //   const scrollPopup = this.element.scrollTop;
+
+  //   this.updateData({ isUserEmoji: evt.target.value });
+
+  //   this.element.scroll(0, scrollPopup);
+  // }
+
+  // #textCommentInputHandler = (evt) => {
+  //   evt.preventDefault();
+  //   this.updateData({
+  //     textComment: evt.target.value,
+  //   }, true);
   // }
 
   // #formSubmitHandler = (evt) => {
@@ -154,7 +204,7 @@ export default class FilmsPopupView extends SmartView {
 
   #closePopupClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.closePopupClick(this.#card);
+    this._callback.closePopupClick(FilmsPopupView.parseDataToCard(this._data));
   }
 
   #addToWatchClickHandler = (evt) => {
