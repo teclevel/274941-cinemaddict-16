@@ -108,6 +108,13 @@ export default class FilmsPopupView extends SmartView {
     return createFilmsPopupTemplate(this.#card, this.comments.template);
   }
 
+
+  restoreHandlers = () => {
+    this.setPopupClickHandler(this._callback.closePopupClick);
+    this.setAddWatchedClickHandler(this._callback.addToWatchClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+  }
   // submitForm = () => {
   //   this.element.querySelector('form')
   //     .submit(FilmsPopupView.parseDataToCard(this._data));
@@ -163,5 +170,22 @@ export default class FilmsPopupView extends SmartView {
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.watchedClick();
+  }
+
+  static parseCardToData = (card) => ({
+    ...card,
+    isUserEmoji: null
+  })
+
+  static parseDataToCard = (data) => {
+    const card = { ...data };
+
+    if (card.isUserEmoji) {
+      card.isUserEmoji = null;
+    }
+
+    delete card.isUserEmoji;
+
+    return card;
   }
 }
