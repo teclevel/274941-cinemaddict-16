@@ -29,7 +29,8 @@ export const FilterType = {
   ALL_MOVIES: 'all',
   WATCH_LIST: 'watchList',
   HISTORY: 'history',
-  FAVORITES: 'favorites'
+  FAVORITES: 'favorites',
+  STATISTIC: 'stats'
 };
 
 export const noFilmsTextType = {

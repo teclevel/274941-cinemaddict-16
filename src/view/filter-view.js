@@ -1,7 +1,14 @@
 import AbstractView from './abstract-view';
 
-const createFilterItemTemplate = (filter, currentFilterType) => {
-  const { type, name, count } = filter;
+//  const FilterType = {
+//   ALL_MOVIES: 'all',
+//   WATCH_LIST: 'watchList',
+//   HISTORY: 'history',
+//   FAVORITES: 'favorites',
+//   STATISTIC: 'stats'
+// };
+
+const createFilterItemTemplate = ({ type, name, count }, currentFilterType) => {
   const itemActive = 'main-navigation__item--active';
   const filterCount = `<span class="main-navigation__item-count"> ${count} </span>`;
 
@@ -14,9 +21,25 @@ const createFilterItemTemplate = (filter, currentFilterType) => {
   );
 };
 
+const createStatisticTemplate = ({ type, name }, currentFilterType) => {
+  const itemActive = 'main-navigation__item--active';
+  return (
+    `<a href="#${type}"
+     class="main-navigation__additional
+     ${type === currentFilterType ? itemActive : ''}" data-filter-type="${type}">
+     ${name}</a>`
+  );
+};
+
 const createFilterTemplate = (filterItems, currentFilterType) => {
   const filterItemsTemplate = filterItems
+    .filter((filter) => filter.type !== 'stats')
     .map((filter) => createFilterItemTemplate(filter, currentFilterType))
+    .join('');
+
+  const statisticItemTemplate = filterItems
+    .filter((filter) => filter.type === 'stats')
+    .map((filter) => createStatisticTemplate(filter, currentFilterType))
     .join('');
 
   return (
@@ -24,7 +47,7 @@ const createFilterTemplate = (filterItems, currentFilterType) => {
       <div class="main-navigation__items">
         ${filterItemsTemplate}
       </div>
-      <a href="#stats" class="main-navigation__additional">Stats</a>
+        ${statisticItemTemplate}
     </nav>`
   );
 };
@@ -45,16 +68,34 @@ export default class FilterView extends AbstractView {
 
   setFilterTypeChangeHandler = (callback) => {
     this._callback.filterTypeChange = callback;
-    this.element.querySelector('.main-navigation__items')
-      .addEventListener('click', this.#filterTypeChangeHandler);
+    // this.element.querySelector('.main-navigation')
+    //   .addEventListener('click', this.#filterTypeChangeHandler);
+    this.element.addEventListener('click', this.#filterTypeChangeHandler);
+
   }
 
+  // setStatisticTypeChangeHandler = (callback) => {
+  //   this._callback.filterTypeChange = callback;
+  //   this.element.querySelector('.main-navigation__additional')
+  //     .addEventListener('click', this.#statisticTypeChangeHandler);
+  // }
+
+
   #filterTypeChangeHandler = (evt) => {
+    console.log('filter');
     evt.preventDefault();
     const itemFilter = evt.target.closest('a');
 
     if (!itemFilter) { return; }
+    // if (evt.target.tagName !== 'A') { return; }
 
     this._callback.filterTypeChange(itemFilter.dataset.filterType);
+    // this._callback.filterTypeChange(evt.target.dataset.filterType);
+
   }
+
+  // #statisticTypeChangeHandler = (evt) => {
+  //   evt.preventDefault();
+  //   console.log('stats');
+  // }
 }

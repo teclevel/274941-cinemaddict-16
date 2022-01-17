@@ -3,7 +3,6 @@ import { FilterType, RenderPosition, UpdateType, } from '../const';
 import { filter } from '../utils/filter';
 import { remove, render, replace } from '../utils/render';
 
-
 export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
@@ -11,13 +10,13 @@ export default class FilterPresenter {
 
   #filterComponent = null;
 
-  constructor(filterContainer, filterModel, filmsModel) {// получает модель
+  constructor(filterContainer, filterModel, filmsModel) {
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
     this.#filmsModel = filmsModel;
   }
 
-  get filters() {//обертка для удобства
+  get filters() {
     const cards = this.#filmsModel.cards;
 
     return [
@@ -40,6 +39,11 @@ export default class FilterPresenter {
         type: FilterType.FAVORITES,
         name: 'Favorites',
         count: filter[FilterType.FAVORITES](cards).length || '0'
+      },
+      {
+        type: FilterType.STATISTIC,
+        name: 'Stats',
+        count: ''
       }
     ];
   }
@@ -50,6 +54,8 @@ export default class FilterPresenter {
 
     this.#filterComponent = new FilterView(filters, this.#filterModel.filter);
     this.#filterComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
+    // this.#filterComponent.setStatisticTypeChangeHandler(this.#handleStatisticTypeChange);
+
 
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -72,7 +78,9 @@ export default class FilterPresenter {
       return;
     }
     this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
-    // this.#handleModelEvent();
-    // console.log(this.#filterModel.filter);
   }
+
+  // #handleStatisticTypeChange = () => {
+
+  // };
 }
