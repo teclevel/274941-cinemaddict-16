@@ -34,10 +34,9 @@ const createEmojiListTemplate = (currentEmoji) => (
 );
 
 const createNewCommentTemplate = (newComment, isUserEmoji) => {
-  const { textComment } = newComment;
   const emojiTemplate = createEmojiListTemplate(isUserEmoji);
   const emojiView = isUserEmoji ? `<img src="images/emoji/${isUserEmoji}.png"
-   width="55" height="55" alt="emoji-smile">` : '';
+    width="55" height="55" alt="emoji-smile">` : '';
 
   return `<div class="film-details__new-comment">
     <div class="film-details__add-emoji-label">
@@ -46,7 +45,7 @@ const createNewCommentTemplate = (newComment, isUserEmoji) => {
     <label class="film-details__comment-label">
       <textarea class="film-details__comment-input"
       placeholder="Select reaction below and write comment here"
-      name="comment">${textComment}</textarea>
+      name="comment">${newComment}</textarea>
     </label>
     <div class="film-details__emoji-list">
       ${emojiTemplate}
@@ -54,12 +53,10 @@ const createNewCommentTemplate = (newComment, isUserEmoji) => {
   </div>`;
 };
 
-const createFilmsPopupCommentsTemplate = ({ comments, isUserEmoji }) => {
+const createFilmsPopupCommentsTemplate = ({ comments, isUserEmoji, newComment }) => {
   const itemsComments = createCommentTemplate(comments);
   const count = comments.length;
-
-  const newCommentTemplate = createNewCommentTemplate({}, isUserEmoji);
-  // const newCommentTemplate = createNewCommentTemplate(isUserEmoji);
+  const newCommentTemplate = createNewCommentTemplate(newComment, isUserEmoji);
 
   return `<div class="film-details__bottom-container">
       <section class="film-details__comments-wrap">
@@ -86,10 +83,6 @@ export default class FilmsPopupCommentsView extends SmartView {
     return createFilmsPopupCommentsTemplate(this._data);
   }
 
-  // reset = (card) => {
-  //   this.updateData(FilmsPopupCommentsView.parseCardToData(card));
-  // }
-
   restoreHandlers = () => {
     this.#setInnerHandler();
     this.setDeleteCommentClickHandler(this._callback.deleteCommentClick);
@@ -102,7 +95,6 @@ export default class FilmsPopupCommentsView extends SmartView {
   }
 
   #deleteCommentHandler = (evt) => {
-    console.log('delete');
     evt.preventDefault();
     if (evt.target.tagName !== 'BUTTON') {
       return;
@@ -111,7 +103,8 @@ export default class FilmsPopupCommentsView extends SmartView {
   }
 
   #setInnerHandler = () => {
-    this.element.addEventListener('click', this.#emojiClickHandler);
+    this.element.querySelector('.film-details__emoji-list').
+      addEventListener('click', this.#emojiClickHandler);
     this.element.querySelector('.film-details__comment-input')
       .addEventListener('input', this.#textCommentInputHandler);
   }
@@ -131,30 +124,7 @@ export default class FilmsPopupCommentsView extends SmartView {
   #textCommentInputHandler = (evt) => {
     evt.preventDefault();
     this.updateData({
-      textComment: evt.target.value,
+      newComment: evt.target.value,
     }, true);
   }
-
-  // #formSubmitHandler = (evt) => {
-  //   evt.preventDefault();
-  //   this._callback.formSubmit(FilmsPopupView.parseDataToCard(this._data));
-  // }
-
-
-  // static parseCardToData = (card) => ({
-  //   ...card,
-  //   isUserEmoji: null
-  // })
-
-  // static parseDataToCard = (data) => {
-  //   const card = { ...data };
-
-  //   if (card.isUserEmoji) {
-  //     card.isUserEmoji = null;
-  //   }
-
-  //   delete card.isUserEmoji;
-
-  //   return card;
-  // }
 }

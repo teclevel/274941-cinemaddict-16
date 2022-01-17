@@ -1,12 +1,5 @@
+import { FilterType } from '../const';
 import AbstractView from './abstract-view';
-
-//  const FilterType = {
-//   ALL_MOVIES: 'all',
-//   WATCH_LIST: 'watchList',
-//   HISTORY: 'history',
-//   FAVORITES: 'favorites',
-//   STATISTIC: 'stats'
-// };
 
 const createFilterItemTemplate = ({ type, name, count }, currentFilterType) => {
   const itemActive = 'main-navigation__item--active';
@@ -33,12 +26,12 @@ const createStatisticTemplate = ({ type, name }, currentFilterType) => {
 
 const createFilterTemplate = (filterItems, currentFilterType) => {
   const filterItemsTemplate = filterItems
-    .filter((filter) => filter.type !== 'stats')
+    .filter((filter) => filter.type !== FilterType.STATISTIC)
     .map((filter) => createFilterItemTemplate(filter, currentFilterType))
     .join('');
 
   const statisticItemTemplate = filterItems
-    .filter((filter) => filter.type === 'stats')
+    .filter((filter) => filter.type === FilterType.STATISTIC)
     .map((filter) => createStatisticTemplate(filter, currentFilterType))
     .join('');
 

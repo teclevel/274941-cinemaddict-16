@@ -1,5 +1,6 @@
-import { BLANK_DETAILS_FILM } from '../const';
+import { BLANK_DETAILS_FILM, RenderPosition } from '../const';
 import { getTimeFromMins } from '../utils/day';
+import { render } from '../utils/render';
 import FilmsPopupCommentsView from './films-popup-comments-view';
 import SmartView from './smart-view';
 
@@ -9,7 +10,7 @@ const createGenresTemplate = (genres) => (
   ).join('')
 );
 
-const createFilmsPopupTemplate = (data, commentsTemplate) => {
+const createFilmsPopupTemplate = (data) => {
   const { poster, title, rating, duration, genres, age, director, writers,
     actors, dateRelease, isAddedToWatch, isWatched, isFavorite } = data;
   const itemsGenres = createGenresTemplate(genres);
@@ -90,7 +91,7 @@ const createFilmsPopupTemplate = (data, commentsTemplate) => {
           <button type="button" class="film-details__control-button ${addFavoriteClassName} film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
         </section>
       </div>
-      ${commentsTemplate}
+
     </form>
   </section>`;
 };
@@ -104,26 +105,25 @@ export default class FilmsPopupView extends SmartView {
     this._data = FilmsPopupView.parseCardToData(card);
     this.comments = new FilmsPopupCommentsView({
       comments: this._data.comments,
-      isUserEmoji: this._data.isUserEmoji
+      isUserEmoji: this._data.isUserEmoji,
+      newComment: this._data.newComment
     });
-    // this.#setInnerHandler();
+    render(this.element.querySelector('form'), this.comments, RenderPosition.BEFORE_END);
   }
 
   get template() {
-    return createFilmsPopupTemplate(this._data, this.comments.template);
+    return createFilmsPopupTemplate(this._data);
   }
 
   reset = (card) => {
-    this.updateData(FilmsPopupView.parseDataToCard(card));
+    this.updateData(FilmsPopupView.parseCardToData(card));
   }
 
   restoreHandlers = () => {
-    // this.#setInnerHandler();
     this.setPopupClickHandler(this._callback.closePopupClick);
     this.setAddToWatchClickHandler(this._callback.addToWatchClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
-    this.comments.setDeleteCommentClickHandler(this.comments_callback.deleteCommentClick);
   }
 
   submitForm = () => {
@@ -155,46 +155,6 @@ export default class FilmsPopupView extends SmartView {
       .addEventListener('click', this.#watchedClickHandler);
   }
 
-  // setDeleteCommentClickHandler = (callback) => {
-  //   this._callback.deleteCommentClick = callback;
-  //   this.element.querySelector('.film-details__comments-list')
-  //     .addEventListener('click', this.#deleteCommentHandler);
-  // }
-
-  // #deleteCommentHandler = (evt) => {
-  //   console.log('delete');
-  //   evt.preventDefault();
-  //   if (evt.target.tagName !== 'BUTTON') {
-  //     return;
-  //   }
-  //   this._callback.deleteCommentClick(evt.target.dataset.idComment);
-  // }
-
-  // #setInnerHandler = () => {
-  //   this.element.addEventListener('click', this.#emojiClickHandler);
-  //   this.element.querySelector('.film-details__comment-input')
-  //     .addEventListener('input', this.#textCommentInputHandler);
-  // }
-
-  // #emojiClickHandler = (evt) => {
-  //   if (evt.target.tagName !== 'INPUT') {
-  //     return;
-  //   }
-
-  //   const scrollPopup = this.element.scrollTop;
-
-  //   this.updateData({ isUserEmoji: evt.target.value });
-
-  //   this.element.scroll(0, scrollPopup);
-  // }
-
-  // #textCommentInputHandler = (evt) => {
-  //   evt.preventDefault();
-  //   this.updateData({
-  //     textComment: evt.target.value,
-  //   }, true);
-  // }
-
   // #formSubmitHandler = (evt) => {
   //   evt.preventDefault();
   //   this._callback.formSubmit(FilmsPopupView.parseDataToCard(this._data));
@@ -222,7 +182,8 @@ export default class FilmsPopupView extends SmartView {
 
   static parseCardToData = (card) => ({
     ...card,
-    isUserEmoji: null
+    isUserEmoji: null,
+    newComment: ''
   })
 
   static parseDataToCard = (data) => {

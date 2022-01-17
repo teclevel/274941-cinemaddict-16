@@ -42,7 +42,7 @@ export const noFilmsTextType = {
 
 export const BLANK_DETAILS_FILM = {
   isUserEmoji: null,
-  textComment: '',
+  newComment: '',
 
   isWatched: false,
   isAddedToWatch: false,

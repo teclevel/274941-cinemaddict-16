@@ -48,7 +48,6 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
 
     this.#filmsPopupComponent.comments.setDeleteCommentClickHandler(this.#handleDeleteCommentClick);
-    // this.#filmsPopupComponent.setFormSubmitHandler(this.#handleFormSubmit);
 
     if (!prevCardComponent || !prevPopupComponent) {
       render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFORE_END);
@@ -151,11 +150,6 @@ export default class FilmPresenter {
       this.#closePopup();
     }
   }
-
-  // #handleFormSubmit = (card) => {
-  //   this.#changeData(card);
-  //   this.#submitForm(card);
-  // }
 
   #ctrlEnterKeyDownHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
