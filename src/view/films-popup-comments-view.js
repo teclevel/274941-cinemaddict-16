@@ -1,3 +1,4 @@
+import he from 'he';
 import { EMOJIS } from '../const';
 import { formatDateComment } from '../utils/day';
 import SmartView from './smart-view';
@@ -45,7 +46,7 @@ const createNewCommentTemplate = (newComment, isUserEmoji) => {
     <label class="film-details__comment-label">
       <textarea class="film-details__comment-input"
       placeholder="Select reaction below and write comment here"
-      name="comment">${newComment}</textarea>
+      name="comment">${he.encode(newComment)}</textarea>
     </label>
     <div class="film-details__emoji-list">
       ${emojiTemplate}

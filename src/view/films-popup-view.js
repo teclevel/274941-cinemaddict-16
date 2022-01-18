@@ -97,8 +97,6 @@ const createFilmsPopupTemplate = (data) => {
 };
 
 export default class FilmsPopupView extends SmartView {
-  card = null;
-  comments = null;
 
   constructor(card = BLANK_DETAILS_FILM) {
     super();
@@ -108,6 +106,7 @@ export default class FilmsPopupView extends SmartView {
       isUserEmoji: this._data.isUserEmoji,
       newComment: this._data.newComment
     });
+
     render(this.element.querySelector('form'), this.comments, RenderPosition.BEFORE_END);
   }
 
@@ -124,6 +123,7 @@ export default class FilmsPopupView extends SmartView {
     this.setAddToWatchClickHandler(this._callback.addToWatchClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setFormSubmitHandler(this._callback.formSubmit);
   }
 
   submitForm = () => {
@@ -155,10 +155,17 @@ export default class FilmsPopupView extends SmartView {
       .addEventListener('click', this.#watchedClickHandler);
   }
 
-  // #formSubmitHandler = (evt) => {
-  //   evt.preventDefault();
-  //   this._callback.formSubmit(FilmsPopupView.parseDataToCard(this._data));
-  // }
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('keydown', this.#formSubmitHandler);
+  }
+
+  #formSubmitHandler = (evt) => {
+    if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
+      evt.preventDefault();
+      this._callback.formSubmit(FilmsPopupView.parseDataToCard(this._data));
+    }
+  }
 
   #closePopupClickHandler = (evt) => {
     evt.preventDefault();

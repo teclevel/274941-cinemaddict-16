@@ -47,6 +47,8 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
 
+    this.#filmsPopupComponent.setFormSubmitHandler(this.#handleSubmit);
+
     this.#filmsPopupComponent.comments.setDeleteCommentClickHandler(this.#handleDeleteCommentClick);
 
     if (!prevCardComponent || !prevPopupComponent) {
@@ -86,13 +88,11 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.element.remove();
     this.#mode = Mode.DEFAULT;
     document.removeEventListener('keydown', this.#escKeyDownHandler);
-    document.removeEventListener('keydown', this.#ctrlEnterKeyDownHandler);
   }
 
   #openPopup = () => {
     this.#renderFilmsPopup();
     document.addEventListener('keydown', this.#escKeyDownHandler);
-    document.addEventListener('keydown', this.#ctrlEnterKeyDownHandler);
     this.#changeMode();
     this.#mode = Mode.POPUP;
   }
@@ -112,6 +112,11 @@ export default class FilmPresenter {
 
   #handleClosePopupClick = () => {
     this.#closePopup();
+    this.#changeData(
+      UserAction.UPDATE_CARD,
+      UpdateType.PATCH,
+      this.#card
+    );
   }
 
   #handleFavoriteClick = () => {
@@ -151,9 +156,12 @@ export default class FilmPresenter {
     }
   }
 
-  #ctrlEnterKeyDownHandler = (evt) => {
-    if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
-      this.#filmsPopupComponent.submitForm();
-    }
+  #handleSubmit = (update) => {
+    this.#changeData(
+      UserAction.UPDATE_CARD,
+      UpdateType.PATCH,
+      update
+    );
+    this.#filmsPopupComponent.submitForm();
   }
 }
