@@ -112,11 +112,6 @@ export default class FilmPresenter {
 
   #handleClosePopupClick = () => {
     this.#closePopup();
-    this.#changeData(
-      UserAction.UPDATE_CARD,
-      UpdateType.PATCH,
-      this.#card
-    );
   }
 
   #handleFavoriteClick = () => {

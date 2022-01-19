@@ -107,7 +107,7 @@ export default class FilmsPopupView extends SmartView {
       newComment: this._data.newComment
     });
 
-    render(this.element.querySelector('form'), this.comments, RenderPosition.BEFORE_END);
+    this.#renderInnerElement();
   }
 
   get template() {
@@ -116,6 +116,15 @@ export default class FilmsPopupView extends SmartView {
 
   reset = (card) => {
     this.updateData(FilmsPopupView.parseCardToData(card));
+    this.comments.updateData({
+      isUserEmoji: null,
+      newComment: ''
+    });
+    this.#renderInnerElement();
+  }
+
+  #renderInnerElement = () => {
+    render(this.element.querySelector('form'), this.comments, RenderPosition.BEFORE_END);
   }
 
   restoreHandlers = () => {
@@ -124,11 +133,6 @@ export default class FilmsPopupView extends SmartView {
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
     this.setFormSubmitHandler(this._callback.formSubmit);
-  }
-
-  submitForm = () => {
-    this.element.querySelector('form')
-      .submit(FilmsPopupView.parseDataToCard(this._data));
   }
 
   setPopupClickHandler(callback) {
@@ -157,14 +161,22 @@ export default class FilmsPopupView extends SmartView {
 
   setFormSubmitHandler = (callback) => {
     this._callback.formSubmit = callback;
-    this.element.querySelector('form').addEventListener('keydown', this.#formSubmitHandler);
+    this.element.querySelector('form')
+      .addEventListener('keydown', this.#formSubmitHandler);
   }
 
   #formSubmitHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
+
+      console.log('ctrlEnter');
       evt.preventDefault();
       this._callback.formSubmit(FilmsPopupView.parseDataToCard(this._data));
     }
+  }
+
+  submitForm = () => {
+    this.element.querySelector('form')
+      .submit(FilmsPopupView.parseDataToCard(this._data));
   }
 
   #closePopupClickHandler = (evt) => {
