@@ -61,34 +61,17 @@ export default class FilterView extends AbstractView {
 
   setFilterTypeChangeHandler = (callback) => {
     this._callback.filterTypeChange = callback;
-    // this.element.querySelector('.main-navigation')
-    //   .addEventListener('click', this.#filterTypeChangeHandler);
     this.element.addEventListener('click', this.#filterTypeChangeHandler);
 
   }
 
-  // setStatisticTypeChangeHandler = (callback) => {
-  //   this._callback.filterTypeChange = callback;
-  //   this.element.querySelector('.main-navigation__additional')
-  //     .addEventListener('click', this.#statisticTypeChangeHandler);
-  // }
-
-
   #filterTypeChangeHandler = (evt) => {
-    console.log('filter');
     evt.preventDefault();
     const itemFilter = evt.target.closest('a');
 
     if (!itemFilter) { return; }
-    // if (evt.target.tagName !== 'A') { return; }
 
     this._callback.filterTypeChange(itemFilter.dataset.filterType);
-    // this._callback.filterTypeChange(evt.target.dataset.filterType);
 
   }
-
-  // #statisticTypeChangeHandler = (evt) => {
-  //   evt.preventDefault();
-  //   console.log('stats');
-  // }
 }
