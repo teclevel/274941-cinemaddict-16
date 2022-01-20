@@ -49,7 +49,7 @@ export default class FilmPresenter {
 
     this.#filmsPopupComponent.setFormSubmitHandler(this.#handleSubmit);
 
-    this.#filmsPopupComponent.comments.setDeleteCommentClickHandler(this.#handleDeleteCommentClick);
+    this.#filmsPopupComponent.setDeleteCommentClickHandler(this.#handleDeleteCommentClick);
 
     if (!prevCardComponent || !prevPopupComponent) {
       render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFORE_END);
@@ -152,11 +152,6 @@ export default class FilmPresenter {
   }
 
   #handleSubmit = (update) => {
-    this.#changeData(
-      UserAction.UPDATE_CARD,
-      UpdateType.PATCH,
-      update
-    );
-    this.#filmsPopupComponent.submitForm();
+    this.#changeData(update);
   }
 }
