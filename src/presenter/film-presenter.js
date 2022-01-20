@@ -151,8 +151,7 @@ export default class FilmPresenter {
     }
   }
 
-  #handleSubmit = (update) => {
-    this.#changeData(update);
-    this.#filmsPopupComponent.submitForm();
+  #handleSubmit = () => {
+    // this.#filmsPopupComponent.submitForm();
   }
 }

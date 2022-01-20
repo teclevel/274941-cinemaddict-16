@@ -282,10 +282,6 @@ export default class FilmsPopupView extends SmartView {
   }
 
   #emojiClickHandler = (evt) => {
-    // if (evt.target.tagName !== 'INPUT') {
-    //   return;
-    // }
-console.log(evt.target);
     const scrollPopup = this.element.scrollTop;
 
     this.updateData({ isUserEmoji: evt.target.value });
@@ -301,7 +297,7 @@ console.log(evt.target);
 
   #formSubmitHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
-
+      
       console.log('ctrlEnter');
       evt.preventDefault();
       this._callback.formSubmit(FilmsPopupView.parseDataToCard(this._data));
@@ -328,7 +324,12 @@ console.log(evt.target);
       card.isUserEmoji = null;
     }
 
+    if (card.newComment) {
+      card.newComment = '';
+    }
+
     delete card.isUserEmoji;
+    delete card.newComment;
 
     return card;
   }
