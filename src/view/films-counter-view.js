@@ -3,10 +3,14 @@ import AbstractView from './abstract-view';
 const createStatisticTemplate = (cards) => {
   const counter = cards.length;
 
-  return (`<section class="footer__statistics">${counter}</section>`);
+  return (`<section class="footer__statistics">
+    <p>
+      ${counter} movies inside
+    </p>
+  </section>`);
 };
 
-export default class MovieCounterView extends AbstractView {
+export default class FilmCounterView extends AbstractView {
   #cards = null;
 
   constructor(cards) {

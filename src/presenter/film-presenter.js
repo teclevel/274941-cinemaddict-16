@@ -1,4 +1,4 @@
-import { RenderPosition } from '../const';
+import { RenderPosition, UpdateType, UserAction } from '../const';
 import { remove, render, replace } from '../utils/render';
 import FilmsCardView from '../view/films-card-view';
 import FilmsPopupView from '../view/films-popup-view';
@@ -47,7 +47,9 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
 
-    // this.#filmsPopupComponent.setFormSubmitHandler(this.#handleFormSubmit);
+    this.#filmsPopupComponent.setFormSubmitHandler(this.#handleSubmit);
+
+    this.#filmsPopupComponent.setDeleteCommentClickHandler(this.#handleDeleteCommentClick);
 
     if (!prevCardComponent || !prevPopupComponent) {
       render(this.#filmsListContainer, this.#filmsCardComponent, RenderPosition.BEFORE_END);
@@ -69,15 +71,15 @@ export default class FilmPresenter {
     remove(this.#filmsPopupComponent);
   }
 
-  #renderFilmsPopup = () => {
-    render(footer, this.#filmsPopupComponent, RenderPosition.AFTER_END);
-  }
-
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
       this.#filmsPopupComponent.reset(this.#card);
       this.#closePopup();
     }
+  }
+
+  #renderFilmsPopup = () => {
+    render(footer, this.#filmsPopupComponent, RenderPosition.AFTER_END);
   }
 
   #closePopup = () => {
@@ -86,20 +88,20 @@ export default class FilmPresenter {
     this.#filmsPopupComponent.element.remove();
     this.#mode = Mode.DEFAULT;
     document.removeEventListener('keydown', this.#escKeyDownHandler);
-    document.removeEventListener('keydown', this.#ctrlEnterKeyDownHandler);
   }
 
   #openPopup = () => {
     this.#renderFilmsPopup();
     document.addEventListener('keydown', this.#escKeyDownHandler);
-    document.addEventListener('keydown', this.#ctrlEnterKeyDownHandler);
     this.#changeMode();
     this.#mode = Mode.POPUP;
   }
 
-  // #submitForm =(card)=>{
-  //   this.#filmsPopupComponent.element.querySelector('form').submit(card);
-  // }
+  #deleteComment = (cards, id) => {
+    const comments = cards.comments.filter((comment) => comment.id !== id);
+    delete cards.comments;
+    cards.comments = comments;
+  }
 
   #handleCardClick = () => {
     if (this.#mode === Mode.DEFAULT) {
@@ -113,15 +115,34 @@ export default class FilmPresenter {
   }
 
   #handleFavoriteClick = () => {
-    this.#changeData({ ...this.#card, isFavorite: !this.#card.isFavorite });
+    this.#changeData(
+      UserAction.UPDATE_CARD,
+      this.#mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.PATCH,
+      { ...this.#card, isFavorite: !this.#card.isFavorite });
   }
 
   #handleWatchedClick = () => {
-    this.#changeData({ ...this.#card, isWatched: !this.#card.isWatched });
+    this.#changeData(
+      UserAction.UPDATE_CARD,
+      this.#mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.PATCH,
+      { ...this.#card, isWatched: !this.#card.isWatched });
   }
 
   #handleAddToWatchClick = () => {
-    this.#changeData({ ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch });
+    this.#changeData(
+      UserAction.UPDATE_CARD,
+      this.#mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.PATCH,
+      { ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch });
+  }
+
+  #handleDeleteCommentClick = (id) => {
+    this.#deleteComment(this.#card, id);
+
+    this.#changeData(
+      UserAction.UPDATE_CARD,
+      UpdateType.PATCH,
+      this.#card
+    );
   }
 
   #escKeyDownHandler = (evt) => {
@@ -130,15 +151,7 @@ export default class FilmPresenter {
     }
   }
 
-  // #handleFormSubmit = (card) => {
-  //   // this.#changeData(card);
-  //   this.#submitForm(card);
-  // }
-
-  #ctrlEnterKeyDownHandler = (evt) => {
-    if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
-      this.#filmsPopupComponent.submitForm();
-      // console.log('ctrlEnter');
-    }
+  #handleSubmit = (update) => {
+    this.#changeData(update);
   }
 }
