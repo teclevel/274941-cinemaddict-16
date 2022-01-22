@@ -58,6 +58,17 @@ export default class FilmsListPresenter {
     this.#renderBoard();
   }
 
+  destroy = () => {
+    this.#clearBoard({ resetRenderedCardCount: true }, { resetSortType: true });
+
+    remove(this.#filmsListContainerComponent);
+    remove(this.#filmsListComponent);
+    remove(this.#filmsContainerComponent);
+
+    this.#filmsModel.removeObserver(this.#handleModelEvent);
+    this.#filterModel.removeObserver(this.#handleModelEvent);
+  }
+
   #renderFilmsList = () => {
     render(this.#filmsContainerComponent, this.#filmsListComponent, RenderPosition.BEFORE_END);
   }
@@ -129,9 +140,6 @@ export default class FilmsListPresenter {
     if (resetRenderedCardCount) {
       this.#renderedCardCount = NUMBER_CARDS_PER_STEP;
     } else {
-      // На случай, если перерисовка доски вызвана
-      // уменьшением количества задач (например, удаление или перенос в архив)
-      // нужно скорректировать число показанных задач
       this.#renderedCardCount = Math.min(cardCount, this.#renderedCardCount);
     }
 
@@ -140,11 +148,7 @@ export default class FilmsListPresenter {
     }
   }
 
-  #handleViewAction = (actionType, updateType, update) => {//передается VIEW  //реагирует на то, что происходит с VIEW
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
+  #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_CARD:
         this.#filmsModel.updateCard(updateType, update);
@@ -158,25 +162,18 @@ export default class FilmsListPresenter {
     }
   }
 
-  #handleModelEvent = (updateType, data) => {         //   передается модели    //реагирует на то что происходит с моделью
-    // В зависимости от типа изменений решаем, что делать:
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список (например, когда задача ушла в архив)
-    // - обновить всю доску (например, при переключении фильтра)
+  #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
         this.#filmPresenter.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
         this.#clearBoard();
         this.#renderBoard();
-        // - обновить список (например, когда задача ушла в архив)
         break;
       case UpdateType.MAJOR:
         this.#clearBoard({ resetRenderedCardCount: true, resetSortType: true });
         this.#renderBoard();
-        // - обновить всю доску (например, при переключении фильтра)
         break;
     }
   }

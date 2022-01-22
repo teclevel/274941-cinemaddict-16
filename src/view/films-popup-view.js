@@ -273,8 +273,9 @@ export default class FilmsPopupView extends SmartView {
   }
 
   #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+
     if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
-      evt.preventDefault();
       this.element.querySelector('form').submit();
       this._callback.formSubmit(FilmsPopupView.parseDataToCard(this._data));
     }

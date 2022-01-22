@@ -2,6 +2,8 @@ import FilterView from '../view/filter-view';
 import { FilterType, RenderPosition, UpdateType, } from '../const';
 import { filter } from '../utils/filter';
 import { remove, render, replace } from '../utils/render';
+import { boardPresenter, main } from '../main';
+import StatisticView from '../view/statistic-view';
 
 export default class FilterPresenter {
   #filterContainer = null;
@@ -9,6 +11,7 @@ export default class FilterPresenter {
   #filmsModel = null;
 
   #filterComponent = null;
+  #statisticComponent = null;
 
   constructor(filterContainer, filterModel, filmsModel) {
     this.#filterContainer = filterContainer;
@@ -54,8 +57,6 @@ export default class FilterPresenter {
 
     this.#filterComponent = new FilterView(filters, this.#filterModel.filter);
     this.#filterComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
-    // this.#filterComponent.setStatisticTypeChangeHandler(this.#handleStatisticTypeChange);
-
 
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -69,6 +70,7 @@ export default class FilterPresenter {
     remove(prevFilterComponent);
   }
 
+
   #handleModelEvent = () => {
     this.init();
   }
@@ -77,10 +79,24 @@ export default class FilterPresenter {
     if (this.#filterModel.filter === filterType) {
       return;
     }
-    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+
+    switch (filterType) {
+      case FilterType.ALL_MOVIES:
+      case FilterType.WATCH_LIST:
+      case FilterType.FAVORITES:
+      case FilterType.HISTORY:
+        remove(this.#statisticComponent);
+        boardPresenter.destroy();
+        boardPresenter.init();
+        this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+        break;
+
+      case FilterType.STATISTIC:
+        boardPresenter.destroy();
+        this.#statisticComponent = new StatisticView(this.#filmsModel);
+        render(main, this.#statisticComponent, RenderPosition.BEFORE_END);
+        this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+        break;
+    }
   }
-
-  // #handleStatisticTypeChange = () => {
-
-  // };
 }

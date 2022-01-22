@@ -44,7 +44,6 @@ const createStatisticTemplate = () => (
       </ul>
 
       <!-- Пример диаграммы -->
-      <img src="images/cinemaddict-stats-markup.png" alt="Пример диаграммы">
 
       <div class="statistic__chart-wrap">
         <canvas class="statistic__chart" width="1000"></canvas>
