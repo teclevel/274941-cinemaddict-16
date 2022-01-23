@@ -93,7 +93,7 @@ export default class FilterPresenter {
 
       case FilterType.STATISTIC:
         boardPresenter.destroy();
-        this.#statisticComponent = new StatisticView(this.#filmsModel);
+        this.#statisticComponent = new StatisticView(this.#filmsModel.cards);
         render(main, this.#statisticComponent, RenderPosition.BEFORE_END);
         this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
         break;

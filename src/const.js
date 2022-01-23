@@ -33,6 +33,13 @@ export const FilterType = {
   STATISTIC: 'stats'
 };
 
+export const GenresType = {
+  MUSICAL: 'Musical',
+  WESTERN: 'Western',
+  CARTOON: 'Cartoon',
+  COMEDY: 'Comedy'
+};
+
 export const noFilmsTextType = {
   [FilterType.ALL_MOVIES]: 'There are no movies in our database',
   [FilterType.WATCH_LIST]: 'There are no movies to watch now',
@@ -48,3 +55,19 @@ export const BLANK_DETAILS_FILM = {
   isAddedToWatch: false,
   isFavorite: false
 };
+
+// export const StatisticPeriod = {
+//   All_TIME: 'all-time',
+//   TODAY: 'today',
+//   WEEK: 'week',
+//   MONTH: 'month',
+//   YEAR: 'year'
+// };
+
+export const userRank = {
+  NOVICE: 'Novice',
+  FAN: 'Fan',
+  MOVIE_BUFF: 'Movie buff'
+};
+
+
