@@ -7,30 +7,19 @@ import { render } from './utils/render';
 import FilmsModel from './model/films-model';
 import FilterModel from './model/filter-model';
 import FilterPresenter from './presenter/filter-presenter';
+import ApiService from './api-service';
 
-const NUMBER_CARDS = 6;
+const NUMBER_CARDS = 1;
+const AUTHORIZATION = 'Basic 4ksdf9sdgh0s';
+const END_POINT = 'https://16.ecmascript.pages.academy/cinemaddict';
 
 export const main = document.querySelector('.main');
 const header = document.querySelector('.header');
 const footer = document.querySelector('.footer');
 
 const cards = Array.from({ length: NUMBER_CARDS }, generateDataCard);
-// console.log(cards);
-
-// cards.filter =(cards)=>(item) => item.genres === 'Cartoon';
-
-// const genres = (data) => data.map((card) => card.genres);
-
-
-// const all = genres(cards).map((genre,)=>genre.concat(genre[index]));
-
-// console.log(all);
-
-
-// filter[FilterType.FAVORITES](cards).length
-
-
-const filmsModel = new FilmsModel();
+console.log(cards);
+const filmsModel = new FilmsModel(new ApiService(END_POINT, AUTHORIZATION));
 const filterModel = new FilterModel();
 
 filmsModel.cards = cards;
