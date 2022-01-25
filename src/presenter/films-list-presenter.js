@@ -8,6 +8,7 @@ import { render, remove } from '../utils/render';
 import FilmPresenter from './film-presenter';
 import { FilterType, RenderPosition, SortType, UpdateType, UserAction } from '../const';
 import { filter } from '../utils/filter';
+import LoadingView from '../view/loading-view';
 
 const NUMBER_CARDS_PER_STEP = 5;
 
@@ -19,6 +20,7 @@ export default class FilmsListPresenter {
   #filmsContainerComponent = new FilmsContainerView();
   #filmsListComponent = new FilmsListView();
   #filmsListContainerComponent = new FilmsListContainerView();
+  #loadingComponent = new LoadingView();
   #noFilmsComponent = null;
   #showMoreButtonComponent = null;
   #filmsSortComponent = null;
@@ -27,6 +29,7 @@ export default class FilmsListPresenter {
   #filmPresenter = new Map();
   #currentSortType = SortType.DEFAULT;
   #filterType = FilterType.ALL_MOVIES;
+  #isLoading = true;
 
   constructor(filmsContainer, filmsModel, filterModel) {
     this.#filmsContainer = filmsContainer;
@@ -77,7 +80,6 @@ export default class FilmsListPresenter {
     render(this.#filmsListComponent, this.#filmsListContainerComponent, RenderPosition.BEFORE_END);
   }
 
-
   #renderCard = (card) => {
     const filmPresenter = new FilmPresenter(this.#filmsListContainerComponent, this.#handleViewAction, this.#handleModeChange);
     filmPresenter.init(card);
@@ -91,6 +93,10 @@ export default class FilmsListPresenter {
   #renderNoFilms = () => {
     this.#noFilmsComponent = new FilmsListNoCardsView(this.#filterType);
     render(this.#filmsContainerComponent, this.#noFilmsComponent, RenderPosition.BEFORE_END);
+  }
+
+  #renderLoadingFilms = () => {
+    render(this.#filmsContainerComponent, this.#loadingComponent, RenderPosition.BEFORE_END);
   }
 
   #renderFilmsSort = () => {
@@ -109,6 +115,11 @@ export default class FilmsListPresenter {
   #renderBoard = () => {
     const cards = this.cards;
     const cardCount = this.cards.length;
+
+    if (this.#isLoading) {
+      this.#renderLoadingFilms();
+      return;
+    }
 
     if (cardCount === 0) {
       this.#renderNoFilms();
@@ -132,6 +143,7 @@ export default class FilmsListPresenter {
 
     remove(this.#filmsSortComponent);
     remove(this.#showMoreButtonComponent);
+    remove(this.#loadingComponent);
 
     if (this.#noFilmsComponent) {
       remove(this.#noFilmsComponent);
@@ -173,6 +185,11 @@ export default class FilmsListPresenter {
         break;
       case UpdateType.MAJOR:
         this.#clearBoard({ resetRenderedCardCount: true, resetSortType: true });
+        this.#renderBoard();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
         this.#renderBoard();
         break;
     }

@@ -1,3 +1,4 @@
+import { UpdateType } from '../const';
 import AbstractObservable from '../utils/abstract-observable';
 
 export default class FilmsModel extends AbstractObservable {
@@ -8,19 +9,26 @@ export default class FilmsModel extends AbstractObservable {
   constructor(apiService) {
     super();
     this.#apiService = apiService;
-
-    this.#apiService.cards.then((cards) => {
-      console.log(cards);
-      console.log(cards.map(this.#adaptToClient));
-    });
-  }
-
-  set cards(cards) {
-    this.#cards = [...cards];
   }
 
   get cards() {
     return this.#cards;
+  }
+
+  init = async () => {
+    try {
+      const cards = await this.#apiService.cards;
+      const comments = await this.#apiService.comments;
+
+      console.log(comments);
+      this.#cards = cards.map(this.#adaptToClient);
+      console.log(this.#cards);
+
+    } catch (err) {
+      this.#cards = [];
+    }
+
+    this._notify(UpdateType.INIT);
   }
 
   updateCard = (updateType, update) => {
@@ -45,7 +53,7 @@ export default class FilmsModel extends AbstractObservable {
       ...this.#cards,
     ];
 
-    this._notify(updateType, update);//
+    this._notify(updateType, update);
   }
 
   deleteCard = (updateType, update) => {

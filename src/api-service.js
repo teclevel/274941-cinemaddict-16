@@ -13,21 +13,13 @@ export default class ApiService {
   }
 
   get cards() {
-    return this.#load({url: 'movies'})
+    return this.#load({ url: 'movies' })
       .then(ApiService.parseResponse);
   }
 
-  updateCard = async (card) => {
-    const response = await this.#load({
-      url: `cards/${card.id}`,
-      method: Method.PUT,
-      body: JSON.stringify(this.#adaptToServer(card)),
-      headers: new Headers({'Content-Type': 'application/json'}),
-    });
-
-    const parsedResponse = await ApiService.parseResponse(response);
-
-    return parsedResponse;
+  get comments() {
+    return this.#load({ url: 'comments/10' })
+      .then(ApiService.parseResponse);
   }
 
   #load = async ({
@@ -40,7 +32,7 @@ export default class ApiService {
 
     const response = await fetch(
       `${this.#endPoint}/${url}`,
-      {method, body, headers},
+      { method, body, headers },
     );
 
     try {
@@ -51,21 +43,34 @@ export default class ApiService {
     }
   }
 
+  updateCard = async (card) => {
+    const response = await this.#load({
+      url: `movies/${card.id}`,
+      method: Method.PUT,
+      body: JSON.stringify(this.#adaptToServer(card)),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+    });
+
+    const parsedResponse = await ApiService.parseResponse(response);
+
+    return parsedResponse;
+  }
+
   #adaptToServer = (task) => {
-    const adaptedTask = {...task,
-      'due_date': task.dueDate instanceof Date ? task.dueDate.toISOString() : null, // На сервере дата хранится в ISO формате
-      'is_archived': task.isArchive,
-      'is_favorite': task.isFavorite,
-      'repeating_days': task.repeating,
-    };
+    // const adaptedTask = {...task,
+    //   'due_date': task.dueDate instanceof Date ? task.dueDate.toISOString() : null, // На сервере дата хранится в ISO формате
+    //   'is_archived': task.isArchive,
+    //   'is_favorite': task.isFavorite,
+    //   'repeating_days': task.repeating,
+    // };
 
-    // Ненужные ключи мы удаляем
-    delete adaptedTask.dueDate;
-    delete adaptedTask.isArchive;
-    delete adaptedTask.isFavorite;
-    delete adaptedTask.repeating;
+    // // Ненужные ключи мы удаляем
+    // delete adaptedTask.dueDate;
+    // delete adaptedTask.isArchive;
+    // delete adaptedTask.isFavorite;
+    // delete adaptedTask.repeating;
 
-    return adaptedTask;
+    // return adaptedTask;
   }
 
   static parseResponse = (response) => response.json();
