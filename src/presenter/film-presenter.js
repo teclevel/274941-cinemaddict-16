@@ -1,7 +1,9 @@
 import { RenderPosition, UpdateType, UserAction } from '../const';
+import { filmsModel } from '../main';
 import { remove, render, replace } from '../utils/render';
 import FilmsCardView from '../view/films-card-view';
 import FilmsPopupView from '../view/films-popup-view';
+
 
 const footer = document.querySelector('.footer');
 const body = document.querySelector('body');
@@ -19,6 +21,7 @@ export default class FilmPresenter {
   #filmsPopupComponent = null;
 
   #card = null;
+  #comments = null;
   #mode = Mode.DEFAULT;
 
   constructor(filmsListContainer, changeData, changeMode) {
@@ -29,12 +32,23 @@ export default class FilmPresenter {
 
   init = (card) => {
     this.#card = card;
+    // this.#comments = (id) => filmsModel.getComments(card.id);
+    // console.log(this.#comments);
+
+    filmsModel.getComments(this.#card.id)
+      .then((comments) => {
+        this.#comments = comments;
+        this.#card.comments = this.#comments;
+      })
+      .catch(() => {
+        //
+      });
 
     const prevCardComponent = this.#filmsCardComponent;
     const prevPopupComponent = this.#filmsPopupComponent;
 
-    this.#filmsCardComponent = new FilmsCardView(card);
-    this.#filmsPopupComponent = new FilmsPopupView(card);
+    this.#filmsCardComponent = new FilmsCardView(this.#card);
+    this.#filmsPopupComponent = new FilmsPopupView(this.#card);
 
     this.#filmsCardComponent.setFilmClickHandler(this.#handleCardClick);
     this.#filmsPopupComponent.setPopupClickHandler(this.#handleClosePopupClick);

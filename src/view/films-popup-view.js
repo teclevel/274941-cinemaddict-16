@@ -7,15 +7,15 @@ import { formatDateComment } from '../utils/day';
 
 
 const createCommentTemplate = (comments) => (
-  comments.map(({ emotion, commentText, name, date, id }) =>
+  comments.map(({ emotion, comment, author, date, id }) =>
     `<li class="film-details__comment">
       <span class="film-details__comment-emoji">
-        <img src="${emotion}" width="55" height="55" alt="emoji-smile">
+        <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-smile">
       </span>
       <div>
-        <p class="film-details__comment-text">${commentText}</p>
+        <p class="film-details__comment-text">${comment}</p>
         <p class="film-details__comment-info">
-          <span class="film-details__comment-author">${name}</span>
+          <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${formatDateComment(date)}</span>
           <button class="film-details__comment-delete" data-id-comment="${id}">Delete</button>
         </p>
@@ -173,6 +173,8 @@ export default class FilmsPopupView extends SmartView {
     super();
     this._data = FilmsPopupView.parseCardToData(card);
     this.#setInnerHandler();
+    // console.log('parse', this._data);// нет комментариев
+    // console.log('view', card);//норм
   }
 
   get template() {

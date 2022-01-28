@@ -5,7 +5,6 @@ export default class FilmsModel extends AbstractObservable {
   #apiService = null;
   #cards = [];
 
-
   constructor(apiService) {
     super();
     this.#apiService = apiService;
@@ -18,11 +17,7 @@ export default class FilmsModel extends AbstractObservable {
   init = async () => {
     try {
       const cards = await this.#apiService.cards;
-      const comments = await this.#apiService.comments;
-
-      console.log(comments);
       this.#cards = cards.map(this.#adaptToClient);
-      console.log(this.#cards);
 
     } catch (err) {
       this.#cards = [];
@@ -30,6 +25,8 @@ export default class FilmsModel extends AbstractObservable {
 
     this._notify(UpdateType.INIT);
   }
+
+  getComments = async (id) => await this.#apiService.getComments(id);
 
   updateCard = (updateType, update) => {
     const index = this.#cards.findIndex((card) => card.id === update.id);
@@ -75,21 +72,18 @@ export default class FilmsModel extends AbstractObservable {
     const adaptedCard = {
       ...card,
       ...card['film_info'],
-      actors: card['film_info']['actors'].join(', '),
-      age: card['film_info']['age_rating'],
-      genres: card['film_info']['genre'],
-      duration: card['film_info']['runtime'],
-      rating: card['film_info']['total_rating'],
-      writers: card['film_info']['writers'].join(', '),
       ...card['user_details'],
-
-
-      comments: card['kuyk'],
-      isAddedToWatch: card['user_details']['watchlist'],
-      isFavorite: card['user_details']['favorite'],
+      ...card['film_info'].release,
+      actors: card['film_info'].actors.join(', '),
+      age: card['film_info']['age_rating'],
+      genres: card['film_info'].genre,
+      duration: card['film_info'].runtime,
+      rating: card['film_info']['total_rating'],
+      writers: card['film_info'].writers.join(', '),
+      dateRelease: card['film_info'].release.date,
+      isAddedToWatch: card['user_details'].watchlist,
+      isFavorite: card['user_details'].favorite,
       isWatched: card['user_details']['already_watched'],
-      ...card['film_info']['release'],
-      dateRelease: card['film_info']['release']['date']
     };
 
     delete adaptedCard['film_info'];
@@ -102,7 +96,6 @@ export default class FilmsModel extends AbstractObservable {
     delete adaptedCard['already_watched'];
     // delete adaptedCard['date'];
     delete adaptedCard['watchlist'];
-
     return adaptedCard;
   }
 }

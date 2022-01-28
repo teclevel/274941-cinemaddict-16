@@ -17,10 +17,29 @@ export default class ApiService {
       .then(ApiService.parseResponse);
   }
 
-  get comments() {
-    return this.#load({ url: 'comments/10' })
-      .then(ApiService.parseResponse);
-  }
+  // get comments() {
+  //   return async (id) => this.#load({ url: `comments/${id}` })
+  //     .then(ApiService.parseResponse);
+  // }
+
+  getComments = async (id) => this.#load({ url: `comments/${id}` })
+    .then(ApiService.parseResponse)
+
+  // addComment = async (data) => {
+  //   const response = await this.#load({
+  //     url: `comments/${data.id}`,
+  //     method: Method.POST,
+  //     body: JSON.stringify(data.comment),
+  //     headers: new Headers({ 'Content-Type': 'application/json' }),
+  //   });
+
+  //   return await ApiService.parseResponse(response);
+  // }
+
+  // deleteComment = async (data) => await this.#load({
+  //   url: `comments/${data.commentId}`,
+  //   method: Method.DELETE,
+  // })
 
   #load = async ({
     url,

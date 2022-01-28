@@ -8,8 +8,9 @@ import FilmsModel from './model/films-model';
 import FilterModel from './model/filter-model';
 import FilterPresenter from './presenter/filter-presenter';
 import ApiService from './api-service';
+// import CommentsModel from './model/comments-model';
 
-// const NUMBER_CARDS = 1;
+// const NUMBER_CARDS = 3;
 const AUTHORIZATION = 'Basic 4ksdf9sdgh0s';
 const END_POINT = 'https://16.ecmascript.pages.academy/cinemaddict';
 
@@ -18,18 +19,21 @@ const header = document.querySelector('.header');
 const footer = document.querySelector('.footer');
 
 // const cards = Array.from({ length: NUMBER_CARDS }, generateDataCard);
-// console.log(cards);
-const filmsModel = new FilmsModel(new ApiService(END_POINT, AUTHORIZATION));
+// console.log('moki',cards);
+
+export const filmsModel = new FilmsModel(new ApiService(END_POINT, AUTHORIZATION));
+// const commentsModel = new CommentsModel();
 const filterModel = new FilterModel();
 
 // filmsModel.cards = cards;
 
 export const boardPresenter = new FilmsListPresenter(main, filmsModel, filterModel);
 const filterPresenter = new FilterPresenter(main, filterModel, filmsModel);
-
 /* render(header, new ProfileUserView(cards), RenderPosition.BEFORE_END);
 render(footer, new FilmCounterView(cards), RenderPosition.BEFORE_END);
  */
 filterPresenter.init();
 boardPresenter.init();
 filmsModel.init();
+// commentsModel.init();
+// filmsModel.initComments();

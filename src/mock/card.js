@@ -41,10 +41,10 @@ const generatePoster = () => getRandomElementArray([
 ]);
 
 const generateEmoji = () => getRandomElementArray([
-  './images/emoji/angry.png',
-  './images/emoji/puke.png',
-  './images/emoji/sleeping.png',
-  './images/emoji/smile.png'
+  'angry',
+  'puke',
+  'sleeping',
+  'smile'
 ]);
 
 const generateDate = () => {
@@ -64,13 +64,12 @@ const generateDateComment = () => {
 export const generateComment = () => ({
   id: nanoid(),
   emotion: generateEmoji(),
-  commentText: generateComments(),
-  name: getRandomElementArray(NAMES),
+  comment: generateComments(),
+  author: getRandomElementArray(NAMES),
   date: generateDateComment(),
 });
 
 const comments = Array.from({ length: MAX_NUMBER_COMMENTS }, generateComment);
-
 export const generateDataCard = () => ({
   id: nanoid(),
   comments: comments.slice(0, getRandomInteger(0, MAX_NUMBER_COMMENTS)),
