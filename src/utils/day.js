@@ -6,8 +6,8 @@ dayjs.extend(RelativeTime);
 export const formatDateComment = (date) => {
   if (dayjs().diff(date, 'hour') < 24) {
     return 'Today';
-  } else if (dayjs().diff(date, 'hour') < 48 ){
-    return  date.format('YYYY/MM/D hh:mm');
+  } else if (dayjs().diff(date, 'hour') < 48) {
+    return dayjs(date).format('YYYY/MM/D hh:mm');
   }
 
   return dayjs(date).fromNow();
@@ -21,3 +21,5 @@ export const getTimeFromMins = (mins) => {
   }
   return `${hours}h ${minutes}m`;
 };
+
+export const convertDateInYear = (date) => dayjs(date).format('YYYY');
