@@ -1,8 +1,8 @@
-import { getTimeFromMins } from '../utils/day';
+import { convertDateInYear, getTimeFromMins } from '../utils/day';
 import AbstractView from './abstract-view';
 
 const createFilmsCardTemplate = (card) => {
-  const { title, comments, rating, year, duration, genres, description, poster, isAddedToWatch, isWatched, isFavorite } = card;
+  const { title, comments, rating, dateRelease, duration, genres, description, poster, isAddedToWatch, isWatched, isFavorite } = card;
   const classActive = 'film-card__controls-item--active';
   const count = comments.length;
 
@@ -23,7 +23,7 @@ const createFilmsCardTemplate = (card) => {
       <h3 class="film-card__title">${title}</h3>
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
-        <span class="film-card__year">${year}</span>
+        <span class="film-card__year">${convertDateInYear(dateRelease)}</span>
         <span class="film-card__duration">${getTimeFromMins(duration)}</span>
         <span class="film-card__genre">${genres[0]}</span>
       </p>

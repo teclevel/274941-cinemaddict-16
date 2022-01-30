@@ -1,5 +1,5 @@
 import { BLANK_DETAILS_FILM } from '../const';
-import { getTimeFromMins } from '../utils/day';
+import { convertDateInYear, getTimeFromMins } from '../utils/day';
 import SmartView from './smart-view';
 import he from 'he';
 import { EMOJIS } from '../const';
@@ -135,7 +135,7 @@ const createFilmsPopupTemplate = (data) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${dateRelease}</td>
+                <td class="film-details__cell">${convertDateInYear(dateRelease)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
