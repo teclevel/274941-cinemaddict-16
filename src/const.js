@@ -16,7 +16,7 @@ export const EMOJIS = ['smile', 'sleeping', 'puke', 'angry'];
 export const UserAction = {
   UPDATE_CARD: 'UPDATE_CARD',
   ADD_CARD: 'ADD_CARD',
-  DELETE_CARD: 'DELETE_CARD',
+  CLOSE_POPUP: 'CLOSE_POPUP',
 };
 
 export const UpdateType = {
@@ -24,6 +24,7 @@ export const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
+  INIT_COMMENTS: 'INIT_COMMENTS'
 };
 
 export const FilterType = {

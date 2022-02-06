@@ -40,15 +40,15 @@ const createFilmsCardTemplate = (card) => {
 };
 
 export default class FilmsCardView extends AbstractView {
-  #cards = null;
+  #card = null;
 
-  constructor(cards) {
+  constructor(card) {
     super();
-    this.#cards = cards;
+    this.#card = card;
   }
 
   get template() {
-    return createFilmsCardTemplate(this.#cards);
+    return createFilmsCardTemplate(this.#card);
   }
 
   setFilmClickHandler = (callback) => {
@@ -77,21 +77,21 @@ export default class FilmsCardView extends AbstractView {
 
   #filmClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.filmClick();
+    this._callback.filmClick(this.#card);
   }
 
   #addToWatchClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.addToWatchClick();
+    this._callback.addToWatchClick(this.#card.id);
   }
 
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.favoriteClick();
+    this._callback.favoriteClick(this.#card.id);
   }
 
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.watchedClick();
+    this._callback.watchedClick(this.#card.id);
   }
 }

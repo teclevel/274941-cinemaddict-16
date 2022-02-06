@@ -8,21 +8,19 @@ import FilmsModel from './model/films-model';
 import FilterModel from './model/filter-model';
 import FilterPresenter from './presenter/filter-presenter';
 import ApiService from './api-service';
-// import CommentsModel from './model/comments-model';
 
 // const NUMBER_CARDS = 3;
-const AUTHORIZATION = 'Basic 4ksdf9sdgh0s';
-const END_POINT = 'https://16.ecmascript.pages.academy/cinemaddict';
+export const AUTHORIZATION = 'Basic 4ksdf9gguyrsdghrt0s';
+export const END_POINT = 'https://16.ecmascript.pages.academy/cinemaddict';
 
 export const main = document.querySelector('.main');
+export const footer = document.querySelector('.footer');
 const header = document.querySelector('.header');
-const footer = document.querySelector('.footer');
 
 // const cards = Array.from({ length: NUMBER_CARDS }, generateDataCard);
 // console.log('moki',cards);
 
-export const filmsModel = new FilmsModel(new ApiService(END_POINT, AUTHORIZATION));
-// const commentsModel = new CommentsModel();
+const filmsModel = new FilmsModel(new ApiService(END_POINT, AUTHORIZATION));
 const filterModel = new FilterModel();
 
 // filmsModel.cards = cards;
@@ -35,5 +33,3 @@ render(footer, new FilmCounterView(cards), RenderPosition.BEFORE_END);
 filterPresenter.init();
 boardPresenter.init();
 filmsModel.init();
-// commentsModel.init();
-// filmsModel.initComments();

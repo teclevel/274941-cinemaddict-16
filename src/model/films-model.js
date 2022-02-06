@@ -26,7 +26,7 @@ export default class FilmsModel extends AbstractObservable {
     this._notify(UpdateType.INIT);
   }
 
-  getComments = async (id) => await this.#apiService.getComments(id);
+  // getComments = async (id) => await this.#apiService.getComments(id);
 
   updateCard = (updateType, update) => {
     const index = this.#cards.findIndex((card) => card.id === update.id);
@@ -44,14 +44,14 @@ export default class FilmsModel extends AbstractObservable {
     this._notify(updateType, update);
   }
 
-  addCard = (updateType, update) => {
-    this.#cards = [
-      update,
-      ...this.#cards,
-    ];
+  // addCard = (updateType, update) => {
+  //   this.#cards = [
+  //     update,
+  //     ...this.#cards,
+  //   ];
 
-    this._notify(updateType, update);
-  }
+  //   this._notify(updateType, update);
+  // }
 
   deleteCard = (updateType, update) => {
     const index = this.#cards.findIndex((card) => card.id === update.id);
@@ -84,6 +84,7 @@ export default class FilmsModel extends AbstractObservable {
       isAddedToWatch: card['user_details'].watchlist,
       isFavorite: card['user_details'].favorite,
       isWatched: card['user_details']['already_watched'],
+      releaseCountry: card['film_info']['release']['release_country'],
     };
 
     delete adaptedCard['film_info'];
@@ -94,8 +95,9 @@ export default class FilmsModel extends AbstractObservable {
     delete adaptedCard['user_details'];
     delete adaptedCard['release'];
     delete adaptedCard['already_watched'];
-    // delete adaptedCard['date'];
+    delete adaptedCard['favorite'];
     delete adaptedCard['watchlist'];
+    delete adaptedCard['release_country'];
     return adaptedCard;
   }
 }
