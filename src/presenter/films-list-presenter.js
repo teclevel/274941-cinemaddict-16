@@ -16,20 +16,21 @@ import { AUTHORIZATION, END_POINT, footer } from '../main';
 import ApiService from '../api-service';
 
 
-// const Mode = {
-//   DEFAULT: 'DEFAULT',
-//   POPUP: 'POPUP',
-// };
+export const ModePopup = {
+  IsLoadingComments: true,
+  isClosePopup: true,
+};
+
 const NUMBER_CARDS_PER_STEP = 5;
 
 export default class FilmsListPresenter {
   #filmsContainer = null;
+  #filmsCardComponent = null;
   #filmsModel = null;
   #filterModel = null;
-  #filmsCardComponent = null;
   #cards = null;
   #card = null;
-  // #comments = null;
+
   #popupModel = new PopupModel(new ApiService(END_POINT, AUTHORIZATION));
 
   #filmsContainerComponent = new FilmsContainerView();
@@ -49,7 +50,6 @@ export default class FilmsListPresenter {
   #currentSortType = SortType.DEFAULT;
   #filterType = FilterType.ALL_MOVIES;
   #isLoading = true;
-  #isLoadingComments = true;
 
   constructor(filmsContainer, filmsModel, filterModel) {
     this.#filmsContainer = filmsContainer;
@@ -112,23 +112,22 @@ export default class FilmsListPresenter {
     this.#filmsCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
   }
 
-  resetPopupObserver = () => {
-    this.#isLoadingComments = true;
-  }
-
   #initPopup = (card) => {
-    this.#popupPresenter = new PopupPresenter(this.#popupContainerComponent, this.#handleViewAction, this.#isLoadingComments);
+    this.#popupPresenter = new PopupPresenter(this.#popupContainerComponent, this.#handleViewAction);
     this.#popupModel.addObserver(this.#handleModelEvent);
     this.#showPopup();
     this.#popupModel.init(card.id);
   }
 
   #showPopup = () => {
-    if (this.#isLoadingComments) {
-      console.log('loading comments');
+    if (ModePopup.IsLoadingComments) {
       return;
     }
-    this.#popupPresenter.showPopup(this.#card);
+
+    if (ModePopup.isClosePopup) {
+      this.#popupPresenter.showPopup(this.#card);
+      ModePopup.isClosePopup = false;
+    }
   }
 
   #handleCardClick = (card) => {
@@ -266,16 +265,12 @@ export default class FilmsListPresenter {
         break;
       case UpdateType.INIT_COMMENTS:
         this.#card.comments = this.#popupModel.comments;
-        this.#isLoadingComments = false;
+        ModePopup.IsLoadingComments = false;
         // remove(this.#loadingComponent); //удалить заглушку загрузки коментариев
         this.#showPopup();
         break;
     }
   }
-
-  // #handleModeChange = () => {
-  //   this.#filmPresenter.forEach((presenter) => presenter.resetView());
-  // };
 
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {

@@ -1,46 +1,20 @@
-// import ApiService from '../api-service';
 import { RenderPosition, UpdateType, UserAction } from '../const';
-// import { AUTHORIZATION, END_POINT } from '../main';
-// import CommentsModel from '../model/comments-model';
 import { remove, render, replace } from '../utils/render';
-// import ContainerPopupView from '../view/containerPopup';
 import FilmsPopupView from '../view/films-popup-view';
+import { ModePopup } from './films-list-presenter';
 
-
-// const Mode = {
-//   DEFAULT: 'DEFAULT',
-//   POPUP: 'POPUP',
-// };
-
-// const footer = document.querySelector('.footer');
 const body = document.querySelector('body');
 
 export default class PopupPresenter {
   #filmsPopupComponent = null;
   #popupContainer = null;
   #changeData = null;
-  #resetLoadingComments = true;
-  // #changeMode = null;
-  // #popupComponent = null;
-
   #card = null;
-  // #isLoadingComments = true;
-  // #comments = null;
-  // #mode = Mode.DEFAULT;
 
-  // #commentsModel = new CommentsModel(new ApiService(END_POINT, AUTHORIZATION));
-
-  constructor(popupContainer, changeData, resetLoadingComments) {//, changeMode) {
+  constructor(popupContainer, changeData) {
     this.#popupContainer = popupContainer;
     this.#changeData = changeData;
-    this.#resetLoadingComments = resetLoadingComments;
-    // this.#changeMode = changeMode;
   }
-
-  // get comments() {
-  //   const comments = this.#commentsModel.comments;
-  //   return comments;
-  // }
 
   #renderPopup = (card) => {
     this.#card = card;
@@ -100,11 +74,8 @@ export default class PopupPresenter {
   #handleClosePopupClick = () => {
     this.#closePopup();
 
-    // поменять значение в презентере доски isLoadingComments на true
-    this.#resetLoadingComments = true;
-    // удалить слушатель в презентере доски
-    // this.#popupModel.removeObserver(this.#handleModelEvent);
-
+    ModePopup.IsLoadingComments = true;
+    ModePopup.isClosePopup = true;
   }
 
   #handleFavoriteClick = () => {
