@@ -4,6 +4,7 @@ import AbstractObservable from '../utils/abstract-observable';
 export default class PopupModel extends AbstractObservable {
   #apiService = null;
   #comments = [];
+  // #cards = [];
 
   constructor(apiService) {
     super();
@@ -24,6 +25,22 @@ export default class PopupModel extends AbstractObservable {
 
     this._notify(UpdateType.INIT_COMMENTS);
   }
+
+  // updateCard = (updateType, update) => {
+  //   const index = this.#cards.findIndex((card) => card.id === update.id);
+
+  //   if (index === -1) {
+  //     throw new Error('Can\'t update unexisting card');
+  //   }
+
+  //   this.#cards = [
+  //     ...this.#cards.slice(0, index),
+  //     update,
+  //     ...this.#cards.slice(index + 1),
+  //   ];
+
+  //   this._notify(updateType, update);
+  // }
 
   updateComment = (updateType, update) => {
     const index = this.#comments.findIndex((comment) => comment.id === update.id);

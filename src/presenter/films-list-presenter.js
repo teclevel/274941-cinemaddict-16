@@ -115,8 +115,15 @@ export default class FilmsListPresenter {
   #initPopup = (card) => {
     this.#popupPresenter = new PopupPresenter(this.#popupContainerComponent, this.#handleViewAction);
     this.#popupModel.addObserver(this.#handleModelEvent);
+    this.#filmsModel.addObserver(this.#handleModelEvent);
+
     this.#showPopup();
     this.#popupModel.init(card.id);
+  }
+
+  #handleCardClick = (card) => {
+    this.#card = card;
+    this.#initPopup(card);
   }
 
   #showPopup = () => {
@@ -130,30 +137,25 @@ export default class FilmsListPresenter {
     }
   }
 
-  #handleCardClick = (card) => {
-    this.#card = card;
-    this.#initPopup(card);
-  }
-
-  #handleAddToWatchClick = (idCard) => {
+  #handleAddToWatchClick = (card) => {
     this.#handleViewAction(
       UserAction.UPDATE_CARD,
       UpdateType.MINOR,
-      { ...this.#cards[idCard], isAddedToWatch: !this.#cards[idCard].isAddedToWatch });
+      { ...card, isAddedToWatch: !card.isAddedToWatch });
   }
 
-  #handleWatchedClick = (idCard) => {
+  #handleWatchedClick = (card) => {
     this.#handleViewAction(
       UserAction.UPDATE_CARD,
       UpdateType.MINOR,
-      { ...this.#cards[idCard], isWatched: !this.#cards[idCard].isWatched });
+      { ...card, isWatched: !card.isWatched });
   }
 
-  #handleFavoriteClick = (idCard) => {
+  #handleFavoriteClick = (card) => {
     this.#handleViewAction(
       UserAction.UPDATE_CARD,
       UpdateType.MINOR,
-      { ...this.#cards[idCard], isFavorite: !this.#cards[idCard].isFavorite });
+      { ...card, isFavorite: !card.isFavorite });
   }
 
   #renderCards = (cards) => {
@@ -248,11 +250,17 @@ export default class FilmsListPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        // this.#filmPresenter.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
         this.#clearBoard();
         this.#renderBoard();
+        if (ModePopup.isClosePopup === false) {
+          this.#popupPresenter.closePopup();
+          this.#initPopup(data);
+          // this.#showPopup(data);
+
+        }
+
         break;
       case UpdateType.MAJOR:
         this.#clearBoard({ resetRenderedCardCount: true, resetSortType: true });

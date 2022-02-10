@@ -21,13 +21,13 @@ export default class PopupPresenter {
 
     const prevPopupComponent = this.#filmsPopupComponent;
 
-    this.#filmsPopupComponent = new FilmsPopupView(card);
+    this.#filmsPopupComponent = new FilmsPopupView(this.#card);
 
     this.#filmsPopupComponent.setPopupCloseClickHandler(this.#handleClosePopupClick);
 
-    // this.#filmsPopupComponent.setAddToWatchClickHandler(this.#handleAddToWatchClick);
-    // this.#filmsPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-    // this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
+    this.#filmsPopupComponent.setAddToWatchClickHandler(this.#handleAddToWatchClick);
+    this.#filmsPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
 
 
     if (!prevPopupComponent) {
@@ -49,7 +49,7 @@ export default class PopupPresenter {
 
   // resetView = () => {
   //   this.#filmsPopupComponent.reset(this.#card);
-  //   this.#closePopup();
+  //   this.closePopup();
   // }
 
   showPopup = (card) => {
@@ -58,10 +58,14 @@ export default class PopupPresenter {
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
-  #closePopup = () => {
+  closePopup = () => {
     body.classList.remove('hide-overflow');
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     remove(this.#filmsPopupComponent);
+
+    ModePopup.IsLoadingComments = true;
+    ModePopup.isClosePopup = true;
+
   }
 
   #deleteComment = (cards, id) => {
@@ -72,31 +76,31 @@ export default class PopupPresenter {
 
 
   #handleClosePopupClick = () => {
-    this.#closePopup();
+    this.closePopup();
 
-    ModePopup.IsLoadingComments = true;
-    ModePopup.isClosePopup = true;
+    // ModePopup.IsLoadingComments = true;
+    // ModePopup.isClosePopup = true;
   }
 
-  #handleFavoriteClick = () => {
+  #handleFavoriteClick = (card) => {
     this.#changeData(
       UserAction.UPDATE_CARD,
-      UpdateType.PATCH,
-      { ...this.#card, isFavorite: !this.#card.isFavorite });
+      UpdateType.MINOR,
+      { ...card, isFavorite: !card.isFavorite });
   }
 
-  #handleWatchedClick = () => {
+  #handleWatchedClick = (card) => {
     this.#changeData(
       UserAction.UPDATE_CARD,
-      UpdateType.PATCH,
-      { ...this.#card, isWatched: !this.#card.isWatched });
+      UpdateType.MINOR,
+      { ...card, isWatched: !card.isWatched });
   }
 
-  #handleAddToWatchClick = () => {
+  #handleAddToWatchClick = (card) => {
     this.#changeData(
       UserAction.UPDATE_CARD,
-      UpdateType.PATCH,
-      { ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch });
+      UpdateType.MINOR,
+      { ...card, isAddedToWatch: !card.isAddedToWatch });
   }
 
   #handleDeleteCommentClick = (id) => {
@@ -111,7 +115,7 @@ export default class PopupPresenter {
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
-      this.#closePopup();
+      this.closePopup();
     }
   }
 

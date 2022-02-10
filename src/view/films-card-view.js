@@ -82,16 +82,16 @@ export default class FilmsCardView extends AbstractView {
 
   #addToWatchClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.addToWatchClick(this.#card.id);
+    this._callback.addToWatchClick(this.#card);
   }
 
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.favoriteClick(this.#card.id);
+    this._callback.favoriteClick(this.#card);
   }
 
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.watchedClick(this.#card.id);
+    this._callback.watchedClick(this.#card);
   }
 }

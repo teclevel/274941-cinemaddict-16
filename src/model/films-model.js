@@ -26,8 +26,6 @@ export default class FilmsModel extends AbstractObservable {
     this._notify(UpdateType.INIT);
   }
 
-  // getComments = async (id) => await this.#apiService.getComments(id);
-
   updateCard = (updateType, update) => {
     const index = this.#cards.findIndex((card) => card.id === update.id);
 

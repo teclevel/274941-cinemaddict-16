@@ -166,10 +166,15 @@ const createFilmsPopupTemplate = (data) => {
 };
 
 export default class FilmsPopupView extends SmartView {
+  _data = null;
 
-  constructor(card = BLANK_DETAILS_FILM) {
+  // constructor(card = BLANK_DETAILS_FILM) {
+  constructor(card) {
+
     super();
     this._data = FilmsPopupView.parseCardToData(card);
+    // this._data = card;
+
     this.#setInnerHandler();
   }
 
@@ -245,6 +250,8 @@ export default class FilmsPopupView extends SmartView {
   #closePopupClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.closePopupClick(FilmsPopupView.parseDataToCard(this._data));
+    // this._callback.closePopupClick(this._data);
+
   }
 
   #addToWatchClickHandler = (evt) => {
@@ -254,7 +261,9 @@ export default class FilmsPopupView extends SmartView {
 
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.favoriteClick();
+    // this._callback.favoriteClick(FilmsPopupView.parseDataToCard(this._data));
+    this._callback.favoriteClick(this._data);
+
   }
 
   #watchedClickHandler = (evt) => {
