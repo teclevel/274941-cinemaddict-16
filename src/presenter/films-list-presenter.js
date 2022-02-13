@@ -113,7 +113,7 @@ export default class FilmsListPresenter {
   }
 
   #initPopup = (card) => {
-    this.#popupPresenter = new PopupPresenter(this.#popupContainerComponent, this.#handleViewAction);
+    this.#popupPresenter = new PopupPresenter(this.#popupContainerComponent, this.#handleViewAction, card);
     this.#popupModel.addObserver(this.#handleModelEvent);
     this.#filmsModel.addObserver(this.#handleModelEvent);
 
@@ -132,7 +132,7 @@ export default class FilmsListPresenter {
     }
 
     if (ModePopup.isClosePopup) {
-      this.#popupPresenter.showPopup(this.#card);
+      this.#popupPresenter.showPopup();
       ModePopup.isClosePopup = false;
     }
   }
@@ -257,7 +257,7 @@ export default class FilmsListPresenter {
         if (ModePopup.isClosePopup === false) {
           this.#popupPresenter.closePopup();
           this.#initPopup(data);
-          // this.#showPopup(data);
+          this.#showPopup();
 
         }
 

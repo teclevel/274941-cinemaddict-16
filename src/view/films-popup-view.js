@@ -261,8 +261,7 @@ export default class FilmsPopupView extends SmartView {
 
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
-    // this._callback.favoriteClick(FilmsPopupView.parseDataToCard(this._data));
-    this._callback.favoriteClick(this._data);
+    this._callback.favoriteClick();
 
   }
 

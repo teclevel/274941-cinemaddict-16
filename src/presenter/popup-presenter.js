@@ -11,14 +11,13 @@ export default class PopupPresenter {
   #changeData = null;
   #card = null;
 
-  constructor(popupContainer, changeData) {
+  constructor(popupContainer, changeData, card) {
     this.#popupContainer = popupContainer;
     this.#changeData = changeData;
+    this.#card = card;
   }
 
-  #renderPopup = (card) => {
-    this.#card = card;
-
+  #renderPopup = () => {
     const prevPopupComponent = this.#filmsPopupComponent;
 
     this.#filmsPopupComponent = new FilmsPopupView(this.#card);
@@ -37,7 +36,6 @@ export default class PopupPresenter {
 
     replace(this.#filmsPopupComponent, prevPopupComponent);
     remove(prevPopupComponent);
-
   }
 
 
@@ -82,25 +80,25 @@ export default class PopupPresenter {
     // ModePopup.isClosePopup = true;
   }
 
-  #handleFavoriteClick = (card) => {
+  #handleFavoriteClick = () => {
     this.#changeData(
       UserAction.UPDATE_CARD,
       UpdateType.MINOR,
-      { ...card, isFavorite: !card.isFavorite });
+      { ...this.#card, isFavorite: !this.#card.isFavorite });
   }
 
-  #handleWatchedClick = (card) => {
+  #handleWatchedClick = () => {
     this.#changeData(
       UserAction.UPDATE_CARD,
       UpdateType.MINOR,
-      { ...card, isWatched: !card.isWatched });
+      { ...this.#card, isWatched: !this.#card.isWatched });
   }
 
-  #handleAddToWatchClick = (card) => {
+  #handleAddToWatchClick = () => {
     this.#changeData(
       UserAction.UPDATE_CARD,
       UpdateType.MINOR,
-      { ...card, isAddedToWatch: !card.isAddedToWatch });
+      { ...this.#card, isAddedToWatch: !this.#card.isAddedToWatch });
   }
 
   #handleDeleteCommentClick = (id) => {
