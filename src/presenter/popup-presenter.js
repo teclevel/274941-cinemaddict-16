@@ -38,22 +38,12 @@ export default class PopupPresenter {
     remove(prevPopupComponent);
   }
 
-
-  // destroy = () => {
-  //   remove(this.#filmsPopupComponent);
-  //   this.#commentsModel.removeObserver(this.#handleModelEvent);
-  // }
-
-
-  // resetView = () => {
-  //   this.#filmsPopupComponent.reset(this.#card);
-  //   this.closePopup();
-  // }
-
-  showPopup = (card) => {
-    this.#renderPopup(card);
+  showPopup = () => {
+    this.#renderPopup();
     body.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#escKeyDownHandler);
+    ModePopup.isClosePopup = false;
+
   }
 
   closePopup = () => {
@@ -63,7 +53,6 @@ export default class PopupPresenter {
 
     ModePopup.IsLoadingComments = true;
     ModePopup.isClosePopup = true;
-
   }
 
   #deleteComment = (cards, id) => {
@@ -75,9 +64,6 @@ export default class PopupPresenter {
 
   #handleClosePopupClick = () => {
     this.closePopup();
-
-    // ModePopup.IsLoadingComments = true;
-    // ModePopup.isClosePopup = true;
   }
 
   #handleFavoriteClick = () => {

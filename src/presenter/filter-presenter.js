@@ -86,6 +86,7 @@ export default class FilterPresenter {
       case FilterType.FAVORITES:
       case FilterType.HISTORY:
         remove(this.#statisticComponent);
+        boardPresenter.closePopup();
         boardPresenter.destroy();
         boardPresenter.init();
         this.#filterModel.setFilter(UpdateType.MAJOR, filterType);

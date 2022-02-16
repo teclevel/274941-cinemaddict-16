@@ -114,28 +114,42 @@ export default class FilmsListPresenter {
 
   #initPopup = (card) => {
     this.#popupPresenter = new PopupPresenter(this.#popupContainerComponent, this.#handleViewAction, card);
-    this.#popupModel.addObserver(this.#handleModelEvent);
     this.#filmsModel.addObserver(this.#handleModelEvent);
 
-    this.#showPopup();
+    // this.#showPopup();
+  }
+
+  #initComments = (card) => {
     this.#popupModel.init(card.id);
+    this.#popupModel.addObserver(this.#handleModelEvent);
   }
 
   #handleCardClick = (card) => {
+    if (!ModePopup.isClosePopup) {
+      this.closePopup();
+    }
+
     this.#card = card;
     this.#initPopup(card);
+    this.#initComments(card);
+    this.#showPopup();
   }
 
   #showPopup = () => {
     if (ModePopup.IsLoadingComments) {
+      console.log('Loading comments');
       return;
     }
 
     if (ModePopup.isClosePopup) {
       this.#popupPresenter.showPopup();
-      ModePopup.isClosePopup = false;
     }
   }
+
+  closePopup = () => {
+    this.#popupPresenter.closePopup();
+  }
+
 
   #handleAddToWatchClick = (card) => {
     this.#handleViewAction(
@@ -247,18 +261,18 @@ export default class FilmsListPresenter {
     }
   }
 
-  #handleModelEvent = (updateType, data) => {
+  #handleModelEvent = (updateType, data) => {//обновленные данные
     switch (updateType) {
       case UpdateType.PATCH:
         break;
       case UpdateType.MINOR:
         this.#clearBoard();
         this.#renderBoard();
-        if (ModePopup.isClosePopup === false) {
-          this.#popupPresenter.closePopup();
+        if (!ModePopup.isClosePopup) {// попап открыт
+          this.closePopup();
           this.#initPopup(data);
+          this.#initComments(data);
           this.#showPopup();
-
         }
 
         break;
@@ -288,6 +302,7 @@ export default class FilmsListPresenter {
     this.#currentSortType = sortType;
     this.#clearBoard({ resetRenderedCardCount: true });
     this.#renderBoard();
+    this.closePopup();
   }
 
   #handleShowMoreButtonClick = () => {
