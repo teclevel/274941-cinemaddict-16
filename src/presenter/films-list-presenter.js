@@ -115,8 +115,6 @@ export default class FilmsListPresenter {
   #initPopup = (card) => {
     this.#popupPresenter = new PopupPresenter(this.#popupContainerComponent, this.#handleViewAction, card);
     this.#filmsModel.addObserver(this.#handleModelEvent);
-
-    // this.#showPopup();
   }
 
   #initComments = (card) => {
@@ -125,11 +123,11 @@ export default class FilmsListPresenter {
   }
 
   #handleCardClick = (card) => {
+    this.#card = card;
     if (!ModePopup.isClosePopup) {
       this.closePopup();
     }
 
-    this.#card = card;
     this.#initPopup(card);
     this.#initComments(card);
     this.#showPopup();
@@ -269,6 +267,7 @@ export default class FilmsListPresenter {
         this.#clearBoard();
         this.#renderBoard();
         if (!ModePopup.isClosePopup) {// попап открыт
+          this.#card = data;
           this.closePopup();
           this.#initPopup(data);
           this.#initComments(data);
