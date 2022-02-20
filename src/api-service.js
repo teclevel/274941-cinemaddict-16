@@ -1,6 +1,8 @@
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE'
 };
 
 export default class ApiService {
@@ -25,21 +27,27 @@ export default class ApiService {
   getComments = async (id) => this.#load({ url: `comments/${id}` })
     .then(ApiService.parseResponse)
 
-  // addComment = async (data) => {
-  //   const response = await this.#load({
-  //     url: `comments/${data.id}`,
-  //     method: Method.POST,
-  //     body: JSON.stringify(data.comment),
-  //     headers: new Headers({ 'Content-Type': 'application/json' }),
-  //   });
+  addComment = async (data) => {
+    const response = await this.#load({
+      url: `comments/${data.id}`,
+      method: Method.POST,
+      body: JSON.stringify(data.comment),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+    });
 
-  //   return await ApiService.parseResponse(response);
-  // }
+    const parseResponse = await ApiService.parseResponse(response);
 
-  // deleteComment = async (data) => await this.#load({
-  //   url: `comments/${data.commentId}`,
-  //   method: Method.DELETE,
-  // })
+    return parseResponse;
+  }
+
+  deleteComment = async (comment) => {
+    const response = await this.#load({
+      url: `comments/${comment.id}`,
+      method: Method.DELETE,
+    });
+
+    return response;
+  }
 
   #load = async ({
     url,
@@ -75,21 +83,63 @@ export default class ApiService {
     return parsedResponse;
   }
 
-  #adaptToServer = (task) => {
-    // const adaptedTask = {...task,
-    //   'due_date': task.dueDate instanceof Date ? task.dueDate.toISOString() : null, // На сервере дата хранится в ISO формате
-    //   'is_archived': task.isArchive,
-    //   'is_favorite': task.isFavorite,
-    //   'repeating_days': task.repeating,
-    // };
+  #adaptToServer = (card) => {
+    const adaptedCard = {
+      ...card,
+      'user_details': {
+        'watchlist': card.isAddedToWatch,
+        'favorite': card.isFavorite,
+        'already_watched': card.isWatched,
+        'watching_date': card.watchingDate.toISOString(),
+      },
+      'film_info': {
+        'actors': card.actors.split(', '),
+        'age_rating': card.age,
+        'alternative_title': card.alternativeTitle,
+        'director': card.director,
+        'description': card.description,
+        'genre': card.genres,
+        'poster': card.poster,
+        'release': {
+          'date': card.date,
+          'release_country': card.releaseCountry,
+        },
+        'runtime': card.duration,
+        'title': card.title,
+        'total_rating': card.rating,
+        'writers': card.writers.split(', '),
+      },
+      'comments': card['comments'].map((comment) => comment.id ? comment.id : comment),
+    };
 
-    // // Ненужные ключи мы удаляем
-    // delete adaptedTask.dueDate;
-    // delete adaptedTask.isArchive;
-    // delete adaptedTask.isFavorite;
-    // delete adaptedTask.repeating;
+    // Ненужные ключи мы удаляем
+    delete adaptedCard['genres'];
+    delete adaptedCard['duration'];
+    delete adaptedCard['rating'];
+    delete adaptedCard['age'];
+    delete adaptedCard['release'];
+    delete adaptedCard['isWatched'];
+    delete adaptedCard['isFavorite'];
+    delete adaptedCard['isAddedToWatch'];
+    delete adaptedCard['releaseCountry'];
+    delete adaptedCard['writers'];
+    delete adaptedCard['watchingDate'];
+    delete adaptedCard['title'];
+    delete adaptedCard['poster'];
+    delete adaptedCard['director'];
+    delete adaptedCard['description'];
+    delete adaptedCard['dateRelease'];
+    delete adaptedCard['date'];
+    delete adaptedCard['alternativeTitle'];
+    delete adaptedCard['actors'];
+    // delete adaptedCard['comments'].emotion;
+    // delete adaptedCard['comments'].author;
+    // delete adaptedCard['comments'].comment;
+    // delete adaptedCard['comments']['date'];
 
-    // return adaptedTask;
+    console.log(adaptedCard);
+
+    return adaptedCard;
   }
 
   static parseResponse = (response) => response.json();

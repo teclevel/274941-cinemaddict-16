@@ -1,5 +1,5 @@
 import { BLANK_DETAILS_FILM } from '../const';
-import { convertDateInYear, getTimeFromMins } from '../utils/day';
+import { convertDateInYear } from '../utils/day';
 import SmartView from './smart-view';
 import he from 'he';
 import { EMOJIS } from '../const';
@@ -138,7 +138,7 @@ const createFilmsPopupTemplate = (data) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${getTimeFromMins(duration)}</td>
+              <td class="film-details__cell">${duration}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
@@ -173,7 +173,6 @@ export default class FilmsPopupView extends SmartView {
 
     super();
     this._data = FilmsPopupView.parseCardToData(card);
-    // this._data = card;
 
     this.#setInnerHandler();
   }
@@ -250,8 +249,6 @@ export default class FilmsPopupView extends SmartView {
   #closePopupClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.closePopupClick(FilmsPopupView.parseDataToCard(this._data));
-    // this._callback.closePopupClick(this._data);
-
   }
 
   #addToWatchClickHandler = (evt) => {

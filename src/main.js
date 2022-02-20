@@ -8,6 +8,7 @@ import FilmsModel from './model/films-model';
 import FilterModel from './model/filter-model';
 import FilterPresenter from './presenter/filter-presenter';
 import ApiService from './api-service';
+import PopupModel from './model/popup-model';
 
 // const NUMBER_CARDS = 3;
 export const AUTHORIZATION = 'Basic 4ksdf9gguyrsdghrt0s';
@@ -22,11 +23,12 @@ const header = document.querySelector('.header');
 
 const filmsModel = new FilmsModel(new ApiService(END_POINT, AUTHORIZATION));
 const filterModel = new FilterModel();
+const popupModel = new PopupModel(new ApiService(END_POINT, AUTHORIZATION));
 
 // filmsModel.cards = cards;
 
-export const boardPresenter = new FilmsListPresenter(main, filmsModel, filterModel);
-const filterPresenter = new FilterPresenter(main, filterModel, filmsModel);
+const boardPresenter = new FilmsListPresenter(main, filmsModel, filterModel, popupModel);
+const filterPresenter = new FilterPresenter(main, filterModel, filmsModel, boardPresenter);
 /* render(header, new ProfileUserView(cards), RenderPosition.BEFORE_END);
 render(footer, new FilmCounterView(cards), RenderPosition.BEFORE_END);
  */

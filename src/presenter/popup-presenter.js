@@ -23,7 +23,7 @@ export default class PopupPresenter {
     this.#filmsPopupComponent = new FilmsPopupView(this.#card);
 
     this.#filmsPopupComponent.setPopupCloseClickHandler(this.#handleClosePopupClick);
-
+    this.#filmsPopupComponent.setDeleteCommentClickHandler(this.#handleDeleteCommentClick);
     this.#filmsPopupComponent.setAddToWatchClickHandler(this.#handleAddToWatchClick);
     this.#filmsPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
@@ -43,7 +43,6 @@ export default class PopupPresenter {
     body.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#escKeyDownHandler);
     ModePopup.isClosePopup = false;
-
   }
 
   closePopup = () => {
@@ -55,12 +54,11 @@ export default class PopupPresenter {
     ModePopup.isClosePopup = true;
   }
 
-  #deleteComment = (cards, id) => {
-    const comments = cards.comments.filter((comment) => comment.id !== id);
-    delete cards.comments;
-    cards.comments = comments;
+  #deleteComment = (card, id) => {
+    const comments = card.comments.filter((comment) => comment.id !== id);
+    delete card.comments;
+    card.comments = comments;
   }
-
 
   #handleClosePopupClick = () => {
     this.closePopup();
@@ -88,12 +86,15 @@ export default class PopupPresenter {
   }
 
   #handleDeleteCommentClick = (id) => {
-    this.#deleteComment(this.#card, id);
+    // this.#deleteComment(this.#card, id);
+    const deletingComment = this.#card.comments.find((el) => el.id === id);
+    // console.log(deletingComment);
 
     this.#changeData(
-      UserAction.UPDATE_CARD,
-      UpdateType.PATCH,
-      this.#card
+      UserAction.DELETE_COMMENT,
+      UpdateType.MINOR,
+      deletingComment
+      // this.#card.comments
     );
   }
 

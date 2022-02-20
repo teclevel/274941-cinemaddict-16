@@ -2,21 +2,21 @@ import FilterView from '../view/filter-view';
 import { FilterType, RenderPosition, UpdateType, } from '../const';
 import { filter } from '../utils/filter';
 import { remove, render, replace } from '../utils/render';
-import { boardPresenter, main } from '../main';
 import StatisticView from '../view/statistic-view';
 
 export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #filmsModel = null;
-
+  #filmsListPresenter = null;
   #filterComponent = null;
   #statisticComponent = null;
 
-  constructor(filterContainer, filterModel, filmsModel) {
+  constructor(filterContainer, filterModel, filmsModel, filmsListPresenter) {
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
     this.#filmsModel = filmsModel;
+    this.#filmsListPresenter = filmsListPresenter;
   }
 
   get filters() {
@@ -86,16 +86,16 @@ export default class FilterPresenter {
       case FilterType.FAVORITES:
       case FilterType.HISTORY:
         remove(this.#statisticComponent);
-        boardPresenter.closePopup();
-        boardPresenter.destroy();
-        boardPresenter.init();
+        this.#filmsListPresenter.destroyPopup();
+        this.#filmsListPresenter.destroy();
+        this.#filmsListPresenter.init();
         this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
         break;
 
       case FilterType.STATISTIC:
-        boardPresenter.destroy();
+        this.#filmsListPresenter.destroy();
         this.#statisticComponent = new StatisticView(this.#filmsModel.cards);
-        render(main, this.#statisticComponent, RenderPosition.BEFORE_END);
+        render(this.#filterContainer, this.#statisticComponent, RenderPosition.BEFORE_END);
         this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
         break;
     }

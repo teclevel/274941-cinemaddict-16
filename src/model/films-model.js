@@ -18,6 +18,7 @@ export default class FilmsModel extends AbstractObservable {
     try {
       const cards = await this.#apiService.cards;
       this.#cards = cards.map(this.#adaptToClient);
+      // console.log(this.#cards[0]);
 
     } catch (err) {
       this.#cards = [];
@@ -26,20 +27,26 @@ export default class FilmsModel extends AbstractObservable {
     this._notify(UpdateType.INIT);
   }
 
-  updateCard = (updateType, update) => {
+  updateCard = async (updateType, update) => {
     const index = this.#cards.findIndex((card) => card.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t update unexisting card');
+      throw new Error('Can\'t update unexisting card'); //если нет фильма с таким id
     }
 
-    this.#cards = [
-      ...this.#cards.slice(0, index),
-      update,
-      ...this.#cards.slice(index + 1),
-    ];
-
-    this._notify(updateType, update);
+    try {
+      const response = await this.#apiService.updateCard(update); // запрос к apiService на обновление
+      const updatedCard = this.#adaptToClient(response);
+      // console.log(updatedCard);
+      this.#cards = [
+        ...this.#cards.slice(0, index),
+        updatedCard,
+        ...this.#cards.slice(index + 1),
+      ];
+      this._notify(updateType, updatedCard);
+    } catch (err) {
+      throw new Error('Can\'t update card');
+    }
   }
 
   // addCard = (updateType, update) => {
@@ -51,20 +58,20 @@ export default class FilmsModel extends AbstractObservable {
   //   this._notify(updateType, update);
   // }
 
-  deleteCard = (updateType, update) => {
-    const index = this.#cards.findIndex((card) => card.id === update.id);
+  // deleteCard = (updateType, update) => {
+  //   const index = this.#cards.findIndex((card) => card.id === update.id);
 
-    if (index === -1) {
-      throw new Error('Can\'t delete unexisting card');
-    }
+  //   if (index === -1) {
+  //     throw new Error('Can\'t delete unexisting card');
+  //   }
 
-    this.#cards = [
-      ...this.#cards.slice(0, index),
-      ...this.#cards.slice(index + 1),
-    ];
+  //   this.#cards = [
+  //     ...this.#cards.slice(0, index),
+  //     ...this.#cards.slice(index + 1),
+  //   ];
 
-    this._notify(updateType);
-  }
+  //   this._notify(updateType);
+  // }
 
   #adaptToClient = (card) => {
     const adaptedCard = {
@@ -73,16 +80,18 @@ export default class FilmsModel extends AbstractObservable {
       ...card['user_details'],
       ...card['film_info'].release,
       actors: card['film_info'].actors.join(', '),
-      age: card['film_info']['age_rating'],
+      age: card['film_info'].age_rating,
       genres: card['film_info'].genre,
-      duration: new Date(card['film_info'].runtime),
-      rating: card['film_info']['total_rating'],
+      duration: card['film_info'].runtime,
+      rating: card['film_info'].total_rating,
       writers: card['film_info'].writers.join(', '),
       dateRelease: new Date(card['film_info'].release.date),
       isAddedToWatch: card['user_details'].watchlist,
       isFavorite: card['user_details'].favorite,
-      isWatched: card['user_details']['already_watched'],
-      releaseCountry: card['film_info']['release']['release_country'],
+      isWatched: card['user_details'].already_watched,
+      releaseCountry: card['film_info'].release.release_country,
+      watchingDate: new Date(card['user_details'].watching_date),
+      alternativeTitle: card['film_info'].alternative_title,
     };
 
     delete adaptedCard['film_info'];
@@ -96,6 +105,8 @@ export default class FilmsModel extends AbstractObservable {
     delete adaptedCard['favorite'];
     delete adaptedCard['watchlist'];
     delete adaptedCard['release_country'];
+    delete adaptedCard['watching_date'];
+    delete adaptedCard['alternative_title'];
     return adaptedCard;
   }
 }

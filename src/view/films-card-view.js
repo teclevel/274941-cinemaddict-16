@@ -1,4 +1,4 @@
-import { convertDateInYear, getTimeFromMins } from '../utils/day';
+import { convertDateInYear } from '../utils/day';
 import AbstractView from './abstract-view';
 
 const createFilmsCardTemplate = (card) => {
@@ -24,7 +24,7 @@ const createFilmsCardTemplate = (card) => {
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${convertDateInYear(dateRelease)}</span>
-        <span class="film-card__duration">${getTimeFromMins(duration)}</span>
+        <span class="film-card__duration">${duration}</span>
         <span class="film-card__genre">${genres[0]}</span>
       </p>
       <img src="${poster}" alt="" class="film-card__poster">
