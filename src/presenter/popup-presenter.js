@@ -27,6 +27,7 @@ export default class PopupPresenter {
     this.#filmsPopupComponent.setAddToWatchClickHandler(this.#handleAddToWatchClick);
     this.#filmsPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmsPopupComponent.setWatchedClickHandler(this.#handleWatchedClick);
+    this.#filmsPopupComponent.setFormSubmitHandler(this.#handleSubmit);
 
 
     if (!prevPopupComponent) {

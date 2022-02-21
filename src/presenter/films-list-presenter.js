@@ -80,6 +80,7 @@ export default class FilmsListPresenter {
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
 
+
     this.#renderBoard();
   }
 
@@ -117,6 +118,7 @@ export default class FilmsListPresenter {
   #initPopup = (card) => {
     this.#popupPresenter = new PopupPresenter(this.#popupContainerComponent, this.#handleViewAction, card);
     this.#filmsModel.addObserver(this.#handleModelEvent);
+    this.#popupModel.addObserver(this.#handleModelEvent);
   }
 
   #initComments = (card) => {
@@ -150,6 +152,7 @@ export default class FilmsListPresenter {
   destroyPopup = () => {
     if (this.#popupPresenter) {
       this.#popupPresenter.closePopup();
+      // this.#popupModel.removeObserver(this.#handleModelEvent);
     }
   }
 
@@ -249,16 +252,28 @@ export default class FilmsListPresenter {
     }
   }
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_CARD:
-        this.#filmsModel.updateCard(updateType, update);
+        try {
+          await this.#filmsModel.updateCard(updateType, update);
+        } catch (err) {
+          console.log('ошибка обновления');
+        }
         break;
       case UserAction.ADD_COMMENT:
-        this.#popupModel.addComment(updateType, update);
+        try {
+          await this.#popupModel.addComment(updateType, update);
+        } catch (err) {
+          console.log('ошибка добавления комментария');
+        }
         break;
       case UserAction.DELETE_COMMENT:
-        this.#popupModel.deleteComment(updateType, update);
+        try {
+          await this.#popupModel.deleteComment(updateType, update);
+        } catch (err) {
+          console.log('ошибка удаления комментария');
+        }
         break;
     }
   }
