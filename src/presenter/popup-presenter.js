@@ -54,11 +54,11 @@ export default class PopupPresenter {
     ModePopup.isClosePopup = true;
   }
 
-  #deleteComment = (card, id) => {
-    const comments = card.comments.filter((comment) => comment.id !== id);
-    delete card.comments;
-    card.comments = comments;
-  }
+  // #deleteComment = (card, id) => {
+  //   const comments = card.comments.filter((comment) => comment.id !== id);
+  //   delete card.comments;
+  //   card.comments = comments;
+  // }
 
   #handleClosePopupClick = () => {
     this.closePopup();
@@ -86,15 +86,12 @@ export default class PopupPresenter {
   }
 
   #handleDeleteCommentClick = (id) => {
-    // this.#deleteComment(this.#card, id);
     const deletingComment = this.#card.comments.find((el) => el.id === id);
-    // console.log(deletingComment);
 
     this.#changeData(
       UserAction.DELETE_COMMENT,
       UpdateType.MINOR,
       deletingComment
-      // this.#card.comments
     );
   }
 

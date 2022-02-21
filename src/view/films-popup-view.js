@@ -227,7 +227,7 @@ export default class FilmsPopupView extends SmartView {
 
   setFormSubmitHandler = (callback) => {
     this._callback.formSubmit = callback;
-    this.element.querySelector('form')
+    this.element
       .addEventListener('keydown', this.#formSubmitHandler);
   }
 
@@ -279,7 +279,7 @@ export default class FilmsPopupView extends SmartView {
     evt.preventDefault();
 
     if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
-      this.element.querySelector('form').submit();
+      this.element.submit();
       this._callback.formSubmit(FilmsPopupView.parseDataToCard(this._data));
     }
   }

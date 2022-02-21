@@ -29,7 +29,7 @@ export default class FilmsListPresenter {
   #filmsModel = null;
   #filterModel = null;
   #popupModel = null;
-  #cards = null;
+  // #cards = null;
   #card = null;
 
   // #popupModel = new PopupModel(new ApiService(END_POINT, AUTHORIZATION));
@@ -61,8 +61,9 @@ export default class FilmsListPresenter {
 
   get cards() {
     this.#filterType = this.#filterModel.filter;
-    this.#cards = this.#filmsModel.cards;
-    const filteredCards = filter[this.#filterType](this.#cards);
+    // this.#cards = this.#filmsModel.cards;
+    const cards = this.#filmsModel.cards;
+    const filteredCards = filter[this.#filterType](cards);
 
     switch (this.#currentSortType) {
       case SortType.DATE:
@@ -114,15 +115,15 @@ export default class FilmsListPresenter {
     this.#filmsCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
   }
 
-  #initPopup = (card) => {
-    this.#popupPresenter = new PopupPresenter(this.#popupContainerComponent, this.#handleViewAction, card);
+  #initPopup = () => {
+    this.#popupPresenter = new PopupPresenter(this.#popupContainerComponent, this.#handleViewAction, this.#card);
+    this.#popupModel.init(this.#card.id);
     this.#filmsModel.addObserver(this.#handleModelEvent);
-  }
-
-  #initComments = (card) => {
-    this.#popupModel.init(card.id);
     this.#popupModel.addObserver(this.#handleModelEvent);
   }
+
+  // #initComments = (card) => {
+  // }
 
   #handleCardClick = (card) => {
     // console.log(card);
@@ -131,8 +132,8 @@ export default class FilmsListPresenter {
       this.destroyPopup();
     }
 
-    this.#initPopup(card);
-    this.#initComments(card);
+    this.#initPopup();
+    // this.#initComments(card);
     this.#showPopup();
   }
 
@@ -249,16 +250,30 @@ export default class FilmsListPresenter {
     }
   }
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_CARD:
-        this.#filmsModel.updateCard(updateType, update);
+        try {
+          await this.#filmsModel.updateCard(updateType, update);
+        } catch (err) {
+          console.log('not updated');
+        }
         break;
+
       case UserAction.ADD_COMMENT:
-        this.#popupModel.addComment(updateType, update);
+        try {
+          await this.#popupModel.addComment(updateType, update);
+        } catch (err) {
+          console.log('not updated');
+        }
         break;
+
       case UserAction.DELETE_COMMENT:
-        this.#popupModel.deleteComment(updateType, update);
+        try {
+          await this.#popupModel.deleteComment(updateType, update);
+        } catch (err) {
+          console.log('not updated');
+        }
         break;
     }
   }
@@ -269,17 +284,17 @@ export default class FilmsListPresenter {
       //   // this.#card = data;
       //   this.destroyPopup();
       //   this.#initPopup(data);
-      //   this.#initComments(data);
+      //  // this.#initComments(data);
       //   this.#showPopup();
       //   break;
       case UpdateType.MINOR:
         this.#clearBoard();
         this.#renderBoard();
         if (!ModePopup.isClosePopup) {// попап открыт
-          this.#card = data;
+          // this.#card = data;
           this.destroyPopup();
-          this.#initPopup(data);
-          this.#initComments(data);
+          this.#initPopup();
+          // this.#initComments(data);
           this.#showPopup();
         }
 
