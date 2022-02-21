@@ -11,10 +11,7 @@ import LoadingView from '../view/loading-view';
 import FilmsCardView from '../view/films-card-view';
 import ContainerPopupView from '../view/containerPopup';
 import PopupPresenter from './popup-presenter';
-import PopupModel from '../model/popup-model';
-import { AUTHORIZATION, END_POINT, footer } from '../main';
-import ApiService from '../api-service';
-
+import { footer } from '../main';
 
 export const ModePopup = {
   IsLoadingComments: true,
@@ -31,8 +28,6 @@ export default class FilmsListPresenter {
   #popupModel = null;
   #cards = null;
   #card = null;
-
-  // #popupModel = new PopupModel(new ApiService(END_POINT, AUTHORIZATION));
 
   #filmsContainerComponent = new FilmsContainerView();
   #filmsListComponent = new FilmsListView();
@@ -127,7 +122,6 @@ export default class FilmsListPresenter {
   }
 
   #handleCardClick = (card) => {
-    // console.log(card);
     this.#card = card;
     if (!ModePopup.isClosePopup) {
       this.destroyPopup();
@@ -152,7 +146,7 @@ export default class FilmsListPresenter {
   destroyPopup = () => {
     if (this.#popupPresenter) {
       this.#popupPresenter.closePopup();
-      // this.#popupModel.removeObserver(this.#handleModelEvent);
+      this.#popupModel.removeObserver(this.#handleModelEvent);
     }
   }
 
