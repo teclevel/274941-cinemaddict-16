@@ -11,10 +11,7 @@ import LoadingView from '../view/loading-view';
 import FilmsCardView from '../view/films-card-view';
 import ContainerPopupView from '../view/containerPopup';
 import PopupPresenter from './popup-presenter';
-import PopupModel from '../model/popup-model';
-import { AUTHORIZATION, END_POINT, footer } from '../main';
-import ApiService from '../api-service';
-
+import { footer } from '../main';
 
 export const ModePopup = {
   IsLoadingComments: true,
@@ -31,8 +28,6 @@ export default class FilmsListPresenter {
   #popupModel = null;
   // #cards = null;
   #card = null;
-
-  // #popupModel = new PopupModel(new ApiService(END_POINT, AUTHORIZATION));
 
   #filmsContainerComponent = new FilmsContainerView();
   #filmsListComponent = new FilmsListView();
@@ -81,6 +76,7 @@ export default class FilmsListPresenter {
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
 
+
     this.#renderBoard();
   }
 
@@ -123,10 +119,11 @@ export default class FilmsListPresenter {
   }
 
   // #initComments = (card) => {
+  // this.#popupModel.init(card.id);
+  // this.#popupModel.addObserver(this.#handleModelEvent);
   // }
 
   #handleCardClick = (card) => {
-    // console.log(card);
     this.#card = card;
     if (!ModePopup.isClosePopup) {
       this.destroyPopup();
@@ -151,6 +148,7 @@ export default class FilmsListPresenter {
   destroyPopup = () => {
     if (this.#popupPresenter) {
       this.#popupPresenter.closePopup();
+      this.#popupModel.removeObserver(this.#handleModelEvent);
     }
   }
 
@@ -256,7 +254,7 @@ export default class FilmsListPresenter {
         try {
           await this.#filmsModel.updateCard(updateType, update);
         } catch (err) {
-          console.log('not updated');
+          console.log('ошибка обновления');
         }
         break;
 
@@ -264,7 +262,7 @@ export default class FilmsListPresenter {
         try {
           await this.#popupModel.addComment(updateType, update);
         } catch (err) {
-          console.log('not updated');
+          console.log('ошибка добавления комментария');
         }
         break;
 
@@ -272,7 +270,7 @@ export default class FilmsListPresenter {
         try {
           await this.#popupModel.deleteComment(updateType, update);
         } catch (err) {
-          console.log('not updated');
+          console.log('ошибка удаления комментария');
         }
         break;
     }
