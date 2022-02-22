@@ -75,7 +75,6 @@ export default class FilmsListPresenter {
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
 
-
     this.#renderBoard();
   }
 
@@ -111,17 +110,11 @@ export default class FilmsListPresenter {
   }
 
   #initPopup = () => {
-    console.log('initPopup',this.#card);
     this.#popupPresenter = new PopupPresenter(this.#popupContainerComponent, this.#handleViewAction, this.#card);
     this.#popupModel.init(this.#card.id);
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#popupModel.addObserver(this.#handleModelEvent);
   }
-
-  // #initComments = (card) => {
-  // this.#popupModel.init(card.id);
-  // this.#popupModel.addObserver(this.#handleModelEvent);
-  // }
 
   #handleCardClick = (card) => {
     this.#card = card;
@@ -130,7 +123,6 @@ export default class FilmsListPresenter {
     }
 
     this.#initPopup();
-    // this.#initComments(card);
     this.#showPopup();
   }
 
@@ -150,7 +142,6 @@ export default class FilmsListPresenter {
       this.#popupPresenter.closePopup();
       this.#popupModel.removeObserver(this.#handleModelEvent);
       this.#filmsModel.removeObserver(this.#handleModelEvent);
-
     }
   }
 
@@ -281,12 +272,6 @@ export default class FilmsListPresenter {
   #handleModelEvent = (updateType, data) => {//обновленные данные
     switch (updateType) {
       // case UpdateType.PATCH:
-      //   // this.#card = data;
-      //   this.destroyPopup();
-      //   this.#initPopup(data);
-      //  // this.#initComments(data);
-      //   this.#showPopup();
-      //   break;
       case UpdateType.MINOR:
         this.#clearBoard();
         this.#renderBoard();
@@ -296,7 +281,6 @@ export default class FilmsListPresenter {
           }
           this.destroyPopup();
           this.#initPopup();
-          // this.#initComments(data);
           this.#showPopup();
         }
 

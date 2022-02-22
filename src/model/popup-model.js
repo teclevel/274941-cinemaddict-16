@@ -4,7 +4,6 @@ import AbstractObservable from '../utils/abstract-observable';
 export default class PopupModel extends AbstractObservable {
   #apiService = null;
   #comments = [];
-  // #cards = [];
 
   constructor(apiService) {
     super();
@@ -67,7 +66,7 @@ export default class PopupModel extends AbstractObservable {
         ...this.#comments.slice(0, index),
         ...this.#comments.slice(index + 1),
       ];
-      console.log(this.#comments);
+
       this._notify(updateType);
 
     } catch (err) {

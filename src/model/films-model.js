@@ -18,7 +18,6 @@ export default class FilmsModel extends AbstractObservable {
     try {
       const cards = await this.#apiService.cards;
       this.#cards = cards.map(this.#adaptToClient);
-      // console.log(this.#cards[0]);
 
     } catch (err) {
       this.#cards = [];
@@ -37,41 +36,18 @@ export default class FilmsModel extends AbstractObservable {
     try {
       const response = await this.#apiService.updateCard(update); // запрос к apiService на обновление
       const updatedCard = this.#adaptToClient(response);
-      // console.log(updatedCard);
+
       this.#cards = [
         ...this.#cards.slice(0, index),
         updatedCard,
         ...this.#cards.slice(index + 1),
       ];
       this._notify(updateType, updatedCard);
+
     } catch (err) {
       throw new Error('Can\'t update card');
     }
   }
-
-  // addCard = (updateType, update) => {
-  //   this.#cards = [
-  //     update,
-  //     ...this.#cards,
-  //   ];
-
-  //   this._notify(updateType, update);
-  // }
-
-  // deleteCard = (updateType, update) => {
-  //   const index = this.#cards.findIndex((card) => card.id === update.id);
-
-  //   if (index === -1) {
-  //     throw new Error('Can\'t delete unexisting card');
-  //   }
-
-  //   this.#cards = [
-  //     ...this.#cards.slice(0, index),
-  //     ...this.#cards.slice(index + 1),
-  //   ];
-
-  //   this._notify(updateType);
-  // }
 
   #adaptToClient = (card) => {
     const adaptedCard = {

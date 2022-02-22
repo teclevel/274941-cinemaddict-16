@@ -112,7 +112,6 @@ export default class ApiService {
       'comments': card['comments'].map((comment) => comment.id ? comment.id : comment),
     };
 
-    // Ненужные ключи мы удаляем
     delete adaptedCard['genres'];
     delete adaptedCard['duration'];
     delete adaptedCard['rating'];
@@ -132,12 +131,6 @@ export default class ApiService {
     delete adaptedCard['date'];
     delete adaptedCard['alternativeTitle'];
     delete adaptedCard['actors'];
-    // delete adaptedCard['comments'].emotion;
-    // delete adaptedCard['comments'].author;
-    // delete adaptedCard['comments'].comment;
-    // delete adaptedCard['comments']['date'];
-
-    console.log(adaptedCard);
 
     return adaptedCard;
   }

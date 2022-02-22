@@ -21,7 +21,6 @@ export default class PopupPresenter {
     const prevPopupComponent = this.#filmsPopupComponent;
 
     this.#filmsPopupComponent = new FilmsPopupView(this.#card);
-console.log('renderPopup', this.#card);
     this.#filmsPopupComponent.setPopupCloseClickHandler(this.#handleClosePopupClick);
     this.#filmsPopupComponent.setDeleteCommentClickHandler(this.#handleDeleteCommentClick);
     this.#filmsPopupComponent.setAddToWatchClickHandler(this.#handleAddToWatchClick);
@@ -55,13 +54,10 @@ console.log('renderPopup', this.#card);
     ModePopup.isClosePopup = true;
   }
 
-  // #deleteComment = (card, id) => {
-  //   const comments = card.comments.filter((comment) => comment.id !== id);
-  //   delete card.comments;
-  //   card.comments = comments;
-  // }
-
   #handleClosePopupClick = () => {
+    this.#changeData(UserAction.UPDATE_CARD,
+      UpdateType.MINOR,
+      { ...this.#card });
     this.closePopup();
   }
 
