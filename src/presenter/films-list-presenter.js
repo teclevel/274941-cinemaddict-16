@@ -56,7 +56,6 @@ export default class FilmsListPresenter {
 
   get cards() {
     this.#filterType = this.#filterModel.filter;
-    // this.#cards = this.#filmsModel.cards;
     const cards = this.#filmsModel.cards;
     const filteredCards = filter[this.#filterType](cards);
 
@@ -112,6 +111,7 @@ export default class FilmsListPresenter {
   }
 
   #initPopup = () => {
+    console.log('initPopup',this.#card);
     this.#popupPresenter = new PopupPresenter(this.#popupContainerComponent, this.#handleViewAction, this.#card);
     this.#popupModel.init(this.#card.id);
     this.#filmsModel.addObserver(this.#handleModelEvent);
@@ -149,6 +149,8 @@ export default class FilmsListPresenter {
     if (this.#popupPresenter) {
       this.#popupPresenter.closePopup();
       this.#popupModel.removeObserver(this.#handleModelEvent);
+      this.#filmsModel.removeObserver(this.#handleModelEvent);
+
     }
   }
 
@@ -289,7 +291,9 @@ export default class FilmsListPresenter {
         this.#clearBoard();
         this.#renderBoard();
         if (!ModePopup.isClosePopup) {// попап открыт
-          // this.#card = data;
+          if (data){
+            this.#card = data;
+          }
           this.destroyPopup();
           this.#initPopup();
           // this.#initComments(data);

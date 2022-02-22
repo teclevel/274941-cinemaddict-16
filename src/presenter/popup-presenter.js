@@ -21,7 +21,7 @@ export default class PopupPresenter {
     const prevPopupComponent = this.#filmsPopupComponent;
 
     this.#filmsPopupComponent = new FilmsPopupView(this.#card);
-
+console.log('renderPopup', this.#card);
     this.#filmsPopupComponent.setPopupCloseClickHandler(this.#handleClosePopupClick);
     this.#filmsPopupComponent.setDeleteCommentClickHandler(this.#handleDeleteCommentClick);
     this.#filmsPopupComponent.setAddToWatchClickHandler(this.#handleAddToWatchClick);
