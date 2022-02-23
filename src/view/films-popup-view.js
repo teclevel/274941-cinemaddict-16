@@ -1,10 +1,18 @@
-import { BLANK_DETAILS_FILM } from '../const';
+// import { BLANK_DETAILS_FILM } from '../const';
 import { convertDateInYear } from '../utils/day';
 import SmartView from './smart-view';
 import he from 'he';
 import { EMOJIS } from '../const';
 import { formatDateComment } from '../utils/day';
 
+const BLANK_DETAILS_FILM = {
+  isUserEmoji: null,
+  newComment: '',
+
+//   isWatched: false,
+//   isAddedToWatch: false,
+//   isFavorite: false
+};
 
 const createCommentTemplate = (comments) => (
   comments.map(({ emotion, comment, author, date, id }) =>
@@ -168,8 +176,8 @@ const createFilmsPopupTemplate = (data) => {
 export default class FilmsPopupView extends SmartView {
   _data = null;
 
-  // constructor(card = BLANK_DETAILS_FILM) {
-  constructor(card) {
+  constructor(card = BLANK_DETAILS_FILM) {
+  // constructor(card) {
 
     super();
     this._data = FilmsPopupView.parseCardToData(card);
@@ -276,11 +284,13 @@ export default class FilmsPopupView extends SmartView {
   }
 
   #formSubmitHandler = (evt) => {
-    evt.preventDefault();
 
     if ((evt.ctrlKey || evt.metaKey) && evt.key === 'Enter') {
-      this.element.submit();
-      this._callback.formSubmit(FilmsPopupView.parseDataToCard(this._data));
+      evt.preventDefault();
+      // this.element.submit();
+      // this._callback.formSubmit(FilmsPopupView.parseDataToCard(this._data));
+
+      this._callback.formSubmit(this._data);
     }
   }
 

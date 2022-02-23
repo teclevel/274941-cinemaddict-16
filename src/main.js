@@ -10,7 +10,7 @@ import FilterPresenter from './presenter/filter-presenter';
 import ApiService from './api-service';
 import PopupModel from './model/popup-model';
 
-export const AUTHORIZATION = 'Basic 4ksdf9gguyrsdghrt0s';
+export const AUTHORIZATION = 'Basic 4ksdf9gguyersdghrt0s';
 export const END_POINT = 'https://16.ecmascript.pages.academy/cinemaddict';
 
 export const main = document.querySelector('.main');

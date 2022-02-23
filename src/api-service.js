@@ -31,7 +31,7 @@ export default class ApiService {
     const response = await this.#load({
       url: `comments/${data.id}`,
       method: Method.POST,
-      body: JSON.stringify(data.comment),
+      body: JSON.stringify(this.#adaptToServerUserComment(data)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
 
@@ -81,6 +81,16 @@ export default class ApiService {
     const parsedResponse = await ApiService.parseResponse(response);
 
     return parsedResponse;
+  }
+
+  #adaptToServerUserComment = (card) => {
+    const adaptedComment = {
+      comments:{
+        comment: card.newComment,
+        emotion: card.isUserEmoji,
+      }
+    };
+    return adaptedComment;
   }
 
   #adaptToServer = (card) => {

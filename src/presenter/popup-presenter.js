@@ -99,6 +99,17 @@ export default class PopupPresenter {
   }
 
   #handleSubmit = (update) => {
-    this.#changeData(update);
+    // const update =
+    // {
+    //   id: 0,
+    //   comments: {
+    //     comment: "sdgegqg",
+    //     emotion: "puke",
+    //   },
+    // };
+    this.#changeData(
+      UserAction.ADD_COMMENT,
+      UpdateType.MINOR,
+      update);
   }
 }
