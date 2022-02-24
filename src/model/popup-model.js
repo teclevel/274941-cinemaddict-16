@@ -16,7 +16,7 @@ export default class PopupModel extends AbstractObservable {
 
   init = async (id) => {
     try {
-      this.#comments = await this.#apiService.getComments(id);
+      this.#comments = await this.#apiService.comments(id);
 
     } catch (err) {
       this.#comments = [];

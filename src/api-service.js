@@ -19,19 +19,21 @@ export default class ApiService {
       .then(ApiService.parseResponse);
   }
 
-  // get comments() {
-  //   return async (id) => this.#load({ url: `comments/${id}` })
-  //     .then(ApiService.parseResponse);
-  // }
+  get comments() {
+    return async (id) => this.#load({ url: `comments/${id}` })
+      .then(ApiService.parseResponse);
+  }
 
-  getComments = async (id) => this.#load({ url: `comments/${id}` })
-    .then(ApiService.parseResponse)
+  // getComments = async (id) => this.#load({ url: `comments/${id}` })
+  //   .then(ApiService.parseResponse)
 
   addComment = async (data) => {
     const response = await this.#load({
       url: `comments/${data.id}`,
       method: Method.POST,
       body: JSON.stringify(this.#adaptToServerUserComment(data)),
+
+
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
 
@@ -85,10 +87,10 @@ export default class ApiService {
 
   #adaptToServerUserComment = (card) => {
     const adaptedComment = {
-      comments:{
-        comment: card.newComment,
-        emotion: card.isUserEmoji,
-      }
+
+      comment: card.newComment,
+      emotion: card.isUserEmoji,
+
     };
     return adaptedComment;
   }

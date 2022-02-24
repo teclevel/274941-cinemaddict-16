@@ -256,7 +256,7 @@ export default class FilmsPopupView extends SmartView {
 
   #closePopupClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.closePopupClick(FilmsPopupView.parseDataToCard(this._data));
+    this._callback.closePopupClick();
   }
 
   #addToWatchClickHandler = (evt) => {
@@ -267,7 +267,6 @@ export default class FilmsPopupView extends SmartView {
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.favoriteClick();
-
   }
 
   #watchedClickHandler = (evt) => {
