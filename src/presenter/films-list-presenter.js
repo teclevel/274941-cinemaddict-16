@@ -260,8 +260,10 @@ export default class FilmsListPresenter {
         break;
 
       case UserAction.DELETE_COMMENT:
+        this.#popupPresenter.setDeleting();
         try {
           await this.#popupModel.deleteComment(updateType, update);
+
         } catch (err) {
           console.log('ошибка удаления комментария');
         }
@@ -276,7 +278,7 @@ export default class FilmsListPresenter {
         this.#clearBoard();
         this.#renderBoard();
         if (!ModePopup.isClosePopup) {// попап открыт
-          if (data){
+          if (data) {
             this.#card = data;
           }
           this.destroyPopup();

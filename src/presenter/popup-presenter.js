@@ -4,6 +4,9 @@ import FilmsPopupView from '../view/films-popup-view';
 import { ModePopup } from './films-list-presenter';
 
 const body = document.querySelector('body');
+const State = {
+  DELETING:'DELETING'
+};
 
 export default class PopupPresenter {
   #filmsPopupComponent = null;
@@ -92,16 +95,24 @@ export default class PopupPresenter {
     );
   }
 
+  #handleSubmit = (update) => {
+    this.#changeData(
+      UserAction.ADD_COMMENT,
+      UpdateType.MINOR,
+      update);
+  }
+
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       this.closePopup();
     }
   }
 
-  #handleSubmit = (update) => {
-    this.#changeData(
-      UserAction.ADD_COMMENT,
-      UpdateType.MINOR,
-      update);
+  setDeleting = () => {
+    this.#filmsPopupComponent.updateData(
+      {
+        isDeleting: true
+      }
+    );
   }
 }

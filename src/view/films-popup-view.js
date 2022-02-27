@@ -8,13 +8,13 @@ import { formatDateComment } from '../utils/day';
 const BLANK_DETAILS_FILM = {
   isUserEmoji: null,
   newComment: '',
-
-//   isWatched: false,
-//   isAddedToWatch: false,
-//   isFavorite: false
+  // isDeleting: false,
+  //   isWatched: false,
+  //   isAddedToWatch: false,
+  //   isFavorite: false
 };
 
-const createCommentTemplate = (comments) => (
+const createCommentTemplate = (comments, isDeleting) => (
   comments.map(({ emotion, comment, author, date, id }) =>
     `<li class="film-details__comment">
       <span class="film-details__comment-emoji">
@@ -25,28 +25,28 @@ const createCommentTemplate = (comments) => (
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${formatDateComment(date)}</span>
-          <button class="film-details__comment-delete" data-id-comment="${id}">Delete</button>
+          <button class="film-details__comment-delete" data-id-comment="${id}">${isDeleting ? 'Deleting...' : 'Delete'}</button>
         </p>
       </div>
     </li>`
   ).join('')
 );
 
-const createEmojiListTemplate = (currentEmoji) => (
+const createEmojiListTemplate = (currentEmoji, isDeleting) => (
   EMOJIS.map((emoji) =>
     `<input class="film-details__emoji-item visually-hidden"
         name="comment-emoji"
         type="radio"
         id="emoji-${emoji}"
-        value="${emoji}" ${currentEmoji === emoji ? 'checked' : ''}>
+        value="${emoji}" ${currentEmoji === emoji ? 'checked' : ''}
+        ${isDeleting ? 'disabled' : ''}>
       <label class="film-details__emoji-label" for="emoji-${emoji}">
       <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
     </label>`
   ).join('')
 );
 
-const createNewCommentTemplate = (newComment, isUserEmoji) => {
-  const emojiTemplate = createEmojiListTemplate(isUserEmoji);
+const createNewCommentTemplate = (newComment, isUserEmoji, isDeleting) => {
   const emojiView = isUserEmoji ? `<img src="images/emoji/${isUserEmoji}.png"
     width="55" height="55" alt="emoji-smile">` : '';
 
@@ -57,18 +57,19 @@ const createNewCommentTemplate = (newComment, isUserEmoji) => {
     <label class="film-details__comment-label">
       <textarea class="film-details__comment-input"
       placeholder="Select reaction below and write comment here"
-      name="comment">${he.encode(newComment)}</textarea>
+      name="comment"
+      ${isDeleting ? 'disabled' : ''} >${he.encode(newComment)}</textarea>
     </label>
     <div class="film-details__emoji-list">
-      ${emojiTemplate}
+      ${createEmojiListTemplate(isUserEmoji, isDeleting)}
     </div>
   </div>`;
 };
 
-const createFilmsPopupCommentsTemplate = ({ comments, isUserEmoji, newComment }) => {
-  const itemsComments = createCommentTemplate(comments);
+const createFilmsPopupCommentsTemplate = (comments, isUserEmoji, newComment, isDeleting ) => {
+  const itemsComments = createCommentTemplate(comments, isDeleting);
   const count = comments.length;
-  const newCommentTemplate = createNewCommentTemplate(newComment, isUserEmoji);
+  const newCommentTemplate = createNewCommentTemplate(newComment, isUserEmoji, isDeleting);
 
   return `<div class="film-details__bottom-container">
       <section class="film-details__comments-wrap">
@@ -91,7 +92,7 @@ const createGenresTemplate = (genres) => (
 
 const createFilmsPopupTemplate = (data) => {
   const { poster, title, rating, duration, genres, age, director, writers,
-    actors, dateRelease, isAddedToWatch, isWatched, isFavorite, comments, isUserEmoji, newComment, releaseCountry } = data;
+    actors, dateRelease, isAddedToWatch, isWatched, isFavorite, comments, isUserEmoji, newComment, releaseCountry, isDeleting } = data;
   const itemsGenres = createGenresTemplate(genres);
 
   const addWatchListClassName = isAddedToWatch
@@ -169,7 +170,7 @@ const createFilmsPopupTemplate = (data) => {
         <button type="button" class="film-details__control-button ${addFavoriteClassName} film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
       </section>
     </div>
-    ${createFilmsPopupCommentsTemplate({ comments, isUserEmoji, newComment })}
+    ${createFilmsPopupCommentsTemplate(comments, isUserEmoji, newComment, isDeleting )}
   </form>`;
 };
 
@@ -177,7 +178,7 @@ export default class FilmsPopupView extends SmartView {
   _data = null;
 
   constructor(card = BLANK_DETAILS_FILM) {
-  // constructor(card) {
+    // constructor(card) {
 
     super();
     this._data = FilmsPopupView.parseCardToData(card);
@@ -303,8 +304,10 @@ export default class FilmsPopupView extends SmartView {
   static parseCardToData = (card) => ({
     ...card,
     isUserEmoji: null,
-    newComment: ''
+    newComment: '',
+    isDeleting: false,
   })
+
 
   static parseDataToCard = (data) => {
     const card = { ...data };
@@ -319,6 +322,7 @@ export default class FilmsPopupView extends SmartView {
 
     delete card.isUserEmoji;
     delete card.newComment;
+    delete card.isDeleting;
 
     return card;
   }

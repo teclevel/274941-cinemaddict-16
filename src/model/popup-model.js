@@ -25,22 +25,6 @@ export default class PopupModel extends AbstractObservable {
     this._notify(UpdateType.INIT_COMMENTS);
   }
 
-  // updateComment = (updateType, update) => {
-  //   const index = this.#comments.findIndex((comment) => comment.id === update.id);
-
-  //   if (index === -1) {
-  //     throw new Error('Can\'t update unexisting comment');
-  //   }
-
-  //   this.#comments = [
-  //     ...this.#comments.slice(0, index),
-  //     update,
-  //     ...this.#comments.slice(index + 1),
-  //   ];
-
-  //   this._notify(updateType, update);
-  // }
-
   addComment = async (updateType, update) => {
     try {
       const response = await this.#apiService.addComment(update);
