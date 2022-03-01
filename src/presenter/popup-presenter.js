@@ -123,15 +123,15 @@ export default class PopupPresenter {
     });
   }
 
-  // setAborting = () => {
-  //   const resetFormState = () => {
-  //     this.#filmsPopupComponent.updateData({
-  //       isDisabled: false,
-  //       isSaving: false,
-  //       isDeleting: false,
-  //     });
-  //   };
+  setAborting = () => {
+    const resetFormState = () => {
+      this.#filmsPopupComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
 
-  //   // this.#taskEditComponent.shake(resetFormState);
-  // }
+    this.#filmsPopupComponent.shake(resetFormState);
+  }
 }

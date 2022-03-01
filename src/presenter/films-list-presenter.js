@@ -247,7 +247,7 @@ export default class FilmsListPresenter {
         try {
           await this.#filmsModel.updateCard(updateType, update);
         } catch (err) {
-          console.log('ошибка обновления');
+          this.#popupPresenter.setAborting();
         }
         break;
 
@@ -256,7 +256,7 @@ export default class FilmsListPresenter {
         try {
           await this.#popupModel.addComment(updateType, update);
         } catch (err) {
-          console.log('ошибка добавления комментария');
+          this.#popupPresenter.setAborting();
         }
         break;
 
@@ -264,9 +264,8 @@ export default class FilmsListPresenter {
         this.#popupPresenter.setDeleting();
         try {
           await this.#popupModel.deleteComment(updateType, update);
-
         } catch (err) {
-          console.log('ошибка удаления комментария');
+          this.#popupPresenter.setAborting();
         }
         break;
     }
