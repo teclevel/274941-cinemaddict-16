@@ -252,6 +252,7 @@ export default class FilmsListPresenter {
         break;
 
       case UserAction.ADD_COMMENT:
+        this.#popupPresenter.setSaving();
         try {
           await this.#popupModel.addComment(updateType, update);
         } catch (err) {

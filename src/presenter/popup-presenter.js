@@ -4,9 +4,11 @@ import FilmsPopupView from '../view/films-popup-view';
 import { ModePopup } from './films-list-presenter';
 
 const body = document.querySelector('body');
-const State = {
-  DELETING:'DELETING'
-};
+// const State = {
+//   DELETING: 'DELETING',
+//   SAVING: 'SAVING',
+//   ABORTING: 'ABORTING',
+// };
 
 export default class PopupPresenter {
   #filmsPopupComponent = null;
@@ -109,10 +111,27 @@ export default class PopupPresenter {
   }
 
   setDeleting = () => {
-    this.#filmsPopupComponent.updateData(
-      {
-        isDeleting: true
-      }
-    );
+    this.#filmsPopupComponent.updateData({
+      isDeleting: true
+    });
   }
+
+  setSaving = () => {
+    this.#filmsPopupComponent.updateData({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  // setAborting = () => {
+  //   const resetFormState = () => {
+  //     this.#filmsPopupComponent.updateData({
+  //       isDisabled: false,
+  //       isSaving: false,
+  //       isDeleting: false,
+  //     });
+  //   };
+
+  //   // this.#taskEditComponent.shake(resetFormState);
+  // }
 }

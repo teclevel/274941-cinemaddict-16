@@ -32,21 +32,21 @@ const createCommentTemplate = (comments, isDeleting) => (
   ).join('')
 );
 
-const createEmojiListTemplate = (currentEmoji, isDeleting) => (
+const createEmojiListTemplate = (currentEmoji, isDisabled) => (
   EMOJIS.map((emoji) =>
     `<input class="film-details__emoji-item visually-hidden"
         name="comment-emoji"
         type="radio"
         id="emoji-${emoji}"
         value="${emoji}" ${currentEmoji === emoji ? 'checked' : ''}
-        ${isDeleting ? 'disabled' : ''}>
+        ${isDisabled ? 'disabled' : ''}>
       <label class="film-details__emoji-label" for="emoji-${emoji}">
       <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
     </label>`
   ).join('')
 );
 
-const createNewCommentTemplate = (newComment, isUserEmoji, isDeleting) => {
+const createNewCommentTemplate = (newComment, isUserEmoji, isDisabled, isSaving) => {
   const emojiView = isUserEmoji ? `<img src="images/emoji/${isUserEmoji}.png"
     width="55" height="55" alt="emoji-smile">` : '';
 
@@ -56,20 +56,20 @@ const createNewCommentTemplate = (newComment, isUserEmoji, isDeleting) => {
     </div>
     <label class="film-details__comment-label">
       <textarea class="film-details__comment-input"
-      placeholder="Select reaction below and write comment here"
+      placeholder="${isSaving ? 'Saving...' : 'Select reaction below and write comment here'}"
       name="comment"
-      ${isDeleting ? 'disabled' : ''} >${he.encode(newComment)}</textarea>
+      ${isDisabled ? 'disabled' : ''} >${isSaving ? 'Saving...' : he.encode(newComment)}</textarea>
     </label>
     <div class="film-details__emoji-list">
-      ${createEmojiListTemplate(isUserEmoji, isDeleting)}
+      ${createEmojiListTemplate(isUserEmoji, isDisabled)}
     </div>
   </div>`;
 };
 
-const createFilmsPopupCommentsTemplate = (comments, isUserEmoji, newComment, isDeleting ) => {
+const createFilmsPopupCommentsTemplate = (comments, isUserEmoji, newComment, isDeleting, isDisabled, isSaving) => {
   const itemsComments = createCommentTemplate(comments, isDeleting);
   const count = comments.length;
-  const newCommentTemplate = createNewCommentTemplate(newComment, isUserEmoji, isDeleting);
+  const newCommentTemplate = createNewCommentTemplate(newComment, isUserEmoji, isDisabled, isSaving);
 
   return `<div class="film-details__bottom-container">
       <section class="film-details__comments-wrap">
@@ -92,7 +92,7 @@ const createGenresTemplate = (genres) => (
 
 const createFilmsPopupTemplate = (data) => {
   const { poster, title, rating, duration, genres, age, director, writers,
-    actors, dateRelease, isAddedToWatch, isWatched, isFavorite, comments, isUserEmoji, newComment, releaseCountry, isDeleting } = data;
+    actors, dateRelease, isAddedToWatch, isWatched, isFavorite, comments, isUserEmoji, newComment, releaseCountry, isDeleting, isDisabled, isSaving } = data;
   const itemsGenres = createGenresTemplate(genres);
 
   const addWatchListClassName = isAddedToWatch
@@ -170,7 +170,7 @@ const createFilmsPopupTemplate = (data) => {
         <button type="button" class="film-details__control-button ${addFavoriteClassName} film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
       </section>
     </div>
-    ${createFilmsPopupCommentsTemplate(comments, isUserEmoji, newComment, isDeleting )}
+    ${createFilmsPopupCommentsTemplate(comments, isUserEmoji, newComment, isDeleting, isDisabled, isSaving)}
   </form>`;
 };
 
@@ -258,6 +258,8 @@ export default class FilmsPopupView extends SmartView {
   #closePopupClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.closePopupClick();
+    // this._data = FilmsPopupView.parseDataToCard(this._data);
+    // console.log(this._data);
   }
 
   #addToWatchClickHandler = (evt) => {
@@ -306,6 +308,9 @@ export default class FilmsPopupView extends SmartView {
     isUserEmoji: null,
     newComment: '',
     isDeleting: false,
+    isSaving: false,
+    isDisabled: false,
+    isAborting: false,
   })
 
 
@@ -323,6 +328,9 @@ export default class FilmsPopupView extends SmartView {
     delete card.isUserEmoji;
     delete card.newComment;
     delete card.isDeleting;
+    delete card.isSaving;
+    delete card.isDisabled;
+    delete card.isAborting;
 
     return card;
   }
