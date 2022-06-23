@@ -5,33 +5,53 @@ import ButtonShowMoreView from '../view/show-more-button-view';
 import FilmsSortView from '../view/sort-view';
 import FilmsListNoCardsView from '../view/films-list-no-cards-view';
 import { render, remove } from '../utils/render';
-import FilmPresenter from './film-presenter';
 import { FilterType, RenderPosition, SortType, UpdateType, UserAction } from '../const';
 import { filter } from '../utils/filter';
+import LoadingView from '../view/loading-view';
+import FilmsCardView from '../view/films-card-view';
+import ContainerPopupView from '../view/containerPopup';
+import PopupPresenter from './popup-presenter';
+import { footer } from '../main';
+
+export const ModePopup = {
+  IsLoadingComments: true,
+  isClosePopup: true,
+};
 
 const NUMBER_CARDS_PER_STEP = 5;
 
 export default class FilmsListPresenter {
   #filmsContainer = null;
+  #filmsCardComponent = null;
   #filmsModel = null;
   #filterModel = null;
+  #popupModel = null;
+  // #cards = null;
+  #card = null;
 
   #filmsContainerComponent = new FilmsContainerView();
   #filmsListComponent = new FilmsListView();
   #filmsListContainerComponent = new FilmsListContainerView();
+  #popupContainerComponent = new ContainerPopupView();
+  #popupContainer = render(footer, this.#popupContainerComponent, RenderPosition.AFTER_END);
+  #popupPresenter = null;
+
+  #loadingComponent = new LoadingView();
   #noFilmsComponent = null;
   #showMoreButtonComponent = null;
   #filmsSortComponent = null;
 
   #renderedCardCount = NUMBER_CARDS_PER_STEP;
-  #filmPresenter = new Map();
+  #filmsComponent = new Map();
   #currentSortType = SortType.DEFAULT;
   #filterType = FilterType.ALL_MOVIES;
+  #isLoading = true;
 
-  constructor(filmsContainer, filmsModel, filterModel) {
+  constructor(filmsContainer, filmsModel, filterModel, popupModel) {
     this.#filmsContainer = filmsContainer;
     this.#filmsModel = filmsModel;
     this.#filterModel = filterModel;
+    this.#popupModel = popupModel;
   }
 
   get cards() {
@@ -41,7 +61,7 @@ export default class FilmsListPresenter {
 
     switch (this.#currentSortType) {
       case SortType.DATE:
-        return filteredCards.sort((a, b) => b.year - a.year);
+        return filteredCards.sort((a, b) => b.dateRelease - a.dateRelease);
       case SortType.RATING:
         return filteredCards.sort((a, b) => b.rating - a.rating);
     }
@@ -58,6 +78,17 @@ export default class FilmsListPresenter {
     this.#renderBoard();
   }
 
+  destroy = () => {
+    this.#clearBoard({ resetRenderedCardCount: true }, { resetSortType: true });
+
+    remove(this.#filmsListContainerComponent);
+    remove(this.#filmsListComponent);
+    remove(this.#filmsContainerComponent);
+
+    this.#filmsModel.removeObserver(this.#handleModelEvent);
+    this.#filterModel.removeObserver(this.#handleModelEvent);
+  }
+
   #renderFilmsList = () => {
     render(this.#filmsContainerComponent, this.#filmsListComponent, RenderPosition.BEFORE_END);
   }
@@ -66,11 +97,73 @@ export default class FilmsListPresenter {
     render(this.#filmsListComponent, this.#filmsListContainerComponent, RenderPosition.BEFORE_END);
   }
 
-
   #renderCard = (card) => {
-    const filmPresenter = new FilmPresenter(this.#filmsListContainerComponent, this.#handleViewAction, this.#handleModeChange);
-    filmPresenter.init(card);
-    this.#filmPresenter.set(card.id, filmPresenter);
+    this.#filmsCardComponent = new FilmsCardView(card);
+    render(this.#filmsListContainerComponent, this.#filmsCardComponent, RenderPosition.BEFORE_END);
+    this.#filmsComponent.set(card.id, this.#filmsCardComponent);
+
+    this.#filmsCardComponent.setFilmClickHandler(this.#handleCardClick);
+
+    this.#filmsCardComponent.setAddToWatchClickHandler(this.#handleAddToWatchClick);
+    this.#filmsCardComponent.setWatchedClickHandler(this.#handleWatchedClick);
+    this.#filmsCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+  }
+
+  #initPopup = () => {
+    this.#popupPresenter = new PopupPresenter(this.#popupContainerComponent, this.#handleViewAction, this.#card);
+    this.#popupModel.init(this.#card.id);
+    this.#filmsModel.addObserver(this.#handleModelEvent);
+    this.#popupModel.addObserver(this.#handleModelEvent);
+  }
+
+  #handleCardClick = (card) => {
+    this.#card = card;
+    if (!ModePopup.isClosePopup) {
+      this.destroyPopup();
+    }
+
+    this.#initPopup();
+    this.#showPopup();
+  }
+
+  #showPopup = () => {
+    if (ModePopup.IsLoadingComments) {
+      console.log('Loading comments');
+      return;
+    }
+
+    if (ModePopup.isClosePopup) {
+      this.#popupPresenter.showPopup();
+    }
+  }
+
+  destroyPopup = () => {
+    if (this.#popupPresenter) {
+      this.#popupPresenter.closePopup();
+      this.#popupModel.removeObserver(this.#handleModelEvent);
+      this.#filmsModel.removeObserver(this.#handleModelEvent);
+    }
+  }
+
+  #handleAddToWatchClick = (card) => {
+    this.#handleViewAction(
+      UserAction.UPDATE_CARD,
+      UpdateType.MINOR,
+      { ...card, isAddedToWatch: !card.isAddedToWatch });
+  }
+
+  #handleWatchedClick = (card) => {
+    this.#handleViewAction(
+      UserAction.UPDATE_CARD,
+      UpdateType.MINOR,
+      { ...card, isWatched: !card.isWatched });
+  }
+
+  #handleFavoriteClick = (card) => {
+    this.#handleViewAction(
+      UserAction.UPDATE_CARD,
+      UpdateType.MINOR,
+      { ...card, isFavorite: !card.isFavorite });
   }
 
   #renderCards = (cards) => {
@@ -80,6 +173,10 @@ export default class FilmsListPresenter {
   #renderNoFilms = () => {
     this.#noFilmsComponent = new FilmsListNoCardsView(this.#filterType);
     render(this.#filmsContainerComponent, this.#noFilmsComponent, RenderPosition.BEFORE_END);
+  }
+
+  #renderLoadingFilms = () => {
+    render(this.#filmsContainerComponent, this.#loadingComponent, RenderPosition.BEFORE_END);
   }
 
   #renderFilmsSort = () => {
@@ -99,13 +196,19 @@ export default class FilmsListPresenter {
     const cards = this.cards;
     const cardCount = this.cards.length;
 
-    if (cardCount === 0) {
-      this.#renderNoFilms();
+    if (this.#isLoading) {
+      this.#renderLoadingFilms();
+      return;
     }
 
+    if (cardCount === 0) {
+      this.#renderNoFilms();
+      return;
+    }
+
+    this.#renderFilmsSort();
     this.#renderFilmsList();
     this.#renderFilmsListContainer();
-    this.#renderFilmsSort();
     this.#renderCards(cards.slice(0, Math.min(cardCount, this.#renderedCardCount)));
 
     if (cardCount > this.#renderedCardCount) {
@@ -116,11 +219,12 @@ export default class FilmsListPresenter {
   #clearBoard = ({ resetRenderedCardCount = false, resetSortType = false } = {}) => {
     const cardCount = this.cards.length;
 
-    this.#filmPresenter.forEach((presenter) => presenter.destroy());
-    this.#filmPresenter.clear();
+    this.#filmsComponent.forEach((component) => remove(component));
+    this.#filmsComponent.clear();
 
     remove(this.#filmsSortComponent);
     remove(this.#showMoreButtonComponent);
+    remove(this.#loadingComponent);
 
     if (this.#noFilmsComponent) {
       remove(this.#noFilmsComponent);
@@ -129,9 +233,6 @@ export default class FilmsListPresenter {
     if (resetRenderedCardCount) {
       this.#renderedCardCount = NUMBER_CARDS_PER_STEP;
     } else {
-      // На случай, если перерисовка доски вызвана
-      // уменьшением количества задач (например, удаление или перенос в архив)
-      // нужно скорректировать число показанных задач
       this.#renderedCardCount = Math.min(cardCount, this.#renderedCardCount);
     }
 
@@ -140,50 +241,69 @@ export default class FilmsListPresenter {
     }
   }
 
-  #handleViewAction = (actionType, updateType, update) => {//передается VIEW  //реагирует на то, что происходит с VIEW
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
+  #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_CARD:
-        this.#filmsModel.updateCard(updateType, update);
+        try {
+          await this.#filmsModel.updateCard(updateType, update);
+        } catch (err) {
+          this.#popupPresenter.setAborting();
+        }
         break;
-      case UserAction.ADD_CARD:
-        this.#filmsModel.addCard(updateType, update);
+
+      case UserAction.ADD_COMMENT:
+        this.#popupPresenter.setSaving();
+        try {
+          await this.#popupModel.addComment(updateType, update);
+        } catch (err) {
+          this.#popupPresenter.setAborting();
+        }
         break;
-      case UserAction.DELETE_CARD:
-        this.#filmsModel.deleteCard(updateType, update);
+
+      case UserAction.DELETE_COMMENT:
+        this.#popupPresenter.setDeleting();
+        try {
+          await this.#popupModel.deleteComment(updateType, update);
+        } catch (err) {
+          this.#popupPresenter.setAborting();
+        }
         break;
     }
   }
 
-  #handleModelEvent = (updateType, data) => {         //   передается модели    //реагирует на то что происходит с моделью
-    // В зависимости от типа изменений решаем, что делать:
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список (например, когда задача ушла в архив)
-    // - обновить всю доску (например, при переключении фильтра)
+  #handleModelEvent = (updateType, data) => {//обновленные данные
     switch (updateType) {
-      case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
-        this.#filmPresenter.get(data.id).init(data);
-        break;
+      // case UpdateType.PATCH:
       case UpdateType.MINOR:
         this.#clearBoard();
         this.#renderBoard();
-        // - обновить список (например, когда задача ушла в архив)
+        if (!ModePopup.isClosePopup) {// попап открыт
+          if (data) {
+            this.#card = data;
+          }
+          this.destroyPopup();
+          this.#initPopup();
+          this.#showPopup();
+        }
+
         break;
       case UpdateType.MAJOR:
         this.#clearBoard({ resetRenderedCardCount: true, resetSortType: true });
         this.#renderBoard();
-        // - обновить всю доску (например, при переключении фильтра)
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderBoard();
+        break;
+      case UpdateType.INIT_COMMENTS:
+        this.#card.comments = this.#popupModel.comments;
+        ModePopup.IsLoadingComments = false;
+        // remove(this.#loadingComponent); //удалить заглушку загрузки коментариев
+        this.#showPopup();
         break;
     }
   }
-
-  #handleModeChange = () => {
-    this.#filmPresenter.forEach((presenter) => presenter.resetView());
-  };
 
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
@@ -193,6 +313,7 @@ export default class FilmsListPresenter {
     this.#currentSortType = sortType;
     this.#clearBoard({ resetRenderedCardCount: true });
     this.#renderBoard();
+    this.destroyPopup();
   }
 
   #handleShowMoreButtonClick = () => {

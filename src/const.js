@@ -15,14 +15,16 @@ export const EMOJIS = ['smile', 'sleeping', 'puke', 'angry'];
 
 export const UserAction = {
   UPDATE_CARD: 'UPDATE_CARD',
-  ADD_CARD: 'ADD_CARD',
-  DELETE_CARD: 'DELETE_CARD',
+  ADD_COMMENT: 'ADD_COMMENT',
+  DELETE_COMMENT: 'DELETE_COMMENT',
 };
 
 export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
+  INIT_COMMENTS: 'INIT_COMMENTS'
 };
 
 export const FilterType = {
@@ -31,6 +33,13 @@ export const FilterType = {
   HISTORY: 'history',
   FAVORITES: 'favorites',
   STATISTIC: 'stats'
+};
+
+export const GenresType = {
+  MUSICAL: 'Musical',
+  WESTERN: 'Western',
+  CARTOON: 'Cartoon',
+  COMEDY: 'Comedy'
 };
 
 export const noFilmsTextType = {
@@ -48,3 +57,19 @@ export const BLANK_DETAILS_FILM = {
   isAddedToWatch: false,
   isFavorite: false
 };
+
+// export const StatisticPeriod = {
+//   All_TIME: 'all-time',
+//   TODAY: 'today',
+//   WEEK: 'week',
+//   MONTH: 'month',
+//   YEAR: 'year'
+// };
+
+export const userRank = {
+  NOVICE: 'Novice',
+  FAN: 'Fan',
+  MOVIE_BUFF: 'Movie buff'
+};
+
+

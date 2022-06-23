@@ -1,16 +1,20 @@
 import { SortType } from '../const';
 import AbstractView from './abstract-view';
 
-const createSortTemplate = (currentSortType) => (
-  `<ul class="sort">
-      <li><a href="#" class="sort__button ${currentSortType === SortType.DEFAULT ? 'sort__button--active' : ''}"
-        data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
-      <li><a href="#" class="sort__button ${currentSortType === SortType.DATE ? 'sort__button--active' : ''}"
-        data-sort-type="${SortType.DATE}">Sort by date</a></li>
-      <li><a href="#" class="sort__button ${currentSortType === SortType.RATING ? 'sort__button--active' : ''}"
-        data-sort-type="${SortType.RATING}">Sort by rating</a></li>
-  </ul>`
-);
+const createSortTemplate = (currentSortType) => {
+  const listMenu = Object.values(SortType)
+    .map((item) =>
+      `<li><a href="#" class="sort__button ${currentSortType === item ? 'sort__button--active' : ''}"
+          data-sort-type="${item}">Sort by ${item}</a>
+      </li>`)
+    .join('');
+
+  return (
+    `<ul class="sort">
+        ${listMenu}
+    </ul>`
+  );
+};
 
 export default class FilmsSortView extends AbstractView {
   #currentSortType = null;

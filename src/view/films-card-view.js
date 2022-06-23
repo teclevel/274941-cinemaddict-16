@@ -1,8 +1,8 @@
-import { getTimeFromMins } from '../utils/day';
+import { convertDateInYear } from '../utils/day';
 import AbstractView from './abstract-view';
 
 const createFilmsCardTemplate = (card) => {
-  const { title, comments, rating, year, duration, genres, description, poster, isAddedToWatch, isWatched, isFavorite } = card;
+  const { title, comments, rating, dateRelease, duration, genres, description, poster, isAddedToWatch, isWatched, isFavorite } = card;
   const classActive = 'film-card__controls-item--active';
   const count = comments.length;
 
@@ -23,8 +23,8 @@ const createFilmsCardTemplate = (card) => {
       <h3 class="film-card__title">${title}</h3>
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
-        <span class="film-card__year">${year}</span>
-        <span class="film-card__duration">${getTimeFromMins(duration)}</span>
+        <span class="film-card__year">${convertDateInYear(dateRelease)}</span>
+        <span class="film-card__duration">${duration}</span>
         <span class="film-card__genre">${genres[0]}</span>
       </p>
       <img src="${poster}" alt="" class="film-card__poster">
@@ -40,15 +40,15 @@ const createFilmsCardTemplate = (card) => {
 };
 
 export default class FilmsCardView extends AbstractView {
-  #cards = null;
+  #card = null;
 
-  constructor(cards) {
+  constructor(card) {
     super();
-    this.#cards = cards;
+    this.#card = card;
   }
 
   get template() {
-    return createFilmsCardTemplate(this.#cards);
+    return createFilmsCardTemplate(this.#card);
   }
 
   setFilmClickHandler = (callback) => {
@@ -77,21 +77,21 @@ export default class FilmsCardView extends AbstractView {
 
   #filmClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.filmClick();
+    this._callback.filmClick(this.#card);
   }
 
   #addToWatchClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.addToWatchClick();
+    this._callback.addToWatchClick(this.#card);
   }
 
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.favoriteClick();
+    this._callback.favoriteClick(this.#card);
   }
 
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.watchedClick();
+    this._callback.watchedClick(this.#card);
   }
 }

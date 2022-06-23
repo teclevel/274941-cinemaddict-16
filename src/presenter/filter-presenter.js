@@ -2,18 +2,21 @@ import FilterView from '../view/filter-view';
 import { FilterType, RenderPosition, UpdateType, } from '../const';
 import { filter } from '../utils/filter';
 import { remove, render, replace } from '../utils/render';
+import StatisticView from '../view/statistic-view';
 
 export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #filmsModel = null;
-
+  #filmsListPresenter = null;
   #filterComponent = null;
+  #statisticComponent = null;
 
-  constructor(filterContainer, filterModel, filmsModel) {
+  constructor(filterContainer, filterModel, filmsModel, filmsListPresenter) {
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
     this.#filmsModel = filmsModel;
+    this.#filmsListPresenter = filmsListPresenter;
   }
 
   get filters() {
@@ -54,8 +57,6 @@ export default class FilterPresenter {
 
     this.#filterComponent = new FilterView(filters, this.#filterModel.filter);
     this.#filterComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
-    // this.#filterComponent.setStatisticTypeChangeHandler(this.#handleStatisticTypeChange);
-
 
     this.#filmsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -69,6 +70,7 @@ export default class FilterPresenter {
     remove(prevFilterComponent);
   }
 
+
   #handleModelEvent = () => {
     this.init();
   }
@@ -77,10 +79,25 @@ export default class FilterPresenter {
     if (this.#filterModel.filter === filterType) {
       return;
     }
-    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+
+    switch (filterType) {
+      case FilterType.ALL_MOVIES:
+      case FilterType.WATCH_LIST:
+      case FilterType.FAVORITES:
+      case FilterType.HISTORY:
+        remove(this.#statisticComponent);
+        this.#filmsListPresenter.destroyPopup();
+        this.#filmsListPresenter.destroy();
+        this.#filmsListPresenter.init();
+        this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+        break;
+
+      case FilterType.STATISTIC:
+        this.#filmsListPresenter.destroy();
+        this.#statisticComponent = new StatisticView(this.#filmsModel.cards);
+        render(this.#filterContainer, this.#statisticComponent, RenderPosition.BEFORE_END);
+        this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+        break;
+    }
   }
-
-  // #handleStatisticTypeChange = () => {
-
-  // };
 }
