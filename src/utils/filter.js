@@ -1,6 +1,6 @@
 import { FilterType } from '../const';
 
-export const filter = {
+export const Filter = {
   [FilterType.ALL_MOVIES]: (cards) => cards.filter((card) => card),
   [FilterType.WATCH_LIST]: (cards) => cards.filter((card) => card.isAddedToWatch),
   [FilterType.HISTORY]: (cards) => cards.filter((card) => card.isWatched),

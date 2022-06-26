@@ -1,6 +1,6 @@
 import FilterView from '../view/filter-view';
 import { FilterType, RenderPosition, UpdateType, } from '../const';
-import { filter } from '../utils/filter';
+import { Filter } from '../utils/filter';
 import { remove, render, replace } from '../utils/render';
 import StatisticView from '../view/statistic-view';
 
@@ -31,17 +31,17 @@ export default class FilterPresenter {
       {
         type: FilterType.WATCH_LIST,
         name: 'Watchlist',
-        count: filter[FilterType.WATCH_LIST](cards).length || '0'
+        count: Filter[FilterType.WATCH_LIST](cards).length || '0'
       },
       {
         type: FilterType.HISTORY,
         name: 'History',
-        count: filter[FilterType.HISTORY](cards).length || '0'
+        count: Filter[FilterType.HISTORY](cards).length || '0'
       },
       {
         type: FilterType.FAVORITES,
         name: 'Favorites',
-        count: filter[FilterType.FAVORITES](cards).length || '0'
+        count: Filter[FilterType.FAVORITES](cards).length || '0'
       },
       {
         type: FilterType.STATISTIC,

@@ -6,7 +6,7 @@ import FilmsSortView from '../view/sort-view';
 import FilmsListNoCardsView from '../view/films-list-no-cards-view';
 import { render, remove } from '../utils/render';
 import { FilterType, RenderPosition, SortType, UpdateType, UserAction } from '../const';
-import { filter } from '../utils/filter';
+import { Filter } from '../utils/filter';
 import LoadingView from '../view/loading-view';
 import FilmsCardView from '../view/films-card-view';
 import ContainerPopupView from '../view/containerPopup';
@@ -57,7 +57,7 @@ export default class FilmsListPresenter {
   get cards() {
     this.#filterType = this.#filterModel.filter;
     const cards = this.#filmsModel.cards;
-    const filteredCards = filter[this.#filterType](cards);
+    const filteredCards = Filter[this.#filterType](cards);
 
     switch (this.#currentSortType) {
       case SortType.DATE:

@@ -1,7 +1,7 @@
 export const SortType = {
   DEFAULT: 'default',
   DATE: 'date',
-  RATING: 'rating',
+  RATING: 'rating'
 };
 
 export const RenderPosition = {
@@ -35,12 +35,12 @@ export const FilterType = {
   STATISTIC: 'stats'
 };
 
-export const GenresType = {
-  MUSICAL: 'Musical',
-  WESTERN: 'Western',
-  CARTOON: 'Cartoon',
-  COMEDY: 'Comedy'
-};
+// export const GenresType = {
+//   MUSICAL: 'Musical',
+//   WESTERN: 'Western',
+//   CARTOON: 'Cartoon',
+//   COMEDY: 'Comedy'
+// };
 
 export const noFilmsTextType = {
   [FilterType.ALL_MOVIES]: 'There are no movies in our database',
@@ -58,13 +58,28 @@ export const BLANK_DETAILS_FILM = {
   isFavorite: false
 };
 
-// export const StatisticPeriod = {
-//   All_TIME: 'all-time',
-//   TODAY: 'today',
-//   WEEK: 'week',
-//   MONTH: 'month',
-//   YEAR: 'year'
-// };
+export const StatisticMenu = {
+  ALL_TIME: {
+    id: 'all-time',
+    text: 'All time'
+  },
+  TODAY: {
+    id: 'today',
+    text: 'Today'
+  },
+  WEEK: {
+    id: 'week',
+    text: 'Week'
+  },
+  MONTH: {
+    id: 'month',
+    text: 'Month'
+  },
+  YEAR: {
+    id: 'year',
+    text: 'Year'
+  }
+};
 
 export const userRank = {
   NOVICE: 'Novice',
@@ -72,4 +87,16 @@ export const userRank = {
   MOVIE_BUFF: 'Movie buff'
 };
 
-
+export const RankLevels = {
+  NOVICE: {
+    MIN: 0,
+    MAX: 10
+  },
+  FAN: {
+    MIN: 10,
+    MAX: 20
+  },
+  MOVIE_BUFF: {
+    MIN: 20
+  }
+};
