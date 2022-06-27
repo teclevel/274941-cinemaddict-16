@@ -1,23 +1,19 @@
-import { GenresType, userRank } from '../const';
-
-const NO_RANK = 0;
-const MIN_NOVICE = 0;
-const MAX_NOVICE = 10;
-const MIN_FAN = 10;
-const MAX_FAN = 20;
-const MIN_MOVIE_BUFF = 20;
+import Chart from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { FilterType, RankLevels, userRank } from '../const';
+import { Filter } from './filter';
 
 export const getUserRank = (count) => {
-  if (count === NO_RANK) {
+  if (count === RankLevels.NOVICE.MIN) {
     return '';
   }
-  if (count > MIN_NOVICE && count <= MAX_NOVICE) {
+  if (count > RankLevels.NOVICE.MIN && count <= RankLevels.NOVICE.MAX) {
     return userRank.NOVICE;
   }
-  if (count > MIN_FAN && count <= MAX_FAN) {
+  if (count > RankLevels.FAN.MIN && count <= RankLevels.FAN.MAX) {
     return userRank.FAN;
   }
-  if (count > MIN_MOVIE_BUFF) {
+  if (count > RankLevels.MOVIE_BUFF.MIN) {
     return userRank.MOVIE_BUFF;
   }
 };
@@ -33,8 +29,15 @@ export const convertMinutes = (timeMinutes, timeType) => {
   }
 };
 
-export const getSumDurationFilm = (data) => data.reduce((sum, time) => (sum + time.duration), 0);
+export const getSumDurationFilm = (data) => data.reduce((sum, { duration }) => (sum + duration), 0);
 
+const joinArr = (arr) => {
+  const newArr = [];
+  for (const el of arr) {
+    newArr.splice(newArr.length, 0, el);
+  }
+  return newArr.join().split(',');
+};
 // export const FilterGenres = {
 //   // 'Musical', 'Western', 'Cartoon', 'Comedy'
 //   [GenresType.MUSICAL]: (cards) => cards.filter((card) => card.genres === 'Musical').length,
@@ -43,3 +46,87 @@ export const getSumDurationFilm = (data) => data.reduce((sum, time) => (sum + ti
 //   [GenresType.COMEDY]: (cards) => cards.filter((card) => card.genres === 'Comedy').length
 // };
 
+
+// const genreLabels = Object.values(GenresType);
+// console.log(genreLabels);
+export const getWatchedFilms = (data) => Filter[FilterType.HISTORY](data);
+
+// Найти количество повторяющихся слов из массива 1 в массиве 2 и сложить получившееся количество в массив
+
+export const getCountArr = (arr1, arr2) => {
+  const countArr = [];
+  for (const word of arr1) {
+    countArr.push(arr2.filter((el) => el === word).length);
+  }
+  return countArr;
+};
+
+// Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
+
+export const renderChart = (statisticCtx, data) => {
+  const watchedFilms = getWatchedFilms(data);
+  const genresAll = joinArr(watchedFilms.map(({ genres }) => genres));
+  const genreLabels = Array.from(new Set(genresAll));
+  // console.log(genresAll);
+  // console.log(genreLabels);
+
+  const countArrGenre = getCountArr(genreLabels, genresAll);
+
+  return new Chart(statisticCtx, {
+    plugins: [ChartDataLabels],
+    type: 'horizontalBar',
+    data: {
+      labels: genreLabels,
+      datasets: [{
+        data: countArrGenre,
+        backgroundColor: '#ffe800',
+        hoverBackgroundColor: '#ffe800',
+        anchor: 'start',
+        barThickness: 24,
+      }],
+    },
+    options: {
+      responsive: false,
+      plugins: {
+        datalabels: {
+          font: {
+            size: 20,
+          },
+          color: '#ffffff',
+          anchor: 'start',
+          align: 'start',
+          offset: 40,
+        },
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: '#ffffff',
+            padding: 100,
+            fontSize: 20,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false,
+          },
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false,
+          },
+        }],
+      },
+      legend: {
+        display: false,
+      },
+      tooltips: {
+        enabled: false,
+      },
+    },
+  });
+};
